@@ -1,0 +1,43 @@
+'use client'
+
+import Sidebar from '@/components/Sidebar'
+import TopHeader from '@/components/TopHeader'
+import Footer from '@/components/Footer'
+import { SidebarProvider, useSidebar } from '@/contexts/SidebarContext'
+import type { SidebarNavigation, FooterData } from './layout'
+
+function MainContent({ children, footer }: { children: React.ReactNode; footer: FooterData | null }) {
+  const { collapsed } = useSidebar()
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      <TopHeader />
+      <div className={`${collapsed ? 'lg:ml-[72px]' : 'lg:ml-[240px]'} flex flex-col flex-1 transition-all duration-300`}>
+        <main className="flex-1 max-w-[75%] mx-auto">
+          {children}
+        </main>
+
+        <Footer data={footer} />
+      </div>
+    </div>
+  )
+}
+
+export default function CasinoLayoutClient({
+  children,
+  navigation,
+  footer,
+}: {
+  children: React.ReactNode
+  navigation: SidebarNavigation | null
+  footer: FooterData | null
+}) {
+  return (
+    <SidebarProvider>
+      <div className="min-h-screen">
+        <Sidebar navigation={navigation} />
+        <MainContent footer={footer}>{children}</MainContent>
+      </div>
+    </SidebarProvider>
+  )
+}
