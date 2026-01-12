@@ -13,6 +13,10 @@ export const metadata: Metadata = {
     default: 'MetaWin Casino',
   },
   description: "The World's Best Crypto Casino & Prize Winning Platform",
+  robots: {
+    index: false,
+    follow: false,
+  },
 }
 
 export default function RootLayout({
