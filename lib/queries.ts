@@ -519,6 +519,18 @@ export const relatedPromotionsQuery = groq`
   }
 `
 
+// Search games by title or provider
+export const searchGamesQuery = groq`
+  *[_type == "game" && (title match $searchTerm || provider match $searchTerm) && count(categories) > 0] | order(title asc)[0...12] {
+    _id,
+    title,
+    "slug": slug.current,
+    "categorySlug": categories[0]->slug.current,
+    "thumbnail": thumbnail.asset->url,
+    provider
+  }
+`
+
 // Get all promotions for sitemap/static generation
 export const allPromotionSlugsQuery = groq`
   *[_type == "promotion" && isActive == true] {

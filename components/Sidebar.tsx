@@ -29,6 +29,7 @@ import {
   LucideIcon
 } from 'lucide-react'
 import type { SidebarNavigation, NavItem, NavSection } from '@/app/casino/layout'
+import SearchModal from './SearchModal'
 
 const iconMap: Record<string, LucideIcon> = {
   flame: Flame,
@@ -73,6 +74,7 @@ function HighlightBadge({ highlight }: { highlight?: string }) {
 
 export default function Sidebar({ navigation }: SidebarProps) {
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({})
+  const [searchOpen, setSearchOpen] = useState(false)
   const { collapsed, toggle, mobileOpen, setMobileOpen } = useSidebar()
 
   const getIcon = (iconName: string) => {
@@ -210,6 +212,18 @@ export default function Sidebar({ navigation }: SidebarProps) {
           <ChevronLeft className={`w-4 h-4 text-[var(--color-text-muted)] transition-transform ${collapsed ? 'rotate-180' : ''}`} />
         </button>
 
+        {/* Search Button */}
+        <div className="p-3 border-b border-[var(--color-border)]">
+          <button
+            onClick={() => setSearchOpen(true)}
+            className={`w-full flex items-center ${collapsed ? 'justify-center' : ''} gap-3 px-3 py-2.5 rounded-lg text-[var(--color-text-secondary)] hover:text-white hover:bg-[var(--color-bg-hover)] transition-colors`}
+            title={collapsed ? 'Search' : undefined}
+          >
+            <Search className="w-5 h-5" />
+            {!collapsed && <span className="text-sm">Search games...</span>}
+          </button>
+        </div>
+
         {/* Navigation - Scrollable */}
         <nav className="flex-1 overflow-y-auto p-3">
           <ul className="space-y-1">
@@ -221,6 +235,9 @@ export default function Sidebar({ navigation }: SidebarProps) {
             })}
           </ul>
         </nav>
+
+        {/* Search Modal */}
+        <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
 
       </aside>
     </>
