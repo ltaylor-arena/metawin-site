@@ -43,6 +43,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   return {
     title: categoryData.seo?.metaTitle || `${categoryData.title} | MetaWin Casino`,
     description: categoryData.seo?.metaDescription || `Play the best ${categoryData.title} games at MetaWin Casino.`,
+    robots: { index: false, follow: false },
   }
 }
 

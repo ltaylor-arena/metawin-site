@@ -19,6 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: page?.seo?.metaTitle || "The World's Best Crypto Casino",
     description: page?.seo?.metaDescription || "Play thousands of casino games with instant crypto withdrawals.",
+    robots: { index: false, follow: false },
   }
 }
 

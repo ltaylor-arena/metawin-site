@@ -48,6 +48,7 @@ export async function generateMetadata({ params }: GamePageProps): Promise<Metad
   return {
     title: game.seo?.metaTitle || `${game.title} | Play at MetaWin`,
     description: game.seo?.metaDescription || `Play ${game.title} by ${game.provider} at MetaWin. ${game.rtp ? `RTP: ${game.rtp}%` : ''}`,
+    robots: { index: false, follow: false },
   }
 }
 

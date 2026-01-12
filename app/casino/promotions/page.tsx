@@ -77,6 +77,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: page?.seo?.metaTitle || page?.title || 'Promotions | MetaWin Casino',
     description: page?.seo?.metaDescription || 'Discover the latest promotions, competitions, and exclusive offers at MetaWin Casino.',
+    robots: { index: false, follow: false },
   }
 }
 
