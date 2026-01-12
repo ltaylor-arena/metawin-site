@@ -6,6 +6,8 @@ import Hero from '@/components/Hero'
 import GameCarousel from '@/components/GameCarousel'
 import FeatureCards from '@/components/FeatureCards'
 import Tabs from '@/components/Tabs'
+import FAQ from '@/components/FAQ'
+import PromoCard from '@/components/PromoCard'
 
 async function getHomepage() {
   return await client.fetch(homepageQuery)
@@ -44,7 +46,7 @@ export default async function CasinoHomePage() {
             const firstSlide = block.slides?.[0]
             if (!firstSlide) return null
             return (
-              <section key={block._key} className="px-4 md:px-6 pt-4 md:pt-6">
+              <section key={block._key} className="px-0 md:px-6 pt-0 md:pt-6">
                 <Hero
                   heading={firstSlide.heading}
                   subheading={firstSlide.subheading}
@@ -56,17 +58,37 @@ export default async function CasinoHomePage() {
             )
           
           case 'introSection':
+            const hasPromoCards = block.promoCards && block.promoCards.length > 0
             return (
               <section key={block._key} className="px-4 md:px-6 py-8">
-                <div className="max-w-4xl">
-                  {block.heading && (
-                    <h1 className="text-2xl md:text-3xl font-bold text-white mb-4">
-                      {block.heading}
-                    </h1>
-                  )}
-                  {block.text && (
-                    <div className="prose prose-invert prose-sm md:prose-base max-w-none">
-                      <PortableText value={block.text} />
+                <div className={`flex flex-col ${hasPromoCards ? 'lg:flex-row lg:gap-8' : ''}`}>
+                  {/* Left Column - Text Content */}
+                  <div className={hasPromoCards ? 'lg:w-[60%]' : 'max-w-4xl'}>
+                    {block.heading && (
+                      <h1 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                        {block.heading}
+                      </h1>
+                    )}
+                    {block.text && (
+                      <div className="prose prose-invert prose-sm md:prose-base max-w-none">
+                        <PortableText value={block.text} />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Right Column - Promo Cards */}
+                  {hasPromoCards && (
+                    <div className="lg:w-[40%] flex flex-col gap-4 mt-6 lg:mt-0">
+                      {block.promoCards.map((card: any) => (
+                        <PromoCard
+                          key={card._key}
+                          title={card.title}
+                          subtitle={card.subtitle}
+                          colorTheme={card.colorTheme}
+                          backgroundImage={card.backgroundImage}
+                          link={card.link}
+                        />
+                      ))}
                     </div>
                   )}
                 </div>
@@ -127,13 +149,28 @@ export default async function CasinoHomePage() {
               </section>
             )
           
+          case 'faq':
+            return (
+              <section key={block._key} className="px-4 md:px-6">
+                <FAQ heading={block.heading} items={block.items} />
+              </section>
+            )
+
+          case 'featureCards':
+            return (
+              <section key={block._key} className="px-4 md:px-6">
+                <FeatureCards
+                  heading={block.heading}
+                  features={block.cards}
+                />
+              </section>
+            )
+
           default:
             console.log('Unknown block type:', block._type)
             return null
         }
       })}
-      
-      <FeatureCards />
     </div>
   )
 }

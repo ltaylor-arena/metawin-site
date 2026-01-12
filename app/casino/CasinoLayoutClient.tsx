@@ -13,7 +13,7 @@ function MainContent({ children, footer }: { children: React.ReactNode; footer: 
     <div className="flex flex-col min-h-screen">
       <TopHeader />
       <div className={`${collapsed ? 'lg:ml-[72px]' : 'lg:ml-[240px]'} flex flex-col flex-1 transition-all duration-300`}>
-        <main className="flex-1 max-w-[75%] mx-auto">
+        <main className="flex-1 w-full lg:max-w-[75%] lg:mx-auto">
           {children}
         </main>
 
@@ -34,7 +34,7 @@ export default function CasinoLayoutClient({
 }) {
   return (
     <SidebarProvider>
-      <div className="min-h-screen">
+      <div className="casino-site min-h-screen">
         <Sidebar navigation={navigation} />
         <MainContent footer={footer}>{children}</MainContent>
       </div>

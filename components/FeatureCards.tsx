@@ -1,7 +1,7 @@
 // Feature Cards Component
 // "Reasons to Play" style feature highlights
 
-import { Check, Zap, Trophy, Gift, Users } from 'lucide-react'
+import { Check, Zap, Trophy, Gift, Users, Shield, Star, Clock, Wallet, Lock } from 'lucide-react'
 
 interface Feature {
   icon?: string
@@ -10,6 +10,7 @@ interface Feature {
 }
 
 interface FeatureCardsProps {
+  heading?: string
   features?: Feature[]
   className?: string
 }
@@ -20,6 +21,11 @@ const iconMap: Record<string, React.ElementType> = {
   trophy: Trophy,
   gift: Gift,
   users: Users,
+  shield: Shield,
+  star: Star,
+  clock: Clock,
+  wallet: Wallet,
+  lock: Lock,
 }
 
 // Default features matching MetaWin's "Reasons to Play"
@@ -51,19 +57,20 @@ const defaultFeatures: Feature[] = [
   },
 ]
 
-export default function FeatureCards({ 
+export default function FeatureCards({
+  heading = 'Reasons to Play at MetaWin',
   features,
   className = ''
 }: FeatureCardsProps) {
   const displayFeatures = features && features.length > 0 ? features : defaultFeatures
-  
+
   return (
     <section className={`py-6 ${className}`}>
-      <h2 className="text-lg font-semibold text-white mb-4 px-4 md:px-6">
-        Reasons to Play at MetaWin
+      <h2 className="text-lg font-semibold text-white mb-4">
+        {heading}
       </h2>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 px-4 md:px-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {displayFeatures.map((feature, index) => {
           const Icon = feature.icon ? iconMap[feature.icon] : Check
           

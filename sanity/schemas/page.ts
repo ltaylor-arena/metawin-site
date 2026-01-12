@@ -22,6 +22,14 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'description',
+      title: 'Description',
+      type: 'text',
+      group: 'content',
+      rows: 2,
+      description: 'Short intro text displayed below the page title',
+    }),
+    defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
@@ -41,7 +49,37 @@ export default defineType({
       description: 'Set this page as the /casino/ homepage',
       initialValue: false,
     }),
-    
+
+    // Authorship
+    defineField({
+      name: 'author',
+      title: 'Author',
+      type: 'reference',
+      to: [{ type: 'author' }],
+      group: 'settings',
+    }),
+    defineField({
+      name: 'publishedAt',
+      title: 'Published Date',
+      type: 'datetime',
+      group: 'settings',
+    }),
+    defineField({
+      name: 'updatedAt',
+      title: 'Last Updated',
+      type: 'datetime',
+      group: 'settings',
+      description: 'Manually set when content is significantly updated',
+    }),
+    defineField({
+      name: 'showAuthorInfo',
+      title: 'Show Author Info',
+      type: 'boolean',
+      group: 'settings',
+      description: 'Display author bio and dates on this page',
+      initialValue: false,
+    }),
+
     // Page Content Blocks
     defineField({
       name: 'content',
@@ -72,12 +110,20 @@ export default defineType({
               type: 'array',
               of: [{ type: 'block' }],
             }),
+            defineField({
+              name: 'promoCards',
+              title: 'Promo Cards (Right Column)',
+              description: 'Optional: Add 2 promotional cards to display in a right column (40% width on desktop)',
+              type: 'array',
+              of: [{ type: 'promoCard' }],
+              validation: (Rule) => Rule.max(2),
+            }),
           ],
           preview: {
-            select: { title: 'heading' },
-            prepare: ({ title }) => ({
+            select: { title: 'heading', promoCards: 'promoCards' },
+            prepare: ({ title, promoCards }) => ({
               title: title || 'Intro Section',
-              subtitle: 'Heading & Text',
+              subtitle: promoCards?.length ? `Heading & Text + ${promoCards.length} promo cards` : 'Heading & Text',
             }),
           },
         }),
@@ -176,7 +222,15 @@ export default defineType({
             defineField({
               name: 'buttonLink',
               title: 'Button Link',
-              type: 'url',
+              type: 'string',
+              description: 'Internal links must end with /',
+              validation: (Rule) => Rule.custom((value) => {
+                if (!value) return true
+                if (value.startsWith('/') && !value.endsWith('/')) {
+                  return 'Internal URLs must end with a trailing slash'
+                }
+                return true
+              }),
             }),
             defineField({
               name: 'backgroundImage',
@@ -191,6 +245,18 @@ export default defineType({
               subtitle: 'Call to Action',
             }),
           },
+        }),
+
+        // FAQ Section
+        defineArrayMember({
+          type: 'faq',
+          title: 'FAQ Section',
+        }),
+
+        // Feature Cards
+        defineArrayMember({
+          type: 'featureCards',
+          title: 'Feature Cards',
         }),
       ],
     }),

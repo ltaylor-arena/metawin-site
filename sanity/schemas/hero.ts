@@ -44,7 +44,15 @@ export default defineType({
             defineField({
               name: 'ctaLink',
               title: 'CTA Button Link',
-              type: 'url',
+              type: 'string',
+              description: 'Internal links must end with /',
+              validation: (Rule) => Rule.custom((value) => {
+                if (!value) return true
+                if (value.startsWith('/') && !value.endsWith('/')) {
+                  return 'Internal URLs must end with a trailing slash'
+                }
+                return true
+              }),
             }),
             defineField({
               name: 'internalLink',

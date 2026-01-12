@@ -91,19 +91,20 @@ body {
   background: var(--color-border-hover);
 }
 
-/* Typography */
-h1, h2, h3, h4, h5, h6 {
+/* Typography - scoped to casino site only (not Sanity Studio) */
+/* Only sets weight, line-height, and color - let Tailwind handle font sizes */
+.casino-site h1,
+.casino-site h2,
+.casino-site h3,
+.casino-site h4,
+.casino-site h5,
+.casino-site h6 {
   font-weight: 600;
   line-height: 1.25;
   color: var(--color-text-primary);
 }
 
-h1 { font-size: 2.25rem; }
-h2 { font-size: 1.75rem; }
-h3 { font-size: 1.375rem; }
-h4 { font-size: 1.125rem; }
-
-p {
+.casino-site p {
   color: var(--color-text-secondary);
 }
 

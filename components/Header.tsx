@@ -27,7 +27,7 @@ export default function Header() {
         </button>
         
         {/* Logo */}
-        <Link href="/casino" className="text-lg font-bold text-white">
+        <Link href="/casino/" className="text-lg font-bold text-white">
           METAWIN
         </Link>
         

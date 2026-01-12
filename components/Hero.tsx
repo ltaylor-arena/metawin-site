@@ -20,46 +20,43 @@ export default function Hero({
   ctaLink
 }: HeroProps) {
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl">
-      <div className="relative aspect-[10/3] md:aspect-[30/7] w-full">
-        {image?.url ? (
+    <div className="relative w-full overflow-hidden rounded-lg md:h-[298px] bg-[#000107]">
+      {/* Background Image - only visible on md+ */}
+      {image?.url && image.url.length > 0 && (
+        <div className="hidden md:block absolute inset-0">
           <Image
             src={image.url}
             alt={image.alt || heading}
             fill
-            className="object-cover"
+            className="object-cover object-right"
             priority
           />
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-bg-tertiary)] to-[var(--color-bg-secondary)]" />
+          {/* Gradient overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#000107] via-[#000107]/80 to-transparent" />
+        </div>
+      )}
+
+      {/* Content */}
+      <div className="relative flex flex-col justify-center items-center md:items-start p-5 md:py-6 md:px-10 min-h-[200px] md:min-h-full md:h-full">
+        <h2 className="text-white text-center md:text-left text-2xl md:text-[32px] font-bold mb-5 md:w-[520px] md:leading-[44px]">
+          {heading}
+        </h2>
+
+        {subheading && (
+          <p className="text-white/80 text-center md:text-left text-sm md:text-base mb-5 max-w-md">
+            {subheading}
+          </p>
         )}
 
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
-
-        {/* Content */}
-        <div className="absolute inset-0 flex flex-col justify-center px-6 md:px-12 lg:px-16">
-          <div className="max-w-2xl">
-            <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-2 md:mb-4 leading-tight">
-              {heading}
-            </h2>
-
-            {subheading && (
-              <p className="text-sm md:text-lg text-[var(--color-text-secondary)] mb-4 md:mb-6 max-w-lg">
-                {subheading}
-              </p>
-            )}
-
-            {ctaText && (
-              <Link
-                href={ctaLink || '#'}
-                className="btn-primary inline-block text-sm md:text-base"
-              >
-                {ctaText}
-              </Link>
-            )}
-          </div>
-        </div>
+        {ctaText && (
+          <Link
+            href={ctaLink || '#'}
+            className="group relative w-full md:w-[266px] max-w-[266px] py-4 px-8 bg-[var(--color-accent-blue)] hover:bg-[var(--color-accent-blue-hover)] font-bold text-white hover:text-white text-center rounded transition-all duration-300 overflow-hidden"
+          >
+            <span className="relative z-10">{ctaText}</span>
+            <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+          </Link>
+        )}
       </div>
     </div>
   )

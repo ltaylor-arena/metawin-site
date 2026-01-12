@@ -6,7 +6,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Search, Settings, Menu } from 'lucide-react'
+import Image from 'next/image'
+import { Search, Menu } from 'lucide-react'
 import { useSidebar } from '@/contexts/SidebarContext'
 
 export default function TopHeader() {
@@ -25,12 +26,15 @@ export default function TopHeader() {
         </button>
 
         {/* Logo */}
-        <Link href="/casino" className="flex items-center shrink-0">
-          <span className="text-xl font-bold tracking-wider">
-            <span className="text-white">M</span>
-            <span className="text-white">≡</span>
-            <span className="text-white">TAWIN</span>
-          </span>
+        <Link href="/casino/" className="flex items-center shrink-0">
+          <Image
+            src="/images/metawin-logo-white.svg"
+            alt="MetaWin"
+            width={120}
+            height={24}
+            className="h-6 w-auto"
+            priority
+          />
         </Link>
 
         {/* Search Bar - Center */}
@@ -57,18 +61,12 @@ export default function TopHeader() {
           {/* Sign In Button */}
           <Link
             href="https://metawin.com/signin"
-            className="px-4 py-2 rounded-lg font-semibold text-sm text-white transition-all hover:opacity-90"
-            style={{
-              background: 'linear-gradient(135deg, #ec4899 0%, #f97316 100%)'
-            }}
+            className="group relative px-4 py-2 rounded-lg font-semibold text-sm bg-[var(--color-accent-blue)] text-white hover:bg-[var(--color-accent-blue-hover)] hover:text-white transition-all duration-300 overflow-hidden"
           >
-            Sign In
+            <span className="relative z-10">Sign In</span>
+            <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/25 to-transparent" />
           </Link>
 
-          {/* Settings Icon */}
-          <button className="p-2 rounded-lg hover:bg-[var(--color-bg-hover)] transition-colors">
-            <Settings className="w-5 h-5 text-[var(--color-text-secondary)]" />
-          </button>
         </div>
       </div>
     </header>

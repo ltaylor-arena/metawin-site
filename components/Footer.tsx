@@ -4,8 +4,8 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Twitter, MessageCircle, Send, Instagram, Youtube } from 'lucide-react'
-import { PortableText } from '@portabletext/react'
-import type { FooterData } from '@/app/casino/layout'
+import { PortableText, PortableTextBlock } from '@portabletext/react'
+import type { FooterData, FooterColumn } from '@/app/casino/layout'
 
 // Social icon mapping
 const socialIcons: Record<string, React.ElementType> = {
@@ -21,7 +21,7 @@ interface FooterProps {
 }
 
 // Default footer data (fallback when Sanity data unavailable)
-const defaultColumns = [
+const defaultColumns: FooterColumn[] = [
   {
     heading: 'Casino',
     links: [
@@ -113,7 +113,13 @@ export default function Footer({ data }: FooterProps) {
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             {/* Logo & Copyright */}
             <div className="flex flex-col items-center md:items-start gap-2">
-              <span className="text-xl font-bold text-white">METAWIN</span>
+              <Image
+                src="/images/metawin-logo-white.svg"
+                alt="MetaWin"
+                width={120}
+                height={24}
+                className="h-6 w-auto"
+              />
               <p className="text-sm text-[var(--color-text-muted)]">
                 {formattedCopyright}
               </p>
@@ -140,6 +146,45 @@ export default function Footer({ data }: FooterProps) {
           </div>
         </div>
         
+        {/* Crypto Coin Logos */}
+        <div className="flex flex-wrap items-center justify-center gap-6 lg:gap-8 xl:gap-10 mt-8 pt-8 border-t border-[var(--color-border)]">
+          <Image
+            src="/images/bitcoin-logo.svg"
+            alt="Bitcoin"
+            width={120}
+            height={30}
+            className="h-auto w-auto"
+          />
+          <Image
+            src="/images/usdcoin-logo.svg"
+            alt="USD Coin"
+            width={120}
+            height={30}
+            className="h-auto w-auto"
+          />
+          <Image
+            src="/images/ethereum-logo.svg"
+            alt="Ethereum"
+            width={120}
+            height={30}
+            className="h-auto w-auto"
+          />
+          <Image
+            src="/images/solana-logo.svg"
+            alt="Solana"
+            width={120}
+            height={30}
+            className="h-auto w-auto"
+          />
+          <Image
+            src="/images/litecoin-logo.svg"
+            alt="Litecoin"
+            width={120}
+            height={30}
+            className="h-auto w-auto"
+          />
+        </div>
+
         {/* Badges */}
         {badges && badges.length > 0 && (
           <div className="flex flex-wrap items-center justify-center gap-4 mt-8 pt-8 border-t border-[var(--color-border)]">
@@ -168,7 +213,7 @@ export default function Footer({ data }: FooterProps) {
         {legalText && Array.isArray(legalText) && legalText.length > 0 && (
           <div className="mt-8 pt-8 border-t border-[var(--color-border)]">
             <div className="text-xs text-[var(--color-text-muted)] leading-relaxed prose prose-invert prose-xs max-w-none">
-              <PortableText value={legalText} />
+              <PortableText value={legalText as PortableTextBlock[]} />
             </div>
           </div>
         )}

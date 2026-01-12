@@ -25,6 +25,7 @@ import {
   Crown,
   Search,
   CircleX,
+  House,
   LucideIcon
 } from 'lucide-react'
 import type { SidebarNavigation, NavItem, NavSection } from '@/app/casino/layout'
@@ -49,6 +50,7 @@ const iconMap: Record<string, LucideIcon> = {
   coins: Coins,
   crown: Crown,
   search: Search,
+  house: House,
 }
 
 interface SidebarProps {
@@ -132,7 +134,7 @@ export default function Sidebar({ navigation }: SidebarProps) {
               {section.items?.map((item, itemIndex) => (
                 <li key={itemIndex}>
                   <Link
-                    href={item.url || '#'}
+                    href={item.href || '#'}
                     className={`flex items-center ${collapsed ? 'justify-center' : ''} gap-3 px-3 py-2.5 rounded-lg text-[var(--color-text-secondary)] hover:text-white hover:bg-[var(--color-bg-hover)] transition-colors`}
                     title={collapsed ? item.label : undefined}
                   >
@@ -161,7 +163,7 @@ export default function Sidebar({ navigation }: SidebarProps) {
             {section.items?.map((item, itemIndex) => (
               <li key={itemIndex}>
                 <Link
-                  href={item.url || '#'}
+                  href={item.href || '#'}
                   className={`flex items-center ${collapsed ? 'justify-center' : ''} gap-3 px-3 py-2.5 rounded-lg text-[var(--color-text-secondary)] hover:text-white hover:bg-[var(--color-bg-hover)] transition-colors`}
                   title={collapsed ? item.label : undefined}
                 >

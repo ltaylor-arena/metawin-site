@@ -44,7 +44,7 @@ export default function Breadcrumbs({ items, className = '' }: BreadcrumbsProps)
           {/* Home */}
           <li>
             <Link 
-              href="/casino"
+              href="/casino/"
               className="flex items-center text-[var(--color-text-muted)] hover:text-white transition-colors"
             >
               <Home className="w-4 h-4" />

@@ -49,6 +49,14 @@ export default defineType({
                       name: 'url',
                       title: 'URL',
                       type: 'string',
+                      description: 'Internal links must end with /',
+                      validation: (Rule) => Rule.custom((value) => {
+                        if (!value) return true
+                        if (value.startsWith('/') && !value.endsWith('/')) {
+                          return 'Internal URLs must end with a trailing slash'
+                        }
+                        return true
+                      }),
                     }),
                     defineField({
                       name: 'internalLink',

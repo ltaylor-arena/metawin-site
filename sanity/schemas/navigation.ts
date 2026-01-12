@@ -46,6 +46,7 @@ export default defineType({
                 list: [
                   { title: 'Internal Page', value: 'internal' },
                   { title: 'Category', value: 'category' },
+                  { title: 'Game', value: 'game' },
                   { title: 'External URL', value: 'external' },
                 ],
               },
@@ -64,6 +65,13 @@ export default defineType({
               type: 'reference',
               to: [{ type: 'category' }],
               hidden: ({ parent }) => parent?.linkType !== 'category',
+            }),
+            defineField({
+              name: 'gameLink',
+              title: 'Game',
+              type: 'reference',
+              to: [{ type: 'game' }],
+              hidden: ({ parent }) => parent?.linkType !== 'game',
             }),
             defineField({
               name: 'externalUrl',
@@ -165,9 +173,45 @@ export default defineType({
                       type: 'string',
                     }),
                     defineField({
-                      name: 'url',
-                      title: 'URL',
+                      name: 'linkType',
+                      title: 'Link Type',
                       type: 'string',
+                      options: {
+                        list: [
+                          { title: 'Internal Page', value: 'internal' },
+                          { title: 'Category', value: 'category' },
+                          { title: 'Game', value: 'game' },
+                          { title: 'External URL', value: 'external' },
+                        ],
+                      },
+                      initialValue: 'internal',
+                    }),
+                    defineField({
+                      name: 'internalLink',
+                      title: 'Internal Page',
+                      type: 'reference',
+                      to: [{ type: 'page' }],
+                      hidden: ({ parent }) => parent?.linkType !== 'internal',
+                    }),
+                    defineField({
+                      name: 'categoryLink',
+                      title: 'Category',
+                      type: 'reference',
+                      to: [{ type: 'category' }],
+                      hidden: ({ parent }) => parent?.linkType !== 'category',
+                    }),
+                    defineField({
+                      name: 'gameLink',
+                      title: 'Game',
+                      type: 'reference',
+                      to: [{ type: 'game' }],
+                      hidden: ({ parent }) => parent?.linkType !== 'game',
+                    }),
+                    defineField({
+                      name: 'externalUrl',
+                      title: 'External URL',
+                      type: 'url',
+                      hidden: ({ parent }) => parent?.linkType !== 'external',
                     }),
                     defineField({
                       name: 'highlight',
@@ -184,6 +228,19 @@ export default defineType({
                       initialValue: 'none',
                     }),
                   ],
+                  preview: {
+                    select: {
+                      title: 'label',
+                      linkType: 'linkType',
+                      pageName: 'internalLink.title',
+                      categoryName: 'categoryLink.title',
+                      gameName: 'gameLink.title',
+                    },
+                    prepare: ({ title, linkType, pageName, categoryName, gameName }) => ({
+                      title: title || pageName || categoryName || gameName || 'Untitled',
+                      subtitle: linkType ? `${linkType} link` : undefined,
+                    }),
+                  },
                 },
               ],
             }),

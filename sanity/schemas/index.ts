@@ -5,25 +5,33 @@ import page from './page'
 import seo from './seo'
 import hero from './hero'
 import gameCarousel from './gameCarousel'
+import faq from './faq'
+import featureCards from './featureCards'
+import promoCard from './promoCard'
 import game from './game'
 import category from './category'
-import promo from './promo'
 import navigation from './navigation'
 import footer from './footer'
 import siteSettings from './siteSettings'
+import author from './author'
+import promotion from './promotion'
 
 export const schemaTypes = [
   // Documents
   page,
   game,
   category,
-  promo,
+  promotion,
+  author,
   siteSettings,
   navigation,
   footer,
-  
+
   // Objects (reusable components)
   seo,
   hero,
   gameCarousel,
+  faq,
+  featureCards,
+  promoCard,
 ]
