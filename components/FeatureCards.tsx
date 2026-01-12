@@ -85,7 +85,7 @@ export default function FeatureCards({
                   {feature.title}
                 </h3>
               </div>
-              <p className="text-xs text-[var(--color-text-muted)] leading-relaxed">
+              <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
                 {feature.description}
               </p>
             </div>
