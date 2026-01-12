@@ -2,6 +2,16 @@
 const nextConfig = {
   trailingSlash: true,
 
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/casino/',
+        permanent: false,
+      },
+    ]
+  },
+
   async headers() {
     return [
       {
