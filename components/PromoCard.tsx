@@ -67,7 +67,7 @@ export default function PromoCard({
           {title}
         </h3>
         {subtitle && (
-          <p className="text-sm md:text-base text-white/90 mt-2 max-w-[70%] leading-relaxed drop-shadow">
+          <p className="text-sm md:text-base text-white mt-2 max-w-[70%] leading-relaxed drop-shadow-lg">
             {subtitle}
           </p>
         )}

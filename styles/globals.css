@@ -104,9 +104,6 @@ body {
   color: var(--color-text-primary);
 }
 
-.casino-site p {
-  color: var(--color-text-secondary);
-}
 
 a {
   color: var(--color-accent-blue);
