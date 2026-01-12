@@ -212,15 +212,14 @@ export default function Sidebar({ navigation }: SidebarProps) {
           <ChevronLeft className={`w-4 h-4 text-[var(--color-text-muted)] transition-transform ${collapsed ? 'rotate-180' : ''}`} />
         </button>
 
-        {/* Search Button */}
-        <div className="p-3 border-b border-[var(--color-border)]">
+        {/* Search Button - Mobile only */}
+        <div className="p-3 border-b border-[var(--color-border)] lg:hidden">
           <button
             onClick={() => setSearchOpen(true)}
-            className={`w-full flex items-center ${collapsed ? 'justify-center' : ''} gap-3 px-3 py-2.5 rounded-lg text-[var(--color-text-secondary)] hover:text-white hover:bg-[var(--color-bg-hover)] transition-colors`}
-            title={collapsed ? 'Search' : undefined}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[var(--color-text-secondary)] hover:text-white hover:bg-[var(--color-bg-hover)] transition-colors"
           >
             <Search className="w-5 h-5" />
-            {!collapsed && <span className="text-sm">Search games...</span>}
+            <span className="text-sm">Search games...</span>
           </button>
         </div>
 

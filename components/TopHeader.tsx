@@ -9,9 +9,10 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Search, Menu } from 'lucide-react'
 import { useSidebar } from '@/contexts/SidebarContext'
+import SearchModal from './SearchModal'
 
 export default function TopHeader() {
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchOpen, setSearchOpen] = useState(false)
   const { toggleMobile } = useSidebar()
 
   return (
@@ -37,24 +38,26 @@ export default function TopHeader() {
           />
         </Link>
 
-        {/* Search Bar - Center */}
+        {/* Search Bar - Center (clickable to open modal) */}
         <div className="hidden md:flex flex-1 max-w-xl mx-8">
-          <div className="relative w-full">
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="relative w-full text-left"
+          >
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-text-muted)]" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search any game or provider"
-              className="w-full pl-10 pr-4 py-2 rounded-lg bg-[var(--color-bg-secondary)] border border-[var(--color-border)] text-white text-sm placeholder:text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-accent-blue)] transition-colors"
-            />
-          </div>
+            <div className="w-full pl-10 pr-4 py-2 rounded-lg bg-[var(--color-bg-secondary)] border border-[var(--color-border)] text-sm text-[var(--color-text-muted)] hover:border-[var(--color-accent-blue)] transition-colors cursor-text">
+              Search any game or provider
+            </div>
+          </button>
         </div>
 
         {/* Right Actions */}
         <div className="flex items-center gap-3">
           {/* Mobile Search Button */}
-          <button className="md:hidden p-2 rounded-lg hover:bg-[var(--color-bg-hover)] transition-colors">
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="md:hidden p-2 rounded-lg hover:bg-[var(--color-bg-hover)] transition-colors"
+          >
             <Search className="w-5 h-5 text-[var(--color-text-secondary)]" />
           </button>
 
@@ -69,6 +72,9 @@ export default function TopHeader() {
 
         </div>
       </div>
+
+      {/* Search Modal */}
+      <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   )
 }
