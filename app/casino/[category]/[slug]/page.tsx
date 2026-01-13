@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { client } from '@/lib/sanity'
+import { client, urlFor } from '@/lib/sanity'
 import { gameBySlugQuery, allGamesWithCategoriesQuery, gamesByProviderQuery } from '@/lib/queries'
 import { PortableText } from '@portabletext/react'
 import { portableTextComponents } from '@/components/PortableTextComponents'
@@ -116,7 +116,12 @@ export default async function GamePage({ params }: GamePageProps) {
             ) : game.thumbnail ? (
               <div className="relative aspect-video rounded-xl overflow-hidden bg-[var(--color-bg-secondary)]">
                 <Image
-                  src={game.thumbnail}
+                  src={urlFor(game.thumbnail)
+                    .width(1200)
+                    .height(675)
+                    .fit('crop')
+                    .auto('format')
+                    .url()}
                   alt={game.title}
                   fill
                   className="object-cover"

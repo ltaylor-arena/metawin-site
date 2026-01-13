@@ -69,7 +69,7 @@ export const homepageQuery = groq`
           title,
           "slug": slug.current,
           "categorySlug": categories[0]->slug.current,
-          "thumbnail": thumbnail.asset->url,
+          thumbnail,
           provider,
           rtp,
           volatility
@@ -180,6 +180,7 @@ export const sidebarNavigationQuery = groq`
         icon,
         linkType,
         "href": select(
+          linkType == "internal" && internalLink->isHomepage == true => "/casino/",
           linkType == "internal" => "/casino/" + internalLink->slug.current + "/",
           linkType == "category" => "/casino/" + categoryLink->slug.current + "/",
           linkType == "external" => externalUrl
@@ -198,6 +199,7 @@ export const sidebarNavigationQuery = groq`
           icon,
           linkType,
           "href": select(
+            linkType == "internal" && internalLink->isHomepage == true => "/casino/",
             linkType == "internal" => "/casino/" + internalLink->slug.current + "/",
             linkType == "category" => "/casino/" + categoryLink->slug.current + "/",
             linkType == "game" => "/casino/" + gameLink->categories[0]->slug.current + "/" + gameLink->slug.current + "/",
@@ -279,7 +281,7 @@ export const gameBySlugQuery = groq`
     releaseDate,
 
     // Media
-    "thumbnail": thumbnail.asset->url,
+    thumbnail,
     "screenshots": screenshots[] {
       asset,
       alt
@@ -382,7 +384,7 @@ export const gamesByCategoryQuery = groq`
     _id,
     title,
     "slug": slug.current,
-    "thumbnail": thumbnail.asset->url,
+    thumbnail,
     provider,
     rtp,
     volatility,
@@ -407,7 +409,7 @@ export const gamesByProviderQuery = groq`
     title,
     "slug": slug.current,
     "categorySlug": categories[0]->slug.current,
-    "thumbnail": thumbnail.asset->url,
+    thumbnail,
     provider,
     rtp,
     volatility
@@ -526,7 +528,7 @@ export const searchGamesQuery = groq`
     title,
     "slug": slug.current,
     "categorySlug": categories[0]->slug.current,
-    "thumbnail": thumbnail.asset->url,
+    thumbnail,
     provider
   }
 `

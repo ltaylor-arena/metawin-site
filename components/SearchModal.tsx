@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom'
 import { Search, X, Loader2 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { client } from '@/lib/sanity'
+import { client, urlFor } from '@/lib/sanity'
 import { searchGamesQuery } from '@/lib/queries'
 
 interface SearchResult {
@@ -13,7 +13,7 @@ interface SearchResult {
   title: string
   slug: string
   categorySlug: string
-  thumbnail?: string
+  thumbnail?: any // Sanity image reference
   provider?: string
 }
 
@@ -144,7 +144,12 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                     <div className="relative w-12 h-16 rounded-lg overflow-hidden bg-[var(--color-bg-tertiary)] flex-shrink-0">
                       {game.thumbnail ? (
                         <Image
-                          src={game.thumbnail}
+                          src={urlFor(game.thumbnail)
+                            .width(96)
+                            .height(128)
+                            .fit('crop')
+                            .auto('format')
+                            .url()}
                           alt={game.title}
                           fill
                           className="object-cover"

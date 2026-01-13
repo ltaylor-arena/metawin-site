@@ -110,10 +110,7 @@ export default async function CasinoHomePage() {
               <GameCarousel
                 key={block._key}
                 title={block.title}
-                games={block.games?.map((game: any) => ({
-                  ...game,
-                  thumbnail: { url: game.thumbnail, alt: game.title }
-                })) || []}
+                games={block.games || []}
                 showWinAmounts={block.showWinAmounts}
                 cardSize={block.cardSize}
               />

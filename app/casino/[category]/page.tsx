@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { client } from '@/lib/sanity'
+import { client, urlFor } from '@/lib/sanity'
 import { categoryBySlugQuery, gamesByCategoryQuery, allCategoriesQuery } from '@/lib/queries'
 import { PortableText } from '@portabletext/react'
 import { portableTextComponents } from '@/components/PortableTextComponents'
@@ -108,7 +108,12 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                   <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-[var(--color-bg-secondary)]">
                     {game.thumbnail ? (
                       <Image
-                        src={game.thumbnail}
+                        src={urlFor(game.thumbnail)
+                          .width(400)
+                          .height(534)
+                          .fit('crop')
+                          .auto('format')
+                          .url()}
                         alt={game.title}
                         fill
                         className="object-cover transition-transform duration-300 group-hover:scale-105"

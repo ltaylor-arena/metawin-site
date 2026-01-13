@@ -7,15 +7,13 @@ import { useRef, useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight, Play } from 'lucide-react'
+import { urlFor } from '@/lib/sanity'
 
 interface Game {
   title: string
   slug: string
   categorySlug?: string
-  thumbnail: {
-    url: string
-    alt?: string
-  }
+  thumbnail: any // Sanity image reference
   provider?: string
   rtp?: number
   volatility?: 'low' | 'medium' | 'high'
@@ -48,6 +46,13 @@ export default function GameCarousel({
     small: 'w-32 md:w-36',
     medium: 'w-36 md:w-44',
     large: 'w-44 md:w-56',
+  }
+
+  // Image sizes for each card size (2x for retina)
+  const imageSizes = {
+    small: { width: 288, height: 384 },
+    medium: { width: 352, height: 470 },
+    large: { width: 448, height: 598 },
   }
   
   const checkScroll = () => {
@@ -159,8 +164,13 @@ export default function GameCarousel({
               {/* Thumbnail */}
               <div className="relative aspect-[3/4] overflow-hidden rounded-xl">
                 <Image
-                  src={game.thumbnail.url}
-                  alt={game.thumbnail.alt || game.title}
+                  src={urlFor(game.thumbnail)
+                    .width(imageSizes[cardSize].width)
+                    .height(imageSizes[cardSize].height)
+                    .fit('crop')
+                    .auto('format')
+                    .url()}
+                  alt={game.title}
                   fill
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
                 />

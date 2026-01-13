@@ -3,12 +3,13 @@
 
 import Image from 'next/image'
 import { Check } from 'lucide-react'
+import { urlFor } from '@/lib/sanity'
 
 interface QuickSummaryProps {
   title: string
   intro: string
   highlights?: string[]
-  thumbnail?: string
+  thumbnail?: any // Sanity image reference
   isNew?: boolean
   isFeatured?: boolean
 }
@@ -37,7 +38,12 @@ export default function QuickSummary({
           <div className="flex-shrink-0 w-20 sm:w-24 md:w-28">
             <div className="relative aspect-[3/4] rounded-lg overflow-hidden bg-[var(--color-bg-primary)]">
               <Image
-                src={thumbnail}
+                src={urlFor(thumbnail)
+                  .width(224)
+                  .height(300)
+                  .fit('crop')
+                  .auto('format')
+                  .url()}
                 alt={title}
                 fill
                 className="object-cover"

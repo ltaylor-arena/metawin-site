@@ -4,13 +4,14 @@ import { useRef, useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight, Play } from 'lucide-react'
+import { urlFor } from '@/lib/sanity'
 
 interface Game {
   _id: string
   title: string
   slug: string
   categorySlug: string
-  thumbnail: string
+  thumbnail: any // Sanity image reference
   provider: string
   rtp?: number
   volatility?: 'low' | 'medium' | 'high'
@@ -112,7 +113,12 @@ export default function ProviderGamesCarousel({ provider, games }: ProviderGames
               {/* Thumbnail */}
               <div className="relative aspect-[3/4] overflow-hidden rounded-xl">
                 <Image
-                  src={game.thumbnail}
+                  src={urlFor(game.thumbnail)
+                    .width(352)
+                    .height(470)
+                    .fit('crop')
+                    .auto('format')
+                    .url()}
                   alt={game.title}
                   fill
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
