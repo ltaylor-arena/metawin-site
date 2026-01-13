@@ -384,7 +384,7 @@ export const allCategoriesQuery = groq`
 
 // Get all categories with their recent games for games index page
 export const categoriesWithGamesQuery = groq`
-  *[_type == "category"] | order(title asc) {
+  *[_type == "category"] | order(coalesce(order, 999) asc, title asc) {
     _id,
     title,
     "slug": slug.current,
