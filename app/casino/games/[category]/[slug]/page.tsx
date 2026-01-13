@@ -75,7 +75,8 @@ export default async function GamePage({ params }: GamePageProps) {
 
   // Build breadcrumb items
   const breadcrumbItems = [
-    { label: gameCategory?.title || game.categories?.[0]?.title || 'Games', href: `/casino/games/${category}/` },
+    { label: 'Games', href: '/casino/games/' },
+    { label: gameCategory?.title || game.categories?.[0]?.title || 'Category', href: `/casino/games/${category}/` },
     { label: game.seo?.breadcrumbText || game.title },
   ]
 

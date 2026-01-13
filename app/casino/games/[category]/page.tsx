@@ -59,6 +59,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   // Build breadcrumb items
   const breadcrumbItems = [
+    { label: 'Games', href: '/casino/games/' },
     { label: categoryData.seo?.breadcrumbText || categoryData.title },
   ]
 
