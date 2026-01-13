@@ -183,7 +183,7 @@ export const sidebarNavigationQuery = groq`
         "href": select(
           linkType == "internal" && internalLink->isHomepage == true => "/casino/",
           linkType == "internal" => "/casino/" + internalLink->slug.current + "/",
-          linkType == "category" => "/casino/" + categoryLink->slug.current + "/",
+          linkType == "category" => "/casino/games/" + categoryLink->slug.current + "/",
           linkType == "external" => externalUrl
         ),
         highlight
@@ -202,8 +202,8 @@ export const sidebarNavigationQuery = groq`
           "href": select(
             linkType == "internal" && internalLink->isHomepage == true => "/casino/",
             linkType == "internal" => "/casino/" + internalLink->slug.current + "/",
-            linkType == "category" => "/casino/" + categoryLink->slug.current + "/",
-            linkType == "game" => "/casino/" + gameLink->categories[0]->slug.current + "/" + gameLink->slug.current + "/",
+            linkType == "category" => "/casino/games/" + categoryLink->slug.current + "/",
+            linkType == "game" => "/casino/games/" + gameLink->categories[0]->slug.current + "/" + gameLink->slug.current + "/",
             linkType == "external" => externalUrl
           ),
           highlight

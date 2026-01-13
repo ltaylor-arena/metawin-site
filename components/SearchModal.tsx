@@ -136,7 +136,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                 {results.map((game) => (
                   <Link
                     key={game._id}
-                    href={`/casino/${game.categorySlug}/${game.slug}/`}
+                    href={`/casino/games/${game.categorySlug}/${game.slug}/`}
                     onClick={handleClose}
                     className="flex items-center gap-4 p-3 rounded-lg hover:bg-[var(--color-bg-hover)] transition-colors"
                   >

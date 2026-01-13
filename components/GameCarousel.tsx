@@ -157,7 +157,7 @@ export default function GameCarousel({
         {games.map((game, index) => (
           <Link
             key={index}
-            href={`/casino/${game.categorySlug || 'games'}/${game.slug}/`}
+            href={`/casino/games/${game.categorySlug || 'slots'}/${game.slug}/`}
             className={`${cardWidths[cardSize]} flex-shrink-0 group`}
           >
             <div className="game-card">

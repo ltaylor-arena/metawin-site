@@ -75,12 +75,12 @@ export default async function GamePage({ params }: GamePageProps) {
 
   // Build breadcrumb items
   const breadcrumbItems = [
-    { label: gameCategory?.title || game.categories?.[0]?.title || 'Games', href: `/casino/${category}/` },
+    { label: gameCategory?.title || game.categories?.[0]?.title || 'Games', href: `/casino/games/${category}/` },
     { label: game.seo?.breadcrumbText || game.title },
   ]
 
   // Construct page URL for structured data
-  const pageUrl = `https://metawin.com/casino/${category}/${slug}/`
+  const pageUrl = `https://metawin.com/casino/games/${category}/${slug}/`
 
   return (
     <div className="min-h-screen">

@@ -106,7 +106,7 @@ export default function ProviderGamesCarousel({ provider, games }: ProviderGames
         {games.map((game) => (
           <Link
             key={game._id}
-            href={`/casino/${game.categorySlug}/${game.slug}/`}
+            href={`/casino/games/${game.categorySlug}/${game.slug}/`}
             className="w-36 md:w-44 flex-shrink-0 group"
           >
             <div className="game-card">

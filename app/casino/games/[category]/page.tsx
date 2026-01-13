@@ -100,7 +100,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             {games.map((game: any) => (
               <Link
                 key={game._id}
-                href={`/casino/${category}/${game.slug}/`}
+                href={`/casino/games/${category}/${game.slug}/`}
                 className="group"
               >
                 <div className="game-card">
