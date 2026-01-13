@@ -382,6 +382,25 @@ export const allCategoriesQuery = groq`
   }
 `
 
+// Get all categories with their recent games for games index page
+export const categoriesWithGamesQuery = groq`
+  *[_type == "category"] | order(title asc) {
+    _id,
+    title,
+    "slug": slug.current,
+    "games": *[_type == "game" && references(^._id)] | order(_createdAt desc)[0...6] {
+      _id,
+      title,
+      "slug": slug.current,
+      "categorySlug": ^.slug.current,
+      thumbnail,
+      provider,
+      rtp,
+      volatility
+    }
+  }
+`
+
 // Get games by category slug
 export const gamesByCategoryQuery = groq`
   *[_type == "game" && $categorySlug in categories[]->slug.current] {
