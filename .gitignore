@@ -42,3 +42,6 @@
 
 # Claude
 .claude/
+
+# MCP tooling
+.playwright-mcp/
