@@ -268,6 +268,15 @@ export default defineType({
       type: 'seo',
       group: 'seo',
     }),
+
+    // Structured Data
+    defineField({
+      name: 'organizationSchema',
+      title: 'Organization Schema',
+      type: 'organizationSchema',
+      group: 'seo',
+      description: 'Add Organization structured data to this page (typically only needed on homepage)',
+    }),
   ],
   
   preview: {

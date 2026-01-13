@@ -27,6 +27,7 @@ export const homepageQuery = groq`
       noIndex,
       "ogImage": ogImage.asset->url
     },
+    organizationSchema,
     content[] {
       _type,
       _key,
@@ -322,7 +323,10 @@ export const gameBySlugQuery = groq`
       canonicalUrl,
       noIndex,
       "ogImage": ogImage.asset->url
-    }
+    },
+
+    // Structured Data
+    gameSchema
   }
 `
 

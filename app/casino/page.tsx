@@ -8,6 +8,7 @@ import FeatureCards from '@/components/FeatureCards'
 import Tabs from '@/components/Tabs'
 import FAQ from '@/components/FAQ'
 import PromoCard from '@/components/PromoCard'
+import { OrganizationStructuredData } from '@/components/StructuredData'
 
 async function getHomepage() {
   return await client.fetch(homepageQuery)
@@ -41,6 +42,9 @@ export default async function CasinoHomePage() {
   
   return (
     <div className="min-h-screen">
+      {/* Structured Data */}
+      <OrganizationStructuredData data={page.organizationSchema} />
+
       {page.content?.map((block: any) => {
         switch (block._type) {
           case 'hero':

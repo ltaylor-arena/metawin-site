@@ -15,6 +15,8 @@ import footer from './footer'
 import siteSettings from './siteSettings'
 import author from './author'
 import promotion from './promotion'
+import organizationSchema from './organizationSchema'
+import gameSchema from './gameSchema'
 
 export const schemaTypes = [
   // Documents
@@ -34,4 +36,6 @@ export const schemaTypes = [
   faq,
   featureCards,
   promoCard,
+  organizationSchema,
+  gameSchema,
 ]

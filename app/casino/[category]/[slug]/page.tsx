@@ -14,6 +14,7 @@ import AuthorBio from '@/components/AuthorBio'
 import AuthorByline from '@/components/AuthorByline'
 import FAQ from '@/components/FAQ'
 import ProviderGamesCarousel from '@/components/ProviderGamesCarousel'
+import { GameStructuredData } from '@/components/StructuredData'
 
 interface GamePageProps {
   params: Promise<{ category: string; slug: string }>
@@ -78,8 +79,28 @@ export default async function GamePage({ params }: GamePageProps) {
     { label: game.seo?.breadcrumbText || game.title },
   ]
 
+  // Construct page URL for structured data
+  const pageUrl = `https://metawin.com/casino/${category}/${slug}/`
+
   return (
     <div className="min-h-screen">
+      {/* Structured Data */}
+      <GameStructuredData
+        schemaData={game.gameSchema}
+        gameData={{
+          title: game.title,
+          slug: game.slug,
+          provider: game.provider,
+          thumbnail: game.thumbnail,
+          rtp: game.rtp,
+          volatility: game.volatility,
+          description: game.description,
+          externalGameUrl: game.externalGameUrl,
+          categories: game.categories,
+        }}
+        pageUrl={pageUrl}
+      />
+
       {/* Breadcrumbs */}
       <div className="px-4 md:px-6 pt-4">
         <Breadcrumbs items={breadcrumbItems} />

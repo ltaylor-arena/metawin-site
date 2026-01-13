@@ -345,6 +345,15 @@ export default defineType({
       type: 'seo',
       group: 'seo',
     }),
+
+    // Structured Data
+    defineField({
+      name: 'gameSchema',
+      title: 'Game Schema',
+      type: 'gameSchema',
+      group: 'seo',
+      description: 'Structured data settings for this game (auto-generates from game details)',
+    }),
   ],
   preview: {
     select: {
