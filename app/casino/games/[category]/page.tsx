@@ -164,10 +164,6 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
             {categoryData.description}
           </p>
         )}
-        {/* Games count */}
-        <p className="text-sm text-[var(--color-text-muted)] mt-2">
-          Showing {start + 1}–{Math.min(end, totalGames)} of {totalGames} games
-        </p>
       </header>
 
       {/* Main Content */}
@@ -270,6 +266,13 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
           <div className="text-center py-12">
             <p className="text-[var(--color-text-muted)]">No games found in this category.</p>
           </div>
+        )}
+
+        {/* Games count */}
+        {totalGames > 0 && (
+          <p className="text-sm text-[var(--color-text-muted)] text-center mt-6">
+            Showing {start + 1}–{Math.min(end, totalGames)} of {totalGames} games
+          </p>
         )}
 
         {/* Pagination */}
