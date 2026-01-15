@@ -74,10 +74,12 @@ export const homepageQuery = groq`
           provider,
           rtp,
           volatility,
+          isNew,
+          isFeatured,
           "hasContent": count(description) > 0
         }
       },
-      
+
       // Tab section
       _type == "tabSection" => {
         tabs[] {
@@ -197,6 +199,8 @@ export const pageBySlugQuery = groq`
           provider,
           rtp,
           volatility,
+          isNew,
+          isFeatured,
           "hasContent": count(description) > 0
         }
       },
@@ -495,6 +499,8 @@ export const categoriesWithGamesQuery = groq`
       provider,
       rtp,
       volatility,
+      isNew,
+      isFeatured,
       "hasContent": count(description) > 0
     }
   }

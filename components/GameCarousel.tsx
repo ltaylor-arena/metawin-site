@@ -20,6 +20,8 @@ interface Game {
   winAmount?: string
   winner?: string
   hasContent?: boolean
+  isNew?: boolean
+  isFeatured?: boolean
 }
 
 interface GameCarouselProps {
@@ -83,7 +85,7 @@ export default function GameCarousel({
   }
   
   return (
-    <section className="py-6">
+    <section className="py-6 overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between mb-4 px-4 md:px-6">
         <h2 className="text-xl md:text-2xl font-bold text-white">{title}</h2>
@@ -179,6 +181,22 @@ export default function GameCarousel({
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
                   />
+
+                  {/* Badges */}
+                  {(game.isNew || game.isFeatured) && (
+                    <div className="absolute top-2 left-2 flex gap-1">
+                      {game.isNew && (
+                        <span className="px-2 py-1 bg-green-500 text-white text-xs font-bold rounded">
+                          NEW
+                        </span>
+                      )}
+                      {game.isFeatured && (
+                        <span className="px-2 py-1 bg-[var(--color-accent-blue)] text-white text-xs font-bold rounded">
+                          HOT
+                        </span>
+                      )}
+                    </div>
+                  )}
 
                   {/* Hover Overlay with Action Buttons */}
                   <div className="game-card-overlay flex flex-col items-center justify-center gap-2 px-3">
