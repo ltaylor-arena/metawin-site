@@ -159,7 +159,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
             />
           )}
         </div>
-        {categoryData.description && currentPage === 1 && (
+        {categoryData.description && (
           <p className="text-[var(--color-text-muted)] mt-2 max-w-3xl">
             {categoryData.description}
           </p>
