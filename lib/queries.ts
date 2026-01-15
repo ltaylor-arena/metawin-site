@@ -58,13 +58,19 @@ export const homepageQuery = groq`
           link
         }
       },
-      
+
       // Game carousel
       _type == "gameCarousel" => {
         title,
         displayMode,
         showWinAmounts,
         cardSize,
+        "viewAllHref": select(
+          viewAllLink->_type == "page" && viewAllLink->isHomepage == true => "/casino/",
+          viewAllLink->_type == "page" => "/casino/" + viewAllLink->slug.current + "/",
+          viewAllLink->_type == "category" => "/casino/games/" + viewAllLink->slug.current + "/",
+          null
+        ),
         "categorySlug": category->slug.current,
         "games": select(
           displayMode == "category" => *[_type == "game" && references(^.category._ref)] | order(isFeatured desc, title asc)[0...12] {
@@ -232,6 +238,12 @@ export const pageBySlugQuery = groq`
         displayMode,
         showWinAmounts,
         cardSize,
+        "viewAllHref": select(
+          viewAllLink->_type == "page" && viewAllLink->isHomepage == true => "/casino/",
+          viewAllLink->_type == "page" => "/casino/" + viewAllLink->slug.current + "/",
+          viewAllLink->_type == "category" => "/casino/games/" + viewAllLink->slug.current + "/",
+          null
+        ),
         "categorySlug": category->slug.current,
         "games": select(
           displayMode == "category" => *[_type == "game" && references(^.category._ref)] | order(isFeatured desc, title asc)[0...12] {

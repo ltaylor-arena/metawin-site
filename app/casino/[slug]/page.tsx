@@ -175,6 +175,7 @@ export default async function Page({ params }: PageProps) {
                     games={block.games || []}
                     showWinAmounts={block.showWinAmounts}
                     cardSize={block.cardSize}
+                    viewAllHref={block.viewAllHref}
                     signUpUrl={siteSettings?.signUpUrl}
                   />
                 </section>

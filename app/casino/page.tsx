@@ -124,6 +124,7 @@ export default async function CasinoHomePage() {
                 games={block.games || []}
                 showWinAmounts={block.showWinAmounts}
                 cardSize={block.cardSize}
+                viewAllHref={block.viewAllHref}
                 signUpUrl={siteSettings?.signUpUrl}
               />
             )
