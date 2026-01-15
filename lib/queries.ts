@@ -442,6 +442,7 @@ export const categoryBySlugQuery = groq`
     title,
     "slug": slug.current,
     description,
+    gamesPerPage,
     additionalContent,
     faq[] {
       _key,
@@ -514,6 +515,28 @@ export const gamesByCategoryQuery = groq`
     isFeatured,
     "hasContent": count(description) > 0
   } | order(isFeatured desc, title asc)
+`
+
+// Get paginated games by category slug
+export const gamesByCategoryPaginatedQuery = groq`
+  *[_type == "game" && $categorySlug in categories[]->slug.current] | order(isFeatured desc, title asc) [$start...$end] {
+    _id,
+    title,
+    "slug": slug.current,
+    "categorySlug": $categorySlug,
+    thumbnail,
+    provider,
+    rtp,
+    volatility,
+    isNew,
+    isFeatured,
+    "hasContent": count(description) > 0
+  }
+`
+
+// Get total count of games in a category
+export const gamesByCategoryCountQuery = groq`
+  count(*[_type == "game" && $categorySlug in categories[]->slug.current])
 `
 
 // Get all games with their category slugs for static generation

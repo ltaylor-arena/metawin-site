@@ -55,6 +55,15 @@ export default defineType({
       description: 'Lower numbers appear first in navigation',
     }),
     defineField({
+      name: 'gamesPerPage',
+      title: 'Games Per Page',
+      type: 'number',
+      group: 'basic',
+      description: 'Number of games to show per page (default: 24)',
+      initialValue: 24,
+      validation: (Rule) => Rule.min(6).max(60).integer(),
+    }),
+    defineField({
       name: 'showInNav',
       title: 'Show in Navigation',
       type: 'boolean',

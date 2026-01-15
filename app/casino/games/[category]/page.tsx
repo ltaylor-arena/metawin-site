@@ -3,24 +3,32 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { client, urlFor } from '@/lib/sanity'
-import { categoryBySlugQuery, gamesByCategoryQuery, allCategoriesQuery, siteSettingsQuery } from '@/lib/queries'
+import { categoryBySlugQuery, gamesByCategoryPaginatedQuery, gamesByCategoryCountQuery, allCategoriesQuery, siteSettingsQuery } from '@/lib/queries'
 import { PortableText } from '@portabletext/react'
 import { portableTextComponents } from '@/components/PortableTextComponents'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import AuthorByline from '@/components/AuthorByline'
 import AuthorBio from '@/components/AuthorBio'
 import FAQ from '@/components/FAQ'
+import Pagination from '@/components/Pagination'
+
+const DEFAULT_GAMES_PER_PAGE = 24
 
 interface CategoryPageProps {
   params: Promise<{ category: string }>
+  searchParams: Promise<{ page?: string }>
 }
 
 async function getCategory(slug: string) {
   return await client.fetch(categoryBySlugQuery, { slug })
 }
 
-async function getGamesByCategory(categorySlug: string) {
-  return await client.fetch(gamesByCategoryQuery, { categorySlug })
+async function getGamesByCategory(categorySlug: string, start: number, end: number) {
+  return await client.fetch(gamesByCategoryPaginatedQuery, { categorySlug, start, end })
+}
+
+async function getGamesCount(categorySlug: string) {
+  return await client.fetch(gamesByCategoryCountQuery, { categorySlug })
 }
 
 async function getSiteSettings() {
@@ -34,8 +42,9 @@ export async function generateStaticParams() {
   }))
 }
 
-export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: CategoryPageProps): Promise<Metadata> {
   const { category } = await params
+  const { page } = await searchParams
   const categoryData = await getCategory(category)
 
   if (!categoryData) {
@@ -44,15 +53,50 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
     }
   }
 
+  const currentPage = Math.max(1, parseInt(page || '1', 10) || 1)
+  const gamesPerPage = categoryData.gamesPerPage || DEFAULT_GAMES_PER_PAGE
+  const totalGames = await getGamesCount(category)
+  const totalPages = Math.ceil(totalGames / gamesPerPage)
+
+  const basePath = `/casino/games/${category}/`
+  const baseTitle = categoryData.seo?.metaTitle || `${categoryData.title} | MetaWin Casino`
+  const baseDescription = categoryData.seo?.metaDescription || `Play the best ${categoryData.title} games at MetaWin Casino.`
+
+  // Build title with page number for pages > 1
+  const title = currentPage > 1 ? `${baseTitle} - Page ${currentPage}` : baseTitle
+
+  // Build canonical and prev/next URLs
+  const canonicalUrl = currentPage === 1 ? basePath : `${basePath}?page=${currentPage}`
+
+  const alternates: Metadata['alternates'] = {
+    canonical: canonicalUrl,
+  }
+
+  // Build link headers for prev/next (for SEO)
+  const otherMeta: Array<{ rel: string; href: string }> = []
+
+  if (currentPage > 1) {
+    const prevUrl = currentPage === 2 ? basePath : `${basePath}?page=${currentPage - 1}`
+    otherMeta.push({ rel: 'prev', href: prevUrl })
+  }
+
+  if (currentPage < totalPages) {
+    otherMeta.push({ rel: 'next', href: `${basePath}?page=${currentPage + 1}` })
+  }
+
   return {
-    title: categoryData.seo?.metaTitle || `${categoryData.title} | MetaWin Casino`,
-    description: categoryData.seo?.metaDescription || `Play the best ${categoryData.title} games at MetaWin Casino.`,
-    robots: { index: false, follow: false },
+    title,
+    description: baseDescription,
+    alternates,
+    robots: { index: true, follow: true },
+    other: otherMeta.length > 0 ? Object.fromEntries(otherMeta.map(m => [m.rel, m.href])) : undefined,
   }
 }
 
-export default async function CategoryPage({ params }: CategoryPageProps) {
+export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {
   const { category } = await params
+  const { page } = await searchParams
+
   const [categoryData, siteSettings] = await Promise.all([
     getCategory(category),
     getSiteSettings()
@@ -62,8 +106,26 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     notFound()
   }
 
-  const games = await getGamesByCategory(category)
+  // Pagination setup
+  const currentPage = Math.max(1, parseInt(page || '1', 10) || 1)
+  const gamesPerPage = categoryData.gamesPerPage || DEFAULT_GAMES_PER_PAGE
+  const start = (currentPage - 1) * gamesPerPage
+  const end = start + gamesPerPage
+
+  // Fetch games and count in parallel
+  const [games, totalGames] = await Promise.all([
+    getGamesByCategory(category, start, end),
+    getGamesCount(category)
+  ])
+
+  const totalPages = Math.ceil(totalGames / gamesPerPage)
   const signUpUrl = siteSettings?.signUpUrl || 'https://metawin.com/signup'
+  const basePath = `/casino/games/${category}/`
+
+  // Redirect to page 1 if page is out of bounds
+  if (currentPage > totalPages && totalPages > 0) {
+    notFound()
+  }
 
   // Build breadcrumb items
   const breadcrumbItems = [
@@ -83,6 +145,11 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         <div className="flex flex-col xl:flex-row xl:items-baseline xl:justify-between gap-1 xl:gap-4">
           <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">
             {categoryData.title}
+            {currentPage > 1 && (
+              <span className="text-[var(--color-text-muted)] font-normal text-lg md:text-xl ml-2">
+                — Page {currentPage}
+              </span>
+            )}
           </h1>
           {categoryData.showAuthorInfo && categoryData.author && (
             <AuthorByline
@@ -92,11 +159,15 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             />
           )}
         </div>
-        {categoryData.description && (
+        {categoryData.description && currentPage === 1 && (
           <p className="text-[var(--color-text-muted)] mt-2 max-w-3xl">
             {categoryData.description}
           </p>
         )}
+        {/* Games count */}
+        <p className="text-sm text-[var(--color-text-muted)] mt-2">
+          Showing {start + 1}–{Math.min(end, totalGames)} of {totalGames} games
+        </p>
       </header>
 
       {/* Main Content */}
@@ -201,15 +272,22 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           </div>
         )}
 
-        {/* Additional Content */}
-        {categoryData.additionalContent && categoryData.additionalContent.length > 0 && (
+        {/* Pagination */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          basePath={basePath}
+        />
+
+        {/* Additional Content - only show on page 1 */}
+        {currentPage === 1 && categoryData.additionalContent && categoryData.additionalContent.length > 0 && (
           <div className="prose prose-invert prose-sm md:prose-base max-w-none mt-8">
             <PortableText value={categoryData.additionalContent} components={portableTextComponents} />
           </div>
         )}
 
-        {/* FAQ Section */}
-        {categoryData.faq && categoryData.faq.length > 0 && (
+        {/* FAQ Section - only show on page 1 */}
+        {currentPage === 1 && categoryData.faq && categoryData.faq.length > 0 && (
           <div className="mt-8">
             <FAQ
               heading={`${categoryData.title} FAQ`}
@@ -218,8 +296,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           </div>
         )}
 
-        {/* Author Bio */}
-        {categoryData.showAuthorInfo && categoryData.author && (
+        {/* Author Bio - only show on page 1 */}
+        {currentPage === 1 && categoryData.showAuthorInfo && categoryData.author && (
           <div id="author" className="mt-8">
             <AuthorBio author={categoryData.author} />
           </div>
