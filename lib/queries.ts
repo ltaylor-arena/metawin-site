@@ -65,19 +65,61 @@ export const homepageQuery = groq`
         displayMode,
         showWinAmounts,
         cardSize,
-        "games": games[]-> {
-          _id,
-          title,
-          "slug": slug.current,
-          "categorySlug": categories[0]->slug.current,
-          thumbnail,
-          provider,
-          rtp,
-          volatility,
-          isNew,
-          isFeatured,
-          "hasContent": count(description) > 0
-        }
+        "categorySlug": category->slug.current,
+        "games": select(
+          displayMode == "category" => *[_type == "game" && references(^.category._ref)] | order(isFeatured desc, title asc)[0...12] {
+            _id,
+            title,
+            "slug": slug.current,
+            "categorySlug": categories[0]->slug.current,
+            thumbnail,
+            provider,
+            rtp,
+            volatility,
+            isNew,
+            isFeatured,
+            "hasContent": count(description) > 0
+          },
+          displayMode == "latest" => *[_type == "game"] | order(_createdAt desc)[0...12] {
+            _id,
+            title,
+            "slug": slug.current,
+            "categorySlug": categories[0]->slug.current,
+            thumbnail,
+            provider,
+            rtp,
+            volatility,
+            isNew,
+            isFeatured,
+            "hasContent": count(description) > 0
+          },
+          displayMode == "popular" => *[_type == "game" && isFeatured == true] | order(title asc)[0...12] {
+            _id,
+            title,
+            "slug": slug.current,
+            "categorySlug": categories[0]->slug.current,
+            thumbnail,
+            provider,
+            rtp,
+            volatility,
+            isNew,
+            isFeatured,
+            "hasContent": count(description) > 0
+          },
+          games[]-> {
+            _id,
+            title,
+            "slug": slug.current,
+            "categorySlug": categories[0]->slug.current,
+            thumbnail,
+            provider,
+            rtp,
+            volatility,
+            isNew,
+            isFeatured,
+            "hasContent": count(description) > 0
+          }
+        )
       },
 
       // Tab section
@@ -190,19 +232,61 @@ export const pageBySlugQuery = groq`
         displayMode,
         showWinAmounts,
         cardSize,
-        "games": games[]-> {
-          _id,
-          title,
-          "slug": slug.current,
-          "categorySlug": categories[0]->slug.current,
-          thumbnail,
-          provider,
-          rtp,
-          volatility,
-          isNew,
-          isFeatured,
-          "hasContent": count(description) > 0
-        }
+        "categorySlug": category->slug.current,
+        "games": select(
+          displayMode == "category" => *[_type == "game" && references(^.category._ref)] | order(isFeatured desc, title asc)[0...12] {
+            _id,
+            title,
+            "slug": slug.current,
+            "categorySlug": categories[0]->slug.current,
+            thumbnail,
+            provider,
+            rtp,
+            volatility,
+            isNew,
+            isFeatured,
+            "hasContent": count(description) > 0
+          },
+          displayMode == "latest" => *[_type == "game"] | order(_createdAt desc)[0...12] {
+            _id,
+            title,
+            "slug": slug.current,
+            "categorySlug": categories[0]->slug.current,
+            thumbnail,
+            provider,
+            rtp,
+            volatility,
+            isNew,
+            isFeatured,
+            "hasContent": count(description) > 0
+          },
+          displayMode == "popular" => *[_type == "game" && isFeatured == true] | order(title asc)[0...12] {
+            _id,
+            title,
+            "slug": slug.current,
+            "categorySlug": categories[0]->slug.current,
+            thumbnail,
+            provider,
+            rtp,
+            volatility,
+            isNew,
+            isFeatured,
+            "hasContent": count(description) > 0
+          },
+          games[]-> {
+            _id,
+            title,
+            "slug": slug.current,
+            "categorySlug": categories[0]->slug.current,
+            thumbnail,
+            provider,
+            rtp,
+            volatility,
+            isNew,
+            isFeatured,
+            "hasContent": count(description) > 0
+          }
+        )
       },
 
       // Rich text
