@@ -36,7 +36,7 @@ export interface SidebarNavigation {
 // Footer types
 export interface FooterLink {
   label: string
-  url?: string
+  externalUrl?: string
   internalHref?: string
   openInNewTab?: boolean
 }

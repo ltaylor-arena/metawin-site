@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { client, urlFor } from '@/lib/sanity'
-import { gameBySlugQuery, allGamesWithCategoriesQuery, gamesByProviderQuery } from '@/lib/queries'
+import { gameBySlugQuery, allGamesWithCategoriesQuery, gamesByProviderQuery, siteSettingsQuery } from '@/lib/queries'
 import { PortableText } from '@portabletext/react'
 import { portableTextComponents } from '@/components/PortableTextComponents'
 import Breadcrumbs from '@/components/Breadcrumbs'
@@ -26,6 +26,10 @@ async function getGame(slug: string) {
 
 async function getGamesByProvider(provider: string, excludeSlug: string) {
   return await client.fetch(gamesByProviderQuery, { provider, excludeSlug })
+}
+
+async function getSiteSettings() {
+  return await client.fetch(siteSettingsQuery)
 }
 
 export async function generateStaticParams() {
@@ -55,7 +59,10 @@ export async function generateMetadata({ params }: GamePageProps): Promise<Metad
 
 export default async function GamePage({ params }: GamePageProps) {
   const { category, slug } = await params
-  const game = await getGame(slug)
+  const [game, siteSettings] = await Promise.all([
+    getGame(slug),
+    getSiteSettings()
+  ])
 
   if (!game) {
     notFound()
@@ -65,6 +72,8 @@ export default async function GamePage({ params }: GamePageProps) {
   const providerGames = game.provider
     ? await getGamesByProvider(game.provider, slug)
     : []
+
+  const signUpUrl = siteSettings?.signUpUrl || 'https://metawin.com/signup'
 
   // Verify the game belongs to this category
   const gameCategory = game.categories?.find((c: any) => c.slug === category)
@@ -252,6 +261,7 @@ export default async function GamePage({ params }: GamePageProps) {
             <ProviderGamesCarousel
               provider={game.provider}
               games={providerGames}
+              signUpUrl={signUpUrl}
             />
           </div>
         )}

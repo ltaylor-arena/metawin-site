@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ChevronLeft, ChevronRight, Play } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { urlFor } from '@/lib/sanity'
 
 interface Game {
@@ -15,14 +15,16 @@ interface Game {
   provider: string
   rtp?: number
   volatility?: 'low' | 'medium' | 'high'
+  hasContent?: boolean
 }
 
 interface ProviderGamesCarouselProps {
   provider: string
   games: Game[]
+  signUpUrl?: string
 }
 
-export default function ProviderGamesCarousel({ provider, games }: ProviderGamesCarouselProps) {
+export default function ProviderGamesCarousel({ provider, games, signUpUrl = 'https://metawin.com/signup' }: ProviderGamesCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(false)
@@ -103,62 +105,78 @@ export default function ProviderGamesCarousel({ provider, games }: ProviderGames
         className="flex gap-3 md:gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-2"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-        {games.map((game) => (
-          <Link
-            key={game._id}
-            href={`/casino/games/${game.categorySlug}/${game.slug}/`}
-            className="w-36 md:w-44 flex-shrink-0 group"
-          >
-            <div className="game-card">
-              {/* Thumbnail */}
-              <div className="relative aspect-[3/4] overflow-hidden rounded-xl">
-                <Image
-                  src={urlFor(game.thumbnail)
-                    .width(352)
-                    .height(470)
-                    .fit('crop')
-                    .auto('format')
-                    .url()}
-                  alt={game.title}
-                  fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
-                />
+        {games.map((game) => {
+          const gamePageUrl = `/casino/games/${game.categorySlug}/${game.slug}/`
 
-                {/* Hover Overlay */}
-                <div className="game-card-overlay flex items-center justify-center">
-                  <div className="w-12 h-12 rounded-full bg-[var(--color-accent-blue)] flex items-center justify-center">
-                    <Play className="w-5 h-5 text-white ml-0.5" />
+          return (
+            <div
+              key={game._id}
+              className="w-36 md:w-44 flex-shrink-0 group"
+            >
+              <div className="game-card">
+                {/* Thumbnail */}
+                <div className="relative aspect-[3/4] overflow-hidden rounded-xl">
+                  <Image
+                    src={urlFor(game.thumbnail)
+                      .width(352)
+                      .height(470)
+                      .fit('crop')
+                      .auto('format')
+                      .url()}
+                    alt={game.title}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+
+                  {/* Hover Overlay with Action Buttons */}
+                  <div className="game-card-overlay flex flex-col items-center justify-center gap-2 px-3">
+                    <a
+                      href={signUpUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full py-4 px-3 bg-[var(--color-accent-blue)] hover:bg-[var(--color-accent-blue-hover)] text-white hover:text-white text-sm font-semibold rounded-lg text-center transition-colors"
+                    >
+                      Play Now
+                    </a>
+                    {game.hasContent && (
+                      <Link
+                        href={gamePageUrl}
+                        className="w-full py-2 px-3 bg-white/20 hover:bg-white/30 text-white hover:text-white text-xs font-medium rounded-lg text-center transition-colors backdrop-blur-sm"
+                      >
+                        Game Info
+                      </Link>
+                    )}
                   </div>
                 </div>
-              </div>
 
-              {/* Game Info */}
-              <div className="mt-2 px-1">
-                <h3 className="text-sm font-medium text-white truncate">
-                  {game.title}
-                </h3>
+                {/* Game Info */}
+                <div className="mt-2 px-1">
+                  <h3 className="text-sm font-medium text-white truncate">
+                    {game.title}
+                  </h3>
 
-                {/* RTP & Volatility */}
-                {(game.rtp || game.volatility) && (
-                  <div className="flex items-center gap-1.5 mt-1">
-                    {game.rtp && (
-                      <span className="text-[12px]" style={{ color: 'rgb(0, 234, 105)' }}>
-                        RTP {game.rtp}%
-                      </span>
-                    )}
-                    {game.volatility && (
-                      <img
-                        src={`/images/volatility/volatility-${game.volatility}.svg`}
-                        alt={`${game.volatility} volatility`}
-                        style={{ height: '8px', width: 'auto' }}
-                      />
-                    )}
-                  </div>
-                )}
+                  {/* RTP & Volatility */}
+                  {(game.rtp || game.volatility) && (
+                    <div className="flex items-center gap-1.5 mt-1">
+                      {game.rtp && (
+                        <span className="text-[12px]" style={{ color: 'rgb(0, 234, 105)' }}>
+                          RTP {game.rtp}%
+                        </span>
+                      )}
+                      {game.volatility && (
+                        <img
+                          src={`/images/volatility/volatility-${game.volatility}.svg`}
+                          alt={`${game.volatility} volatility`}
+                          style={{ height: '8px', width: 'auto' }}
+                        />
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </Link>
-        ))}
+          )
+        })}
       </div>
     </section>
   )

@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useSidebar } from '@/contexts/SidebarContext'
 import {
   Flame,
@@ -76,6 +77,12 @@ export default function Sidebar({ navigation }: SidebarProps) {
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({})
   const [searchOpen, setSearchOpen] = useState(false)
   const { collapsed, toggle, mobileOpen, setMobileOpen } = useSidebar()
+  const pathname = usePathname()
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setMobileOpen(false)
+  }, [pathname, setMobileOpen])
 
   const getIcon = (iconName: string) => {
     const IconComponent = iconMap[iconName] || LayoutGrid

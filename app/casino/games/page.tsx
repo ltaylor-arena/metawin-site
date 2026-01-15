@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { client } from '@/lib/sanity'
-import { categoriesWithGamesQuery } from '@/lib/queries'
+import { categoriesWithGamesQuery, siteSettingsQuery } from '@/lib/queries'
 import { groq } from 'next-sanity'
 import { PortableText } from '@portabletext/react'
 import { portableTextComponents } from '@/components/PortableTextComponents'
@@ -103,6 +103,10 @@ async function getCategoriesWithGames() {
   return await client.fetch(categoriesWithGamesQuery)
 }
 
+async function getSiteSettings() {
+  return await client.fetch(siteSettingsQuery)
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPage()
 
@@ -126,13 +130,15 @@ interface Category {
     provider?: string
     rtp?: number
     volatility?: 'low' | 'medium' | 'high'
+    hasContent?: boolean
   }>
 }
 
 export default async function GamesIndexPage() {
-  const [page, categories] = await Promise.all([
+  const [page, categories, siteSettings] = await Promise.all([
     getPage(),
-    getCategoriesWithGames()
+    getCategoriesWithGames(),
+    getSiteSettings()
   ])
 
   // Filter out categories with no games
@@ -179,6 +185,7 @@ export default async function GamesIndexPage() {
             games={category.games}
             viewAllHref={`/casino/games/${category.slug}/`}
             cardSize="medium"
+            signUpUrl={siteSettings?.signUpUrl}
           />
         ))}
 

@@ -73,7 +73,8 @@ export const homepageQuery = groq`
           thumbnail,
           provider,
           rtp,
-          volatility
+          volatility,
+          "hasContent": count(description) > 0
         }
       },
       
@@ -142,8 +143,98 @@ export const pageBySlugQuery = groq`
       expertise,
       socialLinks
     },
-    seo,
-    content
+    seo {
+      metaTitle,
+      metaDescription,
+      breadcrumbText,
+      canonicalUrl,
+      noIndex,
+      "ogImage": ogImage.asset->url
+    },
+    content[] {
+      _type,
+      _key,
+
+      // Hero
+      _type == "hero" => {
+        autoplay,
+        autoplaySpeed,
+        slides[] {
+          heading,
+          subheading,
+          "image": image.asset->url,
+          ctaText,
+          ctaLink
+        }
+      },
+
+      // Intro section
+      _type == "introSection" => {
+        heading,
+        text,
+        promoCards[] {
+          _key,
+          title,
+          subtitle,
+          colorTheme,
+          "backgroundImage": backgroundImage.asset->url,
+          link
+        }
+      },
+
+      // Game carousel
+      _type == "gameCarousel" => {
+        title,
+        displayMode,
+        showWinAmounts,
+        cardSize,
+        "games": games[]-> {
+          _id,
+          title,
+          "slug": slug.current,
+          "categorySlug": categories[0]->slug.current,
+          thumbnail,
+          provider,
+          rtp,
+          volatility,
+          "hasContent": count(description) > 0
+        }
+      },
+
+      // Rich text
+      _type == "richText" => {
+        content
+      },
+
+      // CTA Banner
+      _type == "ctaBanner" => {
+        heading,
+        text,
+        buttonText,
+        buttonLink,
+        "backgroundImage": backgroundImage.asset->url
+      },
+
+      // FAQ
+      _type == "faq" => {
+        heading,
+        items[] {
+          question,
+          answer
+        }
+      },
+
+      // Feature Cards
+      _type == "featureCards" => {
+        heading,
+        cards[] {
+          _key,
+          title,
+          description,
+          icon
+        }
+      }
+    }
   }
 `
 
@@ -233,9 +324,15 @@ export const footerQuery = groq`
       heading,
       links[] {
         label,
-        url,
-        "internalHref": "/casino/" + internalLink->slug.current + "/",
-        openInNewTab
+        externalUrl,
+        openInNewTab,
+        "internalHref": select(
+          internalLink->_type == "page" && internalLink->isHomepage == true => "/casino/",
+          internalLink->_type == "page" => "/casino/" + internalLink->slug.current + "/",
+          internalLink->_type == "category" => "/casino/games/" + internalLink->slug.current + "/",
+          internalLink->_type == "game" => "/casino/games/" + internalLink->categories[0]->slug.current + "/" + internalLink->slug.current + "/",
+          null
+        )
       }
     },
     legalText,
@@ -396,7 +493,8 @@ export const categoriesWithGamesQuery = groq`
       thumbnail,
       provider,
       rtp,
-      volatility
+      volatility,
+      "hasContent": count(description) > 0
     }
   }
 `
@@ -407,12 +505,14 @@ export const gamesByCategoryQuery = groq`
     _id,
     title,
     "slug": slug.current,
+    "categorySlug": $categorySlug,
     thumbnail,
     provider,
     rtp,
     volatility,
     isNew,
-    isFeatured
+    isFeatured,
+    "hasContent": count(description) > 0
   } | order(isFeatured desc, title asc)
 `
 
@@ -435,7 +535,8 @@ export const gamesByProviderQuery = groq`
     thumbnail,
     provider,
     rtp,
-    volatility
+    volatility,
+    "hasContent": count(description) > 0
   }
 `
 

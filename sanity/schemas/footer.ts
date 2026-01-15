@@ -44,35 +44,46 @@ export default defineType({
                       name: 'label',
                       title: 'Label',
                       type: 'string',
-                    }),
-                    defineField({
-                      name: 'url',
-                      title: 'URL',
-                      type: 'string',
-                      description: 'Internal links must end with /',
-                      validation: (Rule) => Rule.custom((value) => {
-                        if (!value) return true
-                        if (value.startsWith('/') && !value.endsWith('/')) {
-                          return 'Internal URLs must end with a trailing slash'
-                        }
-                        return true
-                      }),
+                      validation: (Rule) => Rule.required(),
                     }),
                     defineField({
                       name: 'internalLink',
-                      title: 'Or Internal Link',
+                      title: 'Internal Link',
                       type: 'reference',
-                      to: [{ type: 'page' }],
+                      description: 'Link to a page, game, or category',
+                      to: [
+                        { type: 'page' },
+                        { type: 'game' },
+                        { type: 'category' },
+                      ],
+                    }),
+                    defineField({
+                      name: 'externalUrl',
+                      title: 'External URL',
+                      type: 'url',
+                      description: 'Use this for links to external sites (leave Internal Link empty)',
+                      validation: (Rule) => Rule.uri({
+                        scheme: ['http', 'https'],
+                      }),
                     }),
                     defineField({
                       name: 'openInNewTab',
                       title: 'Open in New Tab',
                       type: 'boolean',
+                      description: 'Recommended for external links',
                       initialValue: false,
                     }),
                   ],
                   preview: {
-                    select: { title: 'label' },
+                    select: {
+                      title: 'label',
+                      internalTitle: 'internalLink.title',
+                      externalUrl: 'externalUrl',
+                    },
+                    prepare: ({ title, internalTitle, externalUrl }) => ({
+                      title: title || 'Untitled Link',
+                      subtitle: internalTitle || externalUrl || 'No destination set',
+                    }),
                   },
                 },
               ],

@@ -25,38 +25,38 @@ const defaultColumns: FooterColumn[] = [
   {
     heading: 'Casino',
     links: [
-      { label: 'All Games', url: '/casino/all-games' },
-      { label: 'Slots', url: '/casino/slots' },
-      { label: 'Live Casino', url: '/casino/live-casino' },
-      { label: 'Game Shows', url: '/casino/game-shows' },
-      { label: 'Providers', url: '/casino/providers' },
+      { label: 'All Games', internalHref: '/casino/games/' },
+      { label: 'Slots', internalHref: '/casino/games/slots/' },
+      { label: 'Live Casino', internalHref: '/casino/games/live-casino/' },
+      { label: 'Game Shows', internalHref: '/casino/games/game-shows/' },
+      { label: 'Providers', internalHref: '/casino/providers/' },
     ],
   },
   {
     heading: 'Promotions',
     links: [
-      { label: 'Prizes', url: '/casino/prizes' },
-      { label: 'Races', url: '/casino/races' },
-      { label: 'VIP Program', url: '/casino/vip' },
-      { label: 'Referrals', url: '/casino/referrals' },
+      { label: 'Prizes', internalHref: '/casino/prizes/' },
+      { label: 'Races', internalHref: '/casino/races/' },
+      { label: 'VIP Program', internalHref: '/casino/vip/' },
+      { label: 'Referrals', internalHref: '/casino/referrals/' },
     ],
   },
   {
     heading: 'Support',
     links: [
-      { label: 'Help Center', url: 'https://help.metawin.com', openInNewTab: true },
-      { label: 'Responsible Gaming', url: '/casino/responsible-gaming' },
-      { label: 'Terms of Service', url: '/casino/terms' },
-      { label: 'Privacy Policy', url: '/casino/privacy' },
+      { label: 'Help Center', externalUrl: 'https://help.metawin.com', openInNewTab: true },
+      { label: 'Responsible Gaming', internalHref: '/casino/responsible-gaming/' },
+      { label: 'Terms of Service', internalHref: '/casino/terms/' },
+      { label: 'Privacy Policy', internalHref: '/casino/privacy/' },
     ],
   },
   {
     heading: 'Company',
     links: [
-      { label: 'About Us', url: '/casino/about' },
-      { label: 'Blog', url: '/casino/blog' },
-      { label: 'Careers', url: '/casino/careers' },
-      { label: 'Contact', url: '/casino/contact' },
+      { label: 'About Us', internalHref: '/casino/about/' },
+      { label: 'Blog', internalHref: '/casino/blog/' },
+      { label: 'Careers', internalHref: '/casino/careers/' },
+      { label: 'Contact', internalHref: '/casino/contact/' },
     ],
   },
 ]
@@ -88,8 +88,8 @@ export default function Footer({ data }: FooterProps) {
               </h3>
               <ul className="space-y-3">
                 {column.links.map((link, linkIndex) => {
-                  const href = link.internalHref || link.url || '#'
-                  const isExternal = link.openInNewTab || (link.url?.startsWith('http') && !link.internalHref)
+                  const href = link.internalHref || link.externalUrl || '#'
+                  const isExternal = link.openInNewTab || !!link.externalUrl
                   return (
                     <li key={linkIndex}>
                       <Link

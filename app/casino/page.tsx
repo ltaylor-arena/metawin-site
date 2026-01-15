@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { client } from '@/lib/sanity'
-import { homepageQuery } from '@/lib/queries'
+import { homepageQuery, siteSettingsQuery } from '@/lib/queries'
 import { PortableText } from '@portabletext/react'
 import Hero from '@/components/Hero'
 import GameCarousel from '@/components/GameCarousel'
@@ -14,6 +14,10 @@ async function getHomepage() {
   return await client.fetch(homepageQuery)
 }
 
+async function getSiteSettings() {
+  return await client.fetch(siteSettingsQuery)
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getHomepage()
   
@@ -25,10 +29,13 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function CasinoHomePage() {
-  const page = await getHomepage()
-  
+  const [page, siteSettings] = await Promise.all([
+    getHomepage(),
+    getSiteSettings()
+  ])
+
   console.log('Page data:', JSON.stringify(page, null, 2))
-  
+
   if (!page) {
     return (
       <div className="p-8 text-center">
@@ -117,6 +124,7 @@ export default async function CasinoHomePage() {
                 games={block.games || []}
                 showWinAmounts={block.showWinAmounts}
                 cardSize={block.cardSize}
+                signUpUrl={siteSettings?.signUpUrl}
               />
             )
           

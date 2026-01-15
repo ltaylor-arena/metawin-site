@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { client, urlFor } from '@/lib/sanity'
-import { categoryBySlugQuery, gamesByCategoryQuery, allCategoriesQuery } from '@/lib/queries'
+import { categoryBySlugQuery, gamesByCategoryQuery, allCategoriesQuery, siteSettingsQuery } from '@/lib/queries'
 import { PortableText } from '@portabletext/react'
 import { portableTextComponents } from '@/components/PortableTextComponents'
 import Breadcrumbs from '@/components/Breadcrumbs'
@@ -21,6 +21,10 @@ async function getCategory(slug: string) {
 
 async function getGamesByCategory(categorySlug: string) {
   return await client.fetch(gamesByCategoryQuery, { categorySlug })
+}
+
+async function getSiteSettings() {
+  return await client.fetch(siteSettingsQuery)
 }
 
 export async function generateStaticParams() {
@@ -49,13 +53,17 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { category } = await params
-  const categoryData = await getCategory(category)
+  const [categoryData, siteSettings] = await Promise.all([
+    getCategory(category),
+    getSiteSettings()
+  ])
 
   if (!categoryData) {
     notFound()
   }
 
   const games = await getGamesByCategory(category)
+  const signUpUrl = siteSettings?.signUpUrl || 'https://metawin.com/signup'
 
   // Build breadcrumb items
   const breadcrumbItems = [
@@ -99,11 +107,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         {games && games.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
             {games.map((game: any) => (
-              <Link
-                key={game._id}
-                href={`/casino/games/${category}/${game.slug}/`}
-                className="group"
-              >
+              <div key={game._id} className="group">
                 <div className="game-card">
                   {/* Thumbnail */}
                   <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-[var(--color-bg-secondary)]">
@@ -139,13 +143,24 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                       )}
                     </div>
 
-                    {/* Hover Overlay */}
-                    <div className="game-card-overlay flex items-center justify-center">
-                      <div className="w-12 h-12 rounded-full bg-[var(--color-accent-blue)] flex items-center justify-center">
-                        <svg className="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M8 5v14l11-7z"/>
-                        </svg>
-                      </div>
+                    {/* Hover Overlay with Action Buttons */}
+                    <div className="game-card-overlay flex flex-col items-center justify-center gap-2 px-3">
+                      <a
+                        href={signUpUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full py-4 px-3 bg-[var(--color-accent-blue)] hover:bg-[var(--color-accent-blue-hover)] text-white hover:text-white text-sm font-semibold rounded-lg text-center transition-colors"
+                      >
+                        Play Now
+                      </a>
+                      {game.hasContent && (
+                        <Link
+                          href={`/casino/games/${category}/${game.slug}/`}
+                          className="w-full py-2 px-3 bg-white/20 hover:bg-white/30 text-white hover:text-white text-xs font-medium rounded-lg text-center transition-colors backdrop-blur-sm"
+                        >
+                          Game Info
+                        </Link>
+                      )}
                     </div>
                   </div>
 
@@ -177,7 +192,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                     )}
                   </div>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         ) : (
