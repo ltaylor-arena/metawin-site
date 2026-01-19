@@ -1,7 +1,7 @@
 // Game Schema
-// Individual game entries
+// Individual game entries with reorderable content blocks
 
-import { defineType, defineField } from 'sanity'
+import { defineType, defineField, defineArrayMember } from 'sanity'
 
 export default defineType({
   name: 'game',
@@ -197,90 +197,47 @@ export default defineType({
       ],
     }),
 
-    // Content
+    // Content Blocks (reorderable middle section)
     defineField({
-      name: 'quickSummary',
-      title: 'Quick Summary',
-      type: 'object',
-      group: 'content',
-      description: 'A highlighted summary box that appears at the top of the game page',
-      fields: [
-        defineField({
-          name: 'intro',
-          title: 'Intro Text',
-          type: 'text',
-          rows: 2,
-          description: 'A short 1-2 sentence introduction',
-        }),
-        defineField({
-          name: 'highlights',
-          title: 'Highlights',
-          type: 'array',
-          description: 'Key selling points displayed with tick icons',
-          of: [{ type: 'string' }],
-        }),
-      ],
-    }),
-    defineField({
-      name: 'description',
-      title: 'Description',
+      name: 'content',
+      title: 'Page Content',
       type: 'array',
       group: 'content',
+      description: 'Drag and drop to reorder these content blocks. Screenshots/CTA are always at top, FAQ/Author/Provider games are always at bottom.',
       of: [
-        { type: 'block' },
-        {
-          type: 'image',
-          options: { hotspot: true },
-          fields: [
-            defineField({
-              name: 'alt',
-              title: 'Alt Text',
-              type: 'string',
-              description: 'Important for accessibility and SEO',
-            }),
-            defineField({
-              name: 'caption',
-              title: 'Caption',
-              type: 'string',
-              description: 'Optional caption displayed below the image',
-            }),
-          ],
-        },
+        // Quick Summary
+        defineArrayMember({
+          type: 'gameQuickSummary',
+          title: 'Quick Summary',
+        }),
+
+        // Pros and Cons
+        defineArrayMember({
+          type: 'gameProsAndCons',
+          title: 'Pros and Cons',
+        }),
+
+        // Rich Text
+        defineArrayMember({
+          type: 'gameRichText',
+          title: 'Rich Text',
+        }),
+
+        // Author's Thoughts
+        defineArrayMember({
+          type: 'gameAuthorThoughts',
+          title: "Author's Thoughts",
+        }),
       ],
     }),
-    defineField({
-      name: 'additionalContent',
-      title: 'Additional Content',
-      type: 'array',
-      group: 'content',
-      description: 'Rich text sections that appear below the game details',
-      of: [
-        { type: 'block' },
-        {
-          type: 'image',
-          options: { hotspot: true },
-          fields: [
-            defineField({
-              name: 'alt',
-              title: 'Alt Text',
-              type: 'string',
-              description: 'Important for accessibility and SEO',
-            }),
-            defineField({
-              name: 'caption',
-              title: 'Caption',
-              type: 'string',
-              description: 'Optional caption displayed below the image',
-            }),
-          ],
-        },
-      ],
-    }),
+
+    // FAQ (fixed at bottom)
     defineField({
       name: 'faq',
       title: 'FAQ',
       type: 'array',
       group: 'content',
+      description: 'FAQ section - always displayed after content blocks',
       of: [
         {
           type: 'object',

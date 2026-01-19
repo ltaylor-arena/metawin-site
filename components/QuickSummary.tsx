@@ -1,14 +1,14 @@
 // Quick Summary Component
-// Displays a highlighted summary box with thumbnail, intro text, and bullet highlights
+// Displays a highlighted summary box with thumbnail and intro text (rich text)
 
 import Image from 'next/image'
-import { Check } from 'lucide-react'
+import { PortableText } from '@portabletext/react'
+import { Zap } from 'lucide-react'
 import { urlFor } from '@/lib/sanity'
 
 interface QuickSummaryProps {
   title: string
-  intro: string
-  highlights?: string[]
+  intro: any[] // Portable Text blocks
   thumbnail?: any // Sanity image reference
   isNew?: boolean
   isFeatured?: boolean
@@ -17,18 +17,18 @@ interface QuickSummaryProps {
 export default function QuickSummary({
   title,
   intro,
-  highlights,
   thumbnail,
   isNew,
   isFeatured
 }: QuickSummaryProps) {
-  if (!intro && (!highlights || highlights.length === 0)) {
+  if (!intro || intro.length === 0) {
     return null
   }
 
   return (
     <div className="rounded-xl bg-gradient-to-br from-[var(--color-bg-secondary)] to-[var(--color-bg-tertiary)] border border-[var(--color-border)] p-5 md:p-6">
-      <h2 className="text-lg md:text-xl font-semibold text-white mb-4">
+      <h2 className="flex items-center gap-2 text-lg md:text-xl font-semibold text-white mb-4">
+        <Zap className="w-5 h-5 text-[var(--color-accent-gold)] fill-current" />
         Quick Summary
       </h2>
 
@@ -60,27 +60,8 @@ export default function QuickSummary({
         )}
 
         {/* Content */}
-        <div className="flex-1 min-w-0">
-          {/* Intro text */}
-          {intro && (
-            <p className="text-base md:text-lg font-medium text-[var(--color-text-secondary)] leading-relaxed mb-4">
-              {intro}
-            </p>
-          )}
-
-          {/* Highlights */}
-          {highlights && highlights.length > 0 && (
-            <ul className="space-y-2">
-              {highlights.map((highlight, index) => (
-                <li key={index} className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-sm md:text-base text-[var(--color-text-secondary)]">
-                    {highlight}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
+        <div className="flex-1 min-w-0 prose prose-invert prose-sm md:prose-base max-w-none [&>p]:text-[var(--color-text-secondary)] [&>p]:leading-relaxed [&>p:last-child]:mb-0">
+          <PortableText value={intro} />
         </div>
       </div>
     </div>

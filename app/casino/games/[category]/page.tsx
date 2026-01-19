@@ -147,7 +147,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
             {categoryData.title}
             {currentPage > 1 && (
               <span className="text-[var(--color-text-muted)] font-normal text-lg md:text-xl ml-2">
-                — Page {currentPage}
+                | Page {currentPage}
               </span>
             )}
           </h1>

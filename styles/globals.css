@@ -65,6 +65,7 @@ html {
 
 body {
   font-family: var(--font-sans);
+  font-size: 0.9rem; /* 10% smaller than default 1rem/16px */
   background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
   line-height: 1.6;

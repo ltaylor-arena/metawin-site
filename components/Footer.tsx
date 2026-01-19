@@ -185,7 +185,29 @@ export default function Footer({ data }: FooterProps) {
           />
         </div>
 
-        {/* Badges */}
+        {/* Legal Text from Sanity */}
+        {legalText && Array.isArray(legalText) && legalText.length > 0 && (
+          <div className="mt-8 pt-8 border-t border-[var(--color-border)]">
+            <div className="text-xs text-[var(--color-text-muted)] leading-relaxed prose prose-invert prose-xs max-w-none">
+              <PortableText value={legalText as PortableTextBlock[]} />
+            </div>
+          </div>
+        )}
+
+        {/* Default Legal Disclaimer (shown when no Sanity legal text) */}
+        {(!legalText || !Array.isArray(legalText) || legalText.length === 0) && (
+          <div className="mt-8 pt-8 border-t border-[var(--color-border)]">
+            <p className="text-xs text-[var(--color-text-muted)] leading-relaxed">
+              MetaWin is operated by Asobi N.V., a company registered in Curaçao.
+              Gambling can be addictive. Please play responsibly. You must be 18+ to use this site.
+              MetaWin supports responsible gambling. If you feel you may have a gambling problem,
+              please visit <Link href="https://www.gambleaware.org" target="_blank" rel="noopener noreferrer" className="underline hover:text-white">GambleAware.org</Link> for
+              more information and support.
+            </p>
+          </div>
+        )}
+
+        {/* Trust Badges & Certifications */}
         {badges && badges.length > 0 && (
           <div className="flex flex-wrap items-center justify-center gap-4 mt-8 pt-8 border-t border-[var(--color-border)]">
             {badges.map((badge, index) => {
@@ -206,28 +228,6 @@ export default function Footer({ data }: FooterProps) {
                 <span key={index}>{badgeImage}</span>
               )
             })}
-          </div>
-        )}
-
-        {/* Legal Text from Sanity */}
-        {legalText && Array.isArray(legalText) && legalText.length > 0 && (
-          <div className="mt-8 pt-8 border-t border-[var(--color-border)]">
-            <div className="text-xs text-[var(--color-text-muted)] leading-relaxed prose prose-invert prose-xs max-w-none">
-              <PortableText value={legalText as PortableTextBlock[]} />
-            </div>
-          </div>
-        )}
-
-        {/* Default Legal Disclaimer (shown when no Sanity legal text) */}
-        {(!legalText || !Array.isArray(legalText) || legalText.length === 0) && (
-          <div className="mt-8 pt-8 border-t border-[var(--color-border)]">
-            <p className="text-xs text-[var(--color-text-muted)] leading-relaxed">
-              MetaWin is operated by Asobi N.V., a company registered in Curaçao.
-              Gambling can be addictive. Please play responsibly. You must be 18+ to use this site.
-              MetaWin supports responsible gambling. If you feel you may have a gambling problem,
-              please visit <Link href="https://www.gambleaware.org" target="_blank" rel="noopener noreferrer" className="underline hover:text-white">GambleAware.org</Link> for
-              more information and support.
-            </p>
           </div>
         )}
       </div>

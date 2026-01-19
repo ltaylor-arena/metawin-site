@@ -10,6 +10,8 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 import ScreenshotSlideshow from '@/components/ScreenshotSlideshow'
 import GameDetailsTable from '@/components/GameDetailsTable'
 import QuickSummary from '@/components/QuickSummary'
+import ProsAndCons from '@/components/ProsAndCons'
+import AuthorThoughts from '@/components/AuthorThoughts'
 import AuthorBio from '@/components/AuthorBio'
 import AuthorByline from '@/components/AuthorByline'
 import FAQ from '@/components/FAQ'
@@ -18,6 +20,12 @@ import { GameStructuredData } from '@/components/StructuredData'
 
 interface GamePageProps {
   params: Promise<{ category: string; slug: string }>
+}
+
+interface ContentBlock {
+  _type: string
+  _key: string
+  [key: string]: any
 }
 
 async function getGame(slug: string) {
@@ -57,6 +65,59 @@ export async function generateMetadata({ params }: GamePageProps): Promise<Metad
   }
 }
 
+// Content Block Renderer Component (for reorderable middle section)
+function GameContentBlock({
+  block,
+  game,
+}: {
+  block: ContentBlock
+  game: any
+}) {
+  switch (block._type) {
+    case 'gameQuickSummary':
+      if (!block.intro || block.intro.length === 0) return null
+      return (
+        <QuickSummary
+          title={game.title}
+          intro={block.intro}
+          thumbnail={game.thumbnail}
+          isNew={game.isNew}
+          isFeatured={game.isFeatured}
+        />
+      )
+
+    case 'gameProsAndCons':
+      if ((!block.pros || block.pros.length === 0) && (!block.cons || block.cons.length === 0)) return null
+      return (
+        <ProsAndCons
+          title={game.title}
+          pros={block.pros}
+          cons={block.cons}
+        />
+      )
+
+    case 'gameRichText':
+      if (!block.content || block.content.length === 0) return null
+      return (
+        <div className="prose prose-invert prose-sm md:prose-base max-w-none">
+          <PortableText value={block.content} components={portableTextComponents} />
+        </div>
+      )
+
+    case 'gameAuthorThoughts':
+      if (!block.content || block.content.length === 0 || !game.author) return null
+      return (
+        <AuthorThoughts
+          author={game.author}
+          content={block.content}
+        />
+      )
+
+    default:
+      return null
+  }
+}
+
 export default async function GamePage({ params }: GamePageProps) {
   const { category, slug } = await params
   const [game, siteSettings] = await Promise.all([
@@ -78,7 +139,6 @@ export default async function GamePage({ params }: GamePageProps) {
   // Verify the game belongs to this category
   const gameCategory = game.categories?.find((c: any) => c.slug === category)
   if (!gameCategory && game.categories?.length > 0) {
-    // Redirect to the correct category URL would be ideal, but for now 404
     notFound()
   }
 
@@ -92,6 +152,9 @@ export default async function GamePage({ params }: GamePageProps) {
   // Construct page URL for structured data
   const pageUrl = `https://metawin.com/casino/games/${category}/${slug}/`
 
+  // Get content blocks (reorderable middle section)
+  const contentBlocks: ContentBlock[] = game.content || []
+
   return (
     <div className="min-h-screen">
       {/* Structured Data */}
@@ -104,7 +167,7 @@ export default async function GamePage({ params }: GamePageProps) {
           thumbnail: game.thumbnail,
           rtp: game.rtp,
           volatility: game.volatility,
-          description: game.description,
+          description: game.content?.find((b: ContentBlock) => b._type === 'gameRichText')?.content,
           externalGameUrl: game.externalGameUrl,
           categories: game.categories,
         }}
@@ -136,9 +199,9 @@ export default async function GamePage({ params }: GamePageProps) {
       <div className="px-4 md:px-6 pb-8">
         <div className="border-t border-[var(--color-border)] mb-4"></div>
         <div className="grid grid-cols-1 xl:grid-cols-[1fr_280px] gap-8">
-          {/* Left Column - Media */}
+          {/* Left Column - Content */}
           <div className="space-y-6">
-            {/* Thumbnail / Screenshots */}
+            {/* FIXED: Screenshots / Thumbnail (always at top) */}
             {game.screenshots && game.screenshots.length > 0 ? (
               <ScreenshotSlideshow
                 screenshots={game.screenshots}
@@ -161,7 +224,7 @@ export default async function GamePage({ params }: GamePageProps) {
               </div>
             ) : null}
 
-            {/* Play Button */}
+            {/* FIXED: Play Button (always after screenshots) */}
             {game.externalGameUrl && (
               <Link
                 href={game.externalGameUrl}
@@ -174,36 +237,18 @@ export default async function GamePage({ params }: GamePageProps) {
               </Link>
             )}
 
-            {/* Quick Summary */}
-            {game.quickSummary?.intro && (
-              <QuickSummary
-                title={game.title}
-                intro={game.quickSummary.intro}
-                highlights={game.quickSummary.highlights}
-                thumbnail={game.thumbnail}
-                isNew={game.isNew}
-                isFeatured={game.isFeatured}
+            {/* REORDERABLE: Content Blocks (Quick Summary, Pros/Cons, Rich Text) */}
+            {contentBlocks.map((block) => (
+              <GameContentBlock
+                key={block._key}
+                block={block}
+                game={game}
               />
-            )}
-
-            {/* Description */}
-            {game.description && (
-              <div className="prose prose-invert prose-sm md:prose-base max-w-none">
-                <PortableText value={game.description} components={portableTextComponents} />
-              </div>
-            )}
-
-            {/* Additional Content */}
-            {game.additionalContent && (
-              <div className="prose prose-invert prose-sm md:prose-base max-w-none">
-                <PortableText value={game.additionalContent} components={portableTextComponents} />
-              </div>
-            )}
+            ))}
           </div>
 
-          {/* Right Column - Details */}
+          {/* Right Column - Sidebar */}
           <div className="space-y-6">
-
             {/* Details Table */}
             <GameDetailsTable
               name={game.title}
@@ -234,9 +279,10 @@ export default async function GamePage({ params }: GamePageProps) {
                 <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/25 to-transparent" />
               </Link>
             )}
-
           </div>
         </div>
+
+        {/* FIXED BOTTOM SECTIONS (in order: FAQ, Author Bio, Provider Games) */}
 
         {/* FAQ Section */}
         {game.faq && game.faq.length > 0 && (

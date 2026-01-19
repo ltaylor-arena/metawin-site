@@ -84,7 +84,7 @@ export const homepageQuery = groq`
             volatility,
             isNew,
             isFeatured,
-            "hasContent": count(description) > 0
+            "hasContent": count(content) > 0
           },
           displayMode == "latest" => *[_type == "game"] | order(_createdAt desc)[0...12] {
             _id,
@@ -97,7 +97,7 @@ export const homepageQuery = groq`
             volatility,
             isNew,
             isFeatured,
-            "hasContent": count(description) > 0
+            "hasContent": count(content) > 0
           },
           displayMode == "popular" => *[_type == "game" && isFeatured == true] | order(title asc)[0...12] {
             _id,
@@ -110,7 +110,7 @@ export const homepageQuery = groq`
             volatility,
             isNew,
             isFeatured,
-            "hasContent": count(description) > 0
+            "hasContent": count(content) > 0
           },
           games[]-> {
             _id,
@@ -123,7 +123,7 @@ export const homepageQuery = groq`
             volatility,
             isNew,
             isFeatured,
-            "hasContent": count(description) > 0
+            "hasContent": count(content) > 0
           }
         )
       },
@@ -257,7 +257,7 @@ export const pageBySlugQuery = groq`
             volatility,
             isNew,
             isFeatured,
-            "hasContent": count(description) > 0
+            "hasContent": count(content) > 0
           },
           displayMode == "latest" => *[_type == "game"] | order(_createdAt desc)[0...12] {
             _id,
@@ -270,7 +270,7 @@ export const pageBySlugQuery = groq`
             volatility,
             isNew,
             isFeatured,
-            "hasContent": count(description) > 0
+            "hasContent": count(content) > 0
           },
           displayMode == "popular" => *[_type == "game" && isFeatured == true] | order(title asc)[0...12] {
             _id,
@@ -283,7 +283,7 @@ export const pageBySlugQuery = groq`
             volatility,
             isNew,
             isFeatured,
-            "hasContent": count(description) > 0
+            "hasContent": count(content) > 0
           },
           games[]-> {
             _id,
@@ -296,7 +296,7 @@ export const pageBySlugQuery = groq`
             volatility,
             isNew,
             isFeatured,
-            "hasContent": count(description) > 0
+            "hasContent": count(content) > 0
           }
         )
       },
@@ -485,13 +485,34 @@ export const gameBySlugQuery = groq`
       alt
     },
 
-    // Content
-    quickSummary {
-      intro,
-      highlights
+    // Content Blocks (reorderable middle section)
+    content[] {
+      _type,
+      _key,
+
+      // Quick Summary
+      _type == "gameQuickSummary" => {
+        intro
+      },
+
+      // Pros and Cons
+      _type == "gameProsAndCons" => {
+        pros,
+        cons
+      },
+
+      // Rich Text
+      _type == "gameRichText" => {
+        content
+      },
+
+      // Author's Thoughts
+      _type == "gameAuthorThoughts" => {
+        content
+      }
     },
-    description,
-    additionalContent,
+
+    // FAQ (fixed at bottom)
     faq[] {
       _key,
       question,
@@ -597,7 +618,7 @@ export const categoriesWithGamesQuery = groq`
       volatility,
       isNew,
       isFeatured,
-      "hasContent": count(description) > 0
+      "hasContent": count(content) > 0
     }
   }
 `
@@ -615,7 +636,7 @@ export const gamesByCategoryQuery = groq`
     volatility,
     isNew,
     isFeatured,
-    "hasContent": count(description) > 0
+    "hasContent": count(content) > 0
   } | order(isFeatured desc, title asc)
 `
 
@@ -632,7 +653,7 @@ export const gamesByCategoryPaginatedQuery = groq`
     volatility,
     isNew,
     isFeatured,
-    "hasContent": count(description) > 0
+    "hasContent": count(content) > 0
   }
 `
 
@@ -661,7 +682,7 @@ export const gamesByProviderQuery = groq`
     provider,
     rtp,
     volatility,
-    "hasContent": count(description) > 0
+    "hasContent": count(content) > 0
   }
 `
 

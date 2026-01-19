@@ -17,6 +17,12 @@ import author from './author'
 import promotion from './promotion'
 import organizationSchema from './organizationSchema'
 import gameSchema from './gameSchema'
+import {
+  gameQuickSummary,
+  gameProsAndCons,
+  gameRichText,
+  gameAuthorThoughts,
+} from './gameContentBlocks'
 
 export const schemaTypes = [
   // Documents
@@ -38,4 +44,10 @@ export const schemaTypes = [
   promoCard,
   organizationSchema,
   gameSchema,
+
+  // Game content blocks (reorderable middle section)
+  gameQuickSummary,
+  gameProsAndCons,
+  gameRichText,
+  gameAuthorThoughts,
 ]
