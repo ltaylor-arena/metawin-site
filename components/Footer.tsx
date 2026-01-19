@@ -3,15 +3,17 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { Twitter, MessageCircle, Send, Instagram, Youtube } from 'lucide-react'
+import { Instagram, Youtube } from 'lucide-react'
+import { XIcon, DiscordIcon, TelegramIcon } from './SocialIcons'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 import type { FooterData, FooterColumn } from '@/app/casino/layout'
 
 // Social icon mapping
 const socialIcons: Record<string, React.ElementType> = {
-  twitter: Twitter,
-  discord: MessageCircle,
-  telegram: Send,
+  twitter: XIcon,
+  x: XIcon,
+  discord: DiscordIcon,
+  telegram: TelegramIcon,
   instagram: Instagram,
   youtube: Youtube,
 }
