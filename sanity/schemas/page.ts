@@ -22,6 +22,13 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'h1',
+      title: 'Page Heading (H1)',
+      type: 'string',
+      group: 'content',
+      description: 'Custom H1 for the page. If empty, uses Page Title.',
+    }),
+    defineField({
       name: 'description',
       title: 'Description',
       type: 'text',

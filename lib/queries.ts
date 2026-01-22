@@ -179,6 +179,7 @@ export const pageBySlugQuery = groq`
   *[_type == "page" && slug.current == $slug][0] {
     _id,
     title,
+    h1,
     description,
     "slug": slug.current,
     showAuthorInfo,

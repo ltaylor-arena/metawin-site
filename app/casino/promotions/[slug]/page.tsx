@@ -97,7 +97,7 @@ export default async function PromotionPage({ params }: PromotionPageProps) {
           )}
         </div>
         {promotion.showAuthorInfo && promotion.author && (
-          <div className="mt-3 pb-3 border-b border-[var(--color-border)]">
+          <div className="mt-3">
             <AuthorByline
               author={promotion.author}
               publishedAt={promotion.publishedAt}

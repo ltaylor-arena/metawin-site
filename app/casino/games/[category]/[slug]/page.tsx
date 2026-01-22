@@ -185,7 +185,7 @@ export default async function GamePage({ params }: GamePageProps) {
           {game.title}
         </h1>
         {game.showAuthorInfo && game.author && (
-          <div className="mt-3 pb-3 border-b border-[var(--color-border)]">
+          <div className="mt-3">
             <AuthorByline
               author={game.author}
               publishedAt={game.publishedAt}

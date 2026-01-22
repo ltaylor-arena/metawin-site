@@ -83,7 +83,7 @@ export default async function Page({ params }: PageProps) {
       {/* Page Header */}
       <header className="px-4 md:px-6 pt-6 pb-4">
         <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">
-          {page.title}
+          {page.h1 || page.title}
         </h1>
         {page.showAuthorInfo && page.author && (
           <div className="mt-3 pb-3 border-b border-[var(--color-border)]">
