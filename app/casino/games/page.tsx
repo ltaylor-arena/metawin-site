@@ -216,7 +216,7 @@ export default async function GamesIndexPage() {
           case 'richText':
             return (
               <section key={block._key} className="px-4 md:px-6 py-6">
-                <div className="prose prose-invert prose-sm md:prose-base max-w-4xl">
+                <div className="prose prose-invert prose-sm md:prose-base max-w-none">
                   <PortableText value={block.content} components={portableTextComponents} />
                 </div>
               </section>
@@ -309,12 +309,10 @@ export default async function GamesIndexPage() {
             if (!page?.author || !block.content) return null
             return (
               <section key={block._key} className="px-4 md:px-6 py-6">
-                <div className="max-w-4xl">
-                  <AuthorThoughts
-                    author={page.author}
-                    content={block.content}
-                  />
-                </div>
+                <AuthorThoughts
+                  author={page.author}
+                  content={block.content}
+                />
               </section>
             )
 
@@ -322,13 +320,11 @@ export default async function GamesIndexPage() {
             if (!block.content) return null
             return (
               <section key={block._key} className="px-4 md:px-6 py-6">
-                <div className="max-w-4xl">
-                  <Callout
-                    title={block.title}
-                    content={block.content}
-                    variant={block.variant}
-                  />
-                </div>
+                <Callout
+                  title={block.title}
+                  content={block.content}
+                  variant={block.variant}
+                />
               </section>
             )
 
