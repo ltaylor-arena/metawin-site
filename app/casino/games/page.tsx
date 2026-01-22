@@ -8,6 +8,8 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 import GameCarousel from '@/components/GameCarousel'
 import AuthorByline from '@/components/AuthorByline'
 import AuthorBio from '@/components/AuthorBio'
+import AuthorThoughts from '@/components/AuthorThoughts'
+import Callout from '@/components/Callout'
 import FAQ from '@/components/FAQ'
 import FeatureCards from '@/components/FeatureCards'
 import PromoCard from '@/components/PromoCard'
@@ -90,6 +92,18 @@ const gamesPageQuery = groq`
         buttonText,
         buttonLink,
         "backgroundImage": backgroundImage.asset->url
+      },
+
+      // Author's Thoughts
+      _type == "gameAuthorThoughts" => {
+        content
+      },
+
+      // Callout
+      _type == "callout" => {
+        title,
+        content,
+        variant
       }
     }
   }
@@ -288,6 +302,33 @@ export default async function GamesIndexPage() {
                   heading={block.heading}
                   features={block.cards}
                 />
+              </section>
+            )
+
+          case 'gameAuthorThoughts':
+            if (!page?.author || !block.content) return null
+            return (
+              <section key={block._key} className="px-4 md:px-6 py-6">
+                <div className="max-w-4xl">
+                  <AuthorThoughts
+                    author={page.author}
+                    content={block.content}
+                  />
+                </div>
+              </section>
+            )
+
+          case 'callout':
+            if (!block.content) return null
+            return (
+              <section key={block._key} className="px-4 md:px-6 py-6">
+                <div className="max-w-4xl">
+                  <Callout
+                    title={block.title}
+                    content={block.content}
+                    variant={block.variant}
+                  />
+                </div>
               </section>
             )
 
