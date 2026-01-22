@@ -160,7 +160,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
           )}
         </div>
         {categoryData.description && (
-          <p className="text-[var(--color-text-muted)] mt-2 max-w-3xl">
+          <p className="text-[var(--color-text-muted)] mt-2">
             {categoryData.description}
           </p>
         )}
