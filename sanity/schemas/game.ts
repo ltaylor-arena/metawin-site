@@ -228,6 +228,12 @@ export default defineType({
           type: 'gameAuthorThoughts',
           title: "Author's Thoughts",
         }),
+
+        // Callout
+        defineArrayMember({
+          type: 'callout',
+          title: 'Callout',
+        }),
       ],
     }),
 

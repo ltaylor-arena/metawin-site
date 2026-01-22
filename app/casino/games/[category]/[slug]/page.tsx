@@ -12,6 +12,7 @@ import GameDetailsTable from '@/components/GameDetailsTable'
 import QuickSummary from '@/components/QuickSummary'
 import ProsAndCons from '@/components/ProsAndCons'
 import AuthorThoughts from '@/components/AuthorThoughts'
+import Callout from '@/components/Callout'
 import AuthorBio from '@/components/AuthorBio'
 import AuthorByline from '@/components/AuthorByline'
 import FAQ from '@/components/FAQ'
@@ -110,6 +111,16 @@ function GameContentBlock({
         <AuthorThoughts
           author={game.author}
           content={block.content}
+        />
+      )
+
+    case 'callout':
+      if (!block.content || block.content.length === 0) return null
+      return (
+        <Callout
+          title={block.title}
+          content={block.content}
+          variant={block.variant}
         />
       )
 

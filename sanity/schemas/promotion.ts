@@ -170,6 +170,7 @@ export default defineType({
             }),
           ],
         },
+        { type: 'callout' },
       ],
     }),
     defineField({

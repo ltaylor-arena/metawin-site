@@ -265,6 +265,18 @@ export default defineType({
           type: 'featureCards',
           title: 'Feature Cards',
         }),
+
+        // Author's Thoughts
+        defineArrayMember({
+          type: 'gameAuthorThoughts',
+          title: "Author's Thoughts",
+        }),
+
+        // Callout
+        defineArrayMember({
+          type: 'callout',
+          title: 'Callout',
+        }),
       ],
     }),
     

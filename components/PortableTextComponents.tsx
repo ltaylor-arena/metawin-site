@@ -1,9 +1,10 @@
 // Custom PortableText components for rendering rich text content
-// Includes support for images with captions
+// Includes support for images with captions and callouts
 
 import Image from 'next/image'
-import { PortableTextComponents } from '@portabletext/react'
+import { PortableTextComponents, PortableText } from '@portabletext/react'
 import { urlFor } from '@/lib/sanity'
+import { AlertCircle, Info, CheckCircle, Lightbulb } from 'lucide-react'
 
 interface ImageValue {
   _type: 'image'
@@ -13,6 +14,47 @@ interface ImageValue {
   }
   alt?: string
   caption?: string
+}
+
+interface CalloutValue {
+  _type: 'callout'
+  title?: string
+  content?: any[]
+  variant?: 'info' | 'warning' | 'success' | 'tip'
+}
+
+const calloutStyles = {
+  info: {
+    bg: 'bg-blue-500/10',
+    border: 'border-blue-500/30',
+    icon: 'text-blue-400',
+    title: 'text-blue-400',
+  },
+  warning: {
+    bg: 'bg-yellow-500/10',
+    border: 'border-yellow-500/30',
+    icon: 'text-yellow-400',
+    title: 'text-yellow-400',
+  },
+  success: {
+    bg: 'bg-green-500/10',
+    border: 'border-green-500/30',
+    icon: 'text-green-400',
+    title: 'text-green-400',
+  },
+  tip: {
+    bg: 'bg-purple-500/10',
+    border: 'border-purple-500/30',
+    icon: 'text-purple-400',
+    title: 'text-purple-400',
+  },
+}
+
+const calloutIcons = {
+  info: Info,
+  warning: AlertCircle,
+  success: CheckCircle,
+  tip: Lightbulb,
 }
 
 export const portableTextComponents: PortableTextComponents = {
@@ -40,6 +82,33 @@ export const portableTextComponents: PortableTextComponents = {
             </figcaption>
           )}
         </figure>
+      )
+    },
+    callout: ({ value }: { value: CalloutValue }) => {
+      if (!value?.content || value.content.length === 0) return null
+
+      const variant = value.variant || 'info'
+      const styles = calloutStyles[variant]
+      const Icon = calloutIcons[variant]
+
+      return (
+        <div className={`not-prose my-6 rounded-xl border ${styles.bg} ${styles.border} p-4 md:p-5`}>
+          <div className="flex gap-3">
+            <div className={`flex-shrink-0 ${styles.icon}`}>
+              <Icon className="w-5 h-5 mt-0.5" />
+            </div>
+            <div className="flex-1 min-w-0">
+              {value.title && (
+                <h4 className={`font-semibold ${styles.title} mb-2`}>
+                  {value.title}
+                </h4>
+              )}
+              <div className="prose prose-invert prose-sm max-w-none [&>p]:text-[var(--color-text-secondary)] [&>p]:leading-relaxed [&>p:last-child]:mb-0">
+                <PortableText value={value.content} />
+              </div>
+            </div>
+          </div>
+        </div>
       )
     },
   },

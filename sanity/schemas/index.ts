@@ -17,6 +17,7 @@ import author from './author'
 import promotion from './promotion'
 import organizationSchema from './organizationSchema'
 import gameSchema from './gameSchema'
+import callout from './callout'
 import {
   gameQuickSummary,
   gameProsAndCons,
@@ -44,6 +45,7 @@ export const schemaTypes = [
   promoCard,
   organizationSchema,
   gameSchema,
+  callout,
 
   // Game content blocks (reorderable middle section)
   gameQuickSummary,

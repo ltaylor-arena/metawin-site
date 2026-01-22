@@ -13,6 +13,8 @@ import FAQ from '@/components/FAQ'
 import PromoCard from '@/components/PromoCard'
 import AuthorBio from '@/components/AuthorBio'
 import AuthorByline from '@/components/AuthorByline'
+import AuthorThoughts from '@/components/AuthorThoughts'
+import Callout from '@/components/Callout'
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -225,6 +227,28 @@ export default async function Page({ params }: PageProps) {
                   <FeatureCards
                     heading={block.heading}
                     features={block.cards}
+                  />
+                </section>
+              )
+
+            case 'gameAuthorThoughts':
+              if (!page.author || !block.content) return null
+              return (
+                <section key={block._key} className="mb-8 max-w-4xl">
+                  <AuthorThoughts
+                    author={page.author}
+                    content={block.content}
+                  />
+                </section>
+              )
+
+            case 'callout':
+              return (
+                <section key={block._key} className="mb-8 max-w-4xl">
+                  <Callout
+                    title={block.title}
+                    content={block.content}
+                    variant={block.variant}
                   />
                 </section>
               )

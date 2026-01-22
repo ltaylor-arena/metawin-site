@@ -334,6 +334,18 @@ export const pageBySlugQuery = groq`
           description,
           icon
         }
+      },
+
+      // Author's Thoughts
+      _type == "gameAuthorThoughts" => {
+        content
+      },
+
+      // Callout
+      _type == "callout" => {
+        title,
+        content,
+        variant
       }
     }
   }
@@ -510,6 +522,13 @@ export const gameBySlugQuery = groq`
       // Author's Thoughts
       _type == "gameAuthorThoughts" => {
         content
+      },
+
+      // Callout
+      _type == "callout" => {
+        title,
+        content,
+        variant
       }
     },
 
