@@ -170,7 +170,7 @@ export default async function GamesIndexPage() {
           </div>
         )}
         {page?.description && (
-          <p className="text-[var(--color-text-muted)] mt-4">
+          <p className="text-[var(--color-text-muted)] mt-4 pb-4 border-b border-[var(--color-border)]">
             {page.description}
           </p>
         )}
