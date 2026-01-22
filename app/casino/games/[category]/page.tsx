@@ -142,25 +142,25 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
       {/* Page Header */}
       <header className="px-4 md:px-6 pt-6 pb-4">
-        <div className="flex flex-col xl:flex-row xl:items-baseline xl:justify-between gap-1 xl:gap-4">
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">
-            {categoryData.h1 || categoryData.title}
-            {currentPage > 1 && (
-              <span className="text-[var(--color-text-muted)] font-normal text-lg md:text-xl ml-2">
-                | Page {currentPage}
-              </span>
-            )}
-          </h1>
-          {categoryData.showAuthorInfo && categoryData.author && (
+        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">
+          {categoryData.h1 || categoryData.title}
+          {currentPage > 1 && (
+            <span className="text-[var(--color-text-muted)] font-normal text-lg md:text-xl ml-2">
+              | Page {currentPage}
+            </span>
+          )}
+        </h1>
+        {categoryData.showAuthorInfo && categoryData.author && (
+          <div className="mt-3 pb-3 border-b border-[var(--color-border)]">
             <AuthorByline
               author={categoryData.author}
               publishedAt={categoryData.publishedAt}
               updatedAt={categoryData.updatedAt}
             />
-          )}
-        </div>
+          </div>
+        )}
         {categoryData.description && (
-          <p className="text-[var(--color-text-muted)] mt-2">
+          <p className="text-[var(--color-text-muted)] mt-4">
             {categoryData.description}
           </p>
         )}

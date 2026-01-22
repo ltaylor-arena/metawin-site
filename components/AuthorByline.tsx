@@ -42,7 +42,7 @@ export default function AuthorByline({ author, publishedAt, updatedAt }: AuthorB
     : null
 
   return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-[var(--color-text-muted)]">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 text-xs text-[var(--color-text-muted)]">
       {/* Author */}
       <div className="flex items-center gap-2">
         <span>Written by</span>
