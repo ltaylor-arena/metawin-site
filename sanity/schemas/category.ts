@@ -25,7 +25,7 @@ export default defineType({
       name: 'h1',
       title: 'Page Heading (H1)',
       type: 'string',
-      group: 'basic',
+      group: 'content',
       description: 'Custom H1 for the category page. If empty, uses Category Title.',
     }),
     defineField({
