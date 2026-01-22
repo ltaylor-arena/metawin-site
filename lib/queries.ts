@@ -561,6 +561,7 @@ export const categoryBySlugQuery = groq`
   *[_type == "category" && slug.current == $slug][0] {
     _id,
     title,
+    h1,
     "slug": slug.current,
     description,
     gamesPerPage,
