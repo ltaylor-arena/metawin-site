@@ -86,25 +86,25 @@ export default async function PromotionPage({ params }: PromotionPageProps) {
 
       {/* Page Header */}
       <header className="px-4 md:px-6 pt-6 pb-4">
-        <div className="flex flex-col xl:flex-row xl:items-baseline xl:justify-between gap-1 xl:gap-4">
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">
-              {promotion.title}
-            </h1>
-            {promotion.flair && (
-              <span className="px-2 py-1 text-xs font-semibold bg-[var(--color-accent-blue)] text-white rounded">
-                {promotion.flair}
-              </span>
-            )}
-          </div>
-          {promotion.showAuthorInfo && promotion.author && (
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">
+            {promotion.title}
+          </h1>
+          {promotion.flair && (
+            <span className="px-2 py-1 text-xs font-semibold bg-[var(--color-accent-blue)] text-white rounded">
+              {promotion.flair}
+            </span>
+          )}
+        </div>
+        {promotion.showAuthorInfo && promotion.author && (
+          <div className="mt-3 pb-3 border-b border-[var(--color-border)]">
             <AuthorByline
               author={promotion.author}
               publishedAt={promotion.publishedAt}
               updatedAt={promotion.updatedAt}
             />
-          )}
-        </div>
+          </div>
+        )}
       </header>
 
       {/* Main Content */}

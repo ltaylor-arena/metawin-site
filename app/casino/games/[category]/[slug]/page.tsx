@@ -181,18 +181,18 @@ export default async function GamePage({ params }: GamePageProps) {
 
       {/* Page Header */}
       <header className="px-4 md:px-6 pt-6 pb-4">
-        <div className="flex flex-col xl:flex-row xl:items-baseline xl:justify-between gap-1 xl:gap-4">
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">
-            {game.title}
-          </h1>
-          {game.showAuthorInfo && game.author && (
+        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">
+          {game.title}
+        </h1>
+        {game.showAuthorInfo && game.author && (
+          <div className="mt-3 pb-3 border-b border-[var(--color-border)]">
             <AuthorByline
               author={game.author}
               publishedAt={game.publishedAt}
               updatedAt={game.updatedAt}
             />
-          )}
-        </div>
+          </div>
+        )}
       </header>
 
       {/* Main Content */}

@@ -157,20 +157,20 @@ export default async function GamesIndexPage() {
 
       {/* Page Header */}
       <header className="px-4 md:px-6 pt-6 pb-4">
-        <div className="flex flex-col xl:flex-row xl:items-baseline xl:justify-between gap-1 xl:gap-4">
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">
-            {page?.title || 'All Games'}
-          </h1>
-          {page?.showAuthorInfo && page?.author && (
+        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">
+          {page?.title || 'All Games'}
+        </h1>
+        {page?.showAuthorInfo && page?.author && (
+          <div className="mt-3 pb-3 border-b border-[var(--color-border)]">
             <AuthorByline
               author={page.author}
               publishedAt={page.publishedAt}
               updatedAt={page.updatedAt}
             />
-          )}
-        </div>
+          </div>
+        )}
         {page?.description && (
-          <p className="text-[var(--color-text-muted)] mt-2 max-w-3xl">
+          <p className="text-[var(--color-text-muted)] mt-4">
             {page.description}
           </p>
         )}
