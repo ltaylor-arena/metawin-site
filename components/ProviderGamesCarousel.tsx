@@ -11,7 +11,8 @@ interface Game {
   title: string
   slug: string
   categorySlug: string
-  thumbnail: any // Sanity image reference
+  thumbnail?: any // Sanity image reference
+  externalThumbnailUrl?: string // CDN URL fallback (for imported games)
   provider: string
   rtp?: number
   volatility?: 'low' | 'medium' | 'high'
@@ -108,6 +109,16 @@ export default function ProviderGamesCarousel({ provider, games, signUpUrl = 'ht
         {games.map((game) => {
           const gamePageUrl = `/casino/games/${game.categorySlug}/${game.slug}/`
 
+          // Determine image source: Sanity asset or external URL
+          const thumbnailSrc = game.thumbnail
+            ? urlFor(game.thumbnail)
+                .width(352)
+                .height(470)
+                .fit('crop')
+                .auto('format')
+                .url()
+            : game.externalThumbnailUrl
+
           return (
             <div
               key={game._id}
@@ -116,17 +127,19 @@ export default function ProviderGamesCarousel({ provider, games, signUpUrl = 'ht
               <div className="game-card">
                 {/* Thumbnail */}
                 <div className="relative aspect-[3/4] overflow-hidden rounded-xl">
-                  <Image
-                    src={urlFor(game.thumbnail)
-                      .width(352)
-                      .height(470)
-                      .fit('crop')
-                      .auto('format')
-                      .url()}
-                    alt={game.title}
-                    fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
+                  {thumbnailSrc ? (
+                    <Image
+                      src={thumbnailSrc}
+                      alt={game.title}
+                      fill
+                      sizes="(max-width: 768px) 144px, 176px"
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-[var(--color-bg-tertiary)] flex items-center justify-center">
+                      <span className="text-[var(--color-text-muted)] text-xs">No image</span>
+                    </div>
+                  )}
 
                   {/* Hover Overlay with Action Buttons */}
                   <div className="game-card-overlay flex flex-col items-center justify-center gap-2 px-3">

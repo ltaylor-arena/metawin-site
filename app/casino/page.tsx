@@ -8,6 +8,7 @@ import FeatureCards from '@/components/FeatureCards'
 import Tabs from '@/components/Tabs'
 import FAQ from '@/components/FAQ'
 import PromoCard from '@/components/PromoCard'
+import HotColdSlots from '@/components/HotColdSlots'
 import { OrganizationStructuredData } from '@/components/StructuredData'
 
 async function getHomepage() {
@@ -33,8 +34,6 @@ export default async function CasinoHomePage() {
     getHomepage(),
     getSiteSettings()
   ])
-
-  console.log('Page data:', JSON.stringify(page, null, 2))
 
   if (!page) {
     return (
@@ -173,6 +172,19 @@ export default async function CasinoHomePage() {
                 <FeatureCards
                   heading={block.heading}
                   features={block.cards}
+                />
+              </section>
+            )
+
+          case 'hotColdSlots':
+            return (
+              <section key={block._key} className="px-4 md:px-6 py-8">
+                <HotColdSlots
+                  heading={block.heading}
+                  hotTitle={block.hotTitle}
+                  coldTitle={block.coldTitle}
+                  limit={block.limit || 10}
+                  signUpUrl={siteSettings?.signUpUrl}
                 />
               </section>
             )

@@ -140,7 +140,8 @@ interface Category {
     title: string
     slug: string
     categorySlug: string
-    thumbnail: any
+    thumbnail?: any
+    externalThumbnailUrl?: string
     provider?: string
     rtp?: number
     volatility?: 'low' | 'medium' | 'high'

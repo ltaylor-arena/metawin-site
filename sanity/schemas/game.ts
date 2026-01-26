@@ -1,6 +1,7 @@
 // Game Schema
 // Individual game entries with reorderable content blocks
 
+import React from 'react'
 import { defineType, defineField, defineArrayMember } from 'sanity'
 
 export default defineType({
@@ -22,6 +23,14 @@ export default defineType({
       type: 'string',
       group: 'basic',
       validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'metawinId',
+      title: 'MetaWin Game ID',
+      type: 'number',
+      group: 'basic',
+      description: 'Internal ID from MetaWin platform (auto-set during import)',
+      readOnly: true,
     }),
     defineField({
       name: 'slug',
@@ -172,7 +181,14 @@ export default defineType({
       options: {
         hotspot: true,
       },
-      validation: (Rule) => Rule.required(),
+      description: 'Upload a custom thumbnail, or use External Thumbnail URL below',
+    }),
+    defineField({
+      name: 'externalThumbnailUrl',
+      title: 'External Thumbnail URL',
+      type: 'url',
+      group: 'media',
+      description: 'CDN URL for game thumbnail (used if no uploaded image). Auto-populated during import.',
     }),
     defineField({
       name: 'screenshots',
@@ -323,11 +339,19 @@ export default defineType({
       title: 'title',
       provider: 'provider',
       media: 'thumbnail',
+      externalThumbnailUrl: 'externalThumbnailUrl',
     },
-    prepare: ({ title, provider, media }) => ({
+    prepare: ({ title, provider, media, externalThumbnailUrl }) => ({
       title,
       subtitle: provider,
-      media,
+      // Use Sanity image if available, otherwise show external URL as image
+      media: media || (externalThumbnailUrl
+        ? React.createElement('img', {
+            src: externalThumbnailUrl,
+            alt: title || 'Game thumbnail',
+            style: { width: '100%', height: '100%', objectFit: 'cover' },
+          })
+        : undefined),
     }),
   },
 })

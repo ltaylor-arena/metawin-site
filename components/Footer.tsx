@@ -3,7 +3,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { Instagram, Youtube } from 'lucide-react'
+import { Instagram, Youtube, MessageCircle } from 'lucide-react'
 import { XIcon, DiscordIcon, TelegramIcon } from './SocialIcons'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
 import type { FooterData, FooterColumn } from '@/app/casino/layout'

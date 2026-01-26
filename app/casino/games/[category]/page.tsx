@@ -190,6 +190,14 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
                         fill
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
                       />
+                    ) : game.externalThumbnailUrl ? (
+                      <Image
+                        src={game.externalThumbnailUrl}
+                        alt={game.title}
+                        fill
+                        sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, (max-width: 1280px) 20vw, 16vw"
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-[var(--color-text-muted)]">
                         No Image

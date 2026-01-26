@@ -27,6 +27,13 @@ import {
   Search,
   CircleX,
   House,
+  Gem,
+  Rocket,
+  Triangle,
+  Club,
+  Target,
+  Grid3x3,
+  Wand2,
   LucideIcon
 } from 'lucide-react'
 import type { SidebarNavigation, NavItem, NavSection } from '@/app/casino/layout'
@@ -53,6 +60,14 @@ const iconMap: Record<string, LucideIcon> = {
   crown: Crown,
   search: Search,
   house: House,
+  // Category icons
+  gem: Gem,           // Slots
+  rocket: Rocket,     // Crash
+  triangle: Triangle, // Plinko
+  club: Club,         // Baccarat
+  target: Target,     // Roulette
+  'grid-3x3': Grid3x3, // Keno
+  'wand-2': Wand2,    // MetaWin Originals
 }
 
 interface SidebarProps {

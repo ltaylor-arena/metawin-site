@@ -277,6 +277,47 @@ export default defineType({
           type: 'callout',
           title: 'Callout',
         }),
+
+        // Hot & Cold Slots (Live RTP Tracker)
+        defineArrayMember({
+          type: 'object',
+          name: 'hotColdSlots',
+          title: 'Hot & Cold Slots',
+          fields: [
+            defineField({
+              name: 'heading',
+              title: 'Section Heading',
+              type: 'string',
+              initialValue: 'Live RTP Tracker',
+            }),
+            defineField({
+              name: 'hotTitle',
+              title: 'Hot Table Title',
+              type: 'string',
+              initialValue: 'Hot Games',
+            }),
+            defineField({
+              name: 'coldTitle',
+              title: 'Cold Table Title',
+              type: 'string',
+              initialValue: 'Cold Games',
+            }),
+            defineField({
+              name: 'limit',
+              title: 'Games Per Table',
+              type: 'number',
+              initialValue: 10,
+              validation: (Rule) => Rule.min(1).max(20),
+            }),
+          ],
+          preview: {
+            select: { title: 'heading' },
+            prepare: ({ title }) => ({
+              title: title || 'Hot & Cold Slots',
+              subtitle: 'Live RTP Tracker - fetches real-time data',
+            }),
+          },
+        }),
       ],
     }),
     
