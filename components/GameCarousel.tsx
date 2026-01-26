@@ -31,6 +31,8 @@ interface GameCarouselProps {
   showWinAmounts?: boolean
   cardSize?: 'small' | 'medium' | 'large'
   viewAllHref?: string
+  totalGames?: number
+  showSeeMore?: boolean
   badge?: 'Live' | '24h' | 'New' | 'Hot'
   signUpUrl?: string
 }
@@ -41,6 +43,8 @@ export default function GameCarousel({
   showWinAmounts = false,
   cardSize = 'medium',
   viewAllHref,
+  totalGames,
+  showSeeMore = true,
   badge,
   signUpUrl = 'https://metawin.com/signup',
 }: GameCarouselProps) {
@@ -111,11 +115,11 @@ export default function GameCarousel({
           
           {/* View All Link */}
           {viewAllHref && (
-            <Link 
+            <Link
               href={viewAllHref}
               className="text-sm text-[var(--color-accent-blue)] hover:underline"
             >
-              View All
+              View All{totalGames ? ` (${totalGames.toLocaleString()})` : ''}
             </Link>
           )}
           
@@ -279,6 +283,29 @@ export default function GameCarousel({
             </div>
           )
         })}
+
+        {/* See More Card */}
+        {showSeeMore && viewAllHref && (
+          <Link
+            href={viewAllHref}
+            className={`${cardWidths[cardSize]} flex-shrink-0 group`}
+          >
+            <div
+              className="relative aspect-[3/4] overflow-hidden rounded-xl flex items-center justify-center"
+              style={{
+                backgroundColor: '#080d14',
+                backgroundImage: 'url(/images/see-more-pattern.png)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            >
+              {/* See More Text */}
+              <span className="relative z-10 text-white font-semibold text-base group-hover:scale-105 transition-transform">
+                See More
+              </span>
+            </div>
+          </Link>
+        )}
       </div>
     </section>
   )

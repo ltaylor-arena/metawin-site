@@ -2,6 +2,7 @@
 // Configurable sidebar navigation with mixed items and sections
 
 import { defineType, defineField } from 'sanity'
+import { IconPicker } from '../components/IconPicker'
 
 export default defineType({
   name: 'navigation',
@@ -34,9 +35,11 @@ export default defineType({
             }),
             defineField({
               name: 'icon',
-              title: 'Icon Name',
+              title: 'Icon',
               type: 'string',
-              description: 'Lucide icon name (e.g., "flame", "star", "gamepad-2")',
+              components: {
+                input: IconPicker,
+              },
             }),
             defineField({
               name: 'linkType',
@@ -169,8 +172,11 @@ export default defineType({
                     }),
                     defineField({
                       name: 'icon',
-                      title: 'Icon Name',
+                      title: 'Icon',
                       type: 'string',
+                      components: {
+                        input: IconPicker,
+                      },
                     }),
                     defineField({
                       name: 'linkType',

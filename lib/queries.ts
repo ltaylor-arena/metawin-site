@@ -636,7 +636,8 @@ export const categoriesWithGamesQuery = groq`
     _id,
     title,
     "slug": slug.current,
-    "games": *[_type == "game" && references(^._id)] | order(_createdAt desc)[0...6] {
+    "totalGames": count(*[_type == "game" && references(^._id)]),
+    "games": *[_type == "game" && references(^._id)] | order(_createdAt desc)[0...18] {
       _id,
       title,
       "slug": slug.current,

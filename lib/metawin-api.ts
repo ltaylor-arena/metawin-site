@@ -112,15 +112,17 @@ export interface HotColdGame {
  * Hot = recentRTP > baseRTP (paying above expected)
  * Cold = recentRTP < baseRTP (paying below expected)
  *
- * @param limit - Max games per category (default 10)
+ * Cold games are matched to hot magnitudes for visual balance.
+ *
+ * @param limit - Max games per category (default 7)
  * @param revalidate - Cache time in seconds (default 300)
  */
 export async function getHotColdSlots(
-  limit: number = 10,
+  limit: number = 7,
   revalidate: number = 300
 ): Promise<{ hot: HotColdGame[]; cold: HotColdGame[] }> {
-  // Fetch a larger batch to have enough games to filter
-  const { games } = await fetchGamesCollection('popular', 100, 0, revalidate)
+  // Fetch from 'all' collection for variety across game types (cached for 5 min)
+  const { games } = await fetchGamesCollection('all', 300, 0, revalidate)
 
   // Filter and transform games that have both RTP values
   const gamesWithRtp = games
@@ -142,22 +144,53 @@ export async function getHotColdSlots(
       rtpDifference: Number((game.recentRTP - game.rtp).toFixed(2)),
     }))
 
-  // Filter out extreme outliers (keep only ±20% range for trust)
+  // Filter out extreme outliers and require minimum difference to be meaningful
   const MAX_DIFFERENCE = 20
+  const MIN_DIFFERENCE = 0.5 // Filter out near-zero differences
 
-  // Split into hot (positive difference) and cold (negative difference)
+  // Get hot games (positive difference, sorted highest first)
   const hotGames = gamesWithRtp
-    .filter((g) => g.rtpDifference > 0 && g.rtpDifference <= MAX_DIFFERENCE)
+    .filter((g) => g.rtpDifference >= MIN_DIFFERENCE && g.rtpDifference <= MAX_DIFFERENCE)
     .sort((a, b) => b.rtpDifference - a.rtpDifference)
     .slice(0, limit)
 
-  const coldGames = gamesWithRtp
-    .filter((g) => g.rtpDifference < 0 && g.rtpDifference >= -MAX_DIFFERENCE)
-    .sort((a, b) => a.rtpDifference - b.rtpDifference) // Most negative first
-    .slice(0, limit)
+  // Get all cold games (negative difference)
+  const allColdGames = gamesWithRtp
+    .filter((g) => g.rtpDifference <= -MIN_DIFFERENCE && g.rtpDifference >= -MAX_DIFFERENCE)
 
-  // Cap both to the same length for visual balance
-  const balancedCount = Math.min(hotGames.length, coldGames.length)
+  // Match cold games to hot magnitudes for visual balance
+  // For each hot game's magnitude, find the closest cold game
+  const coldGames: HotColdGame[] = []
+  const usedColdIds = new Set<number>()
+
+  for (const hotGame of hotGames) {
+    const targetMagnitude = -hotGame.rtpDifference // e.g., +14 -> look for -14
+
+    // Find closest cold game to this magnitude that hasn't been used
+    let bestMatch: HotColdGame | null = null
+    let bestDistance = Infinity
+
+    for (const coldGame of allColdGames) {
+      if (usedColdIds.has(coldGame.id)) continue
+
+      const distance = Math.abs(coldGame.rtpDifference - targetMagnitude)
+      if (distance < bestDistance) {
+        bestDistance = distance
+        bestMatch = coldGame
+      }
+    }
+
+    if (bestMatch) {
+      coldGames.push(bestMatch)
+      usedColdIds.add(bestMatch.id)
+    }
+  }
+
+  // Sort cold games by magnitude for consistent display
+  coldGames.sort((a, b) => a.rtpDifference - b.rtpDifference)
+
+  // Ensure same count
+  const balancedCount = Math.min(hotGames.length, coldGames.length, limit)
 
   return {
     hot: hotGames.slice(0, balancedCount),

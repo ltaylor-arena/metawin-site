@@ -43,8 +43,8 @@ function SlotTable({ title, games, type, signUpUrl }: SlotTableProps) {
         {icon}
         <h3 className="text-lg font-bold text-white">{title}</h3>
       </div>
-      <div className="bg-[var(--color-bg-secondary)] rounded-xl overflow-hidden">
-        <table className="w-full">
+      <div className="bg-[var(--color-bg-secondary)] rounded-xl overflow-x-auto">
+        <table className="w-full min-w-0">
           <thead>
             <tr className="border-b border-[var(--color-border)]">
               <th className="text-left text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3">
@@ -53,7 +53,7 @@ function SlotTable({ title, games, type, signUpUrl }: SlotTableProps) {
               <th className="text-right text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3 hidden sm:table-cell">
                 Base RTP
               </th>
-              <th className="text-right text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3">
+              <th className="text-right text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wider px-4 py-3 whitespace-nowrap">
                 {isHot ? 'Hot' : 'Cold'}
               </th>
             </tr>
@@ -100,7 +100,7 @@ function SlotTable({ title, games, type, signUpUrl }: SlotTableProps) {
                     {game.baseRtp.toFixed(2)}%
                   </span>
                 </td>
-                <td className="px-4 py-3 text-right">
+                <td className="px-4 py-3 text-right whitespace-nowrap">
                   <span
                     className={`inline-flex items-center px-2 py-1 rounded-md text-sm font-semibold ${
                       isHot

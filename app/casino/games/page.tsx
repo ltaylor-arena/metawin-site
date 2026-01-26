@@ -135,6 +135,7 @@ interface Category {
   _id: string
   title: string
   slug: string
+  totalGames: number
   games: Array<{
     _id: string
     title: string
@@ -199,6 +200,7 @@ export default async function GamesIndexPage() {
             title={category.title}
             games={category.games}
             viewAllHref={`/casino/games/${category.slug}/`}
+            totalGames={category.totalGames}
             cardSize="medium"
             signUpUrl={siteSettings?.signUpUrl}
           />

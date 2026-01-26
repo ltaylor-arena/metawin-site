@@ -34,40 +34,82 @@ import {
   Target,
   Grid3x3,
   Wand2,
+  Trophy,
+  Percent,
+  Wallet,
+  CreditCard,
+  BadgeDollarSign,
+  Ticket,
+  PartyPopper,
+  Medal,
+  Swords,
+  Bomb,
+  Cherry,
+  Clover,
+  Heart,
+  Diamond,
+  Joystick,
+  Monitor,
   LucideIcon
 } from 'lucide-react'
 import type { SidebarNavigation, NavItem, NavSection } from '@/app/casino/layout'
 import SearchModal from './SearchModal'
 
 const iconMap: Record<string, LucideIcon> = {
+  // Navigation icons
+  house: House,
   flame: Flame,
   star: Star,
-  'gamepad-2': Gamepad2,
-  tv: Tv,
-  'circle-x': CircleX,
-  video: Video,
   sparkles: Sparkles,
-  zap: Zap,
-  fish: Fish,
-  'trending-up': TrendingUp,
-  spade: Spade,
-  'dice-5': Dice5,
-  'circle-dot': CircleDot,
-  'layout-grid': LayoutGrid,
-  users: Users,
-  gift: Gift,
-  coins: Coins,
   crown: Crown,
+  gift: Gift,
+  trophy: Trophy,
   search: Search,
-  house: House,
-  // Category icons
-  gem: Gem,           // Slots
-  rocket: Rocket,     // Crash
-  triangle: Triangle, // Plinko
-  club: Club,         // Baccarat
-  target: Target,     // Roulette
-  'grid-3x3': Grid3x3, // Keno
-  'wand-2': Wand2,    // MetaWin Originals
+
+  // Game category icons
+  gem: Gem,
+  rocket: Rocket,
+  triangle: Triangle,
+  spade: Spade,
+  club: Club,
+  target: Target,
+  'grid-3x3': Grid3x3,
+  'dice-5': Dice5,
+  'wand-2': Wand2,
+  tv: Tv,
+  fish: Fish,
+  'gamepad-2': Gamepad2,
+  joystick: Joystick,
+  monitor: Monitor,
+
+  // Card suits
+  heart: Heart,
+  diamond: Diamond,
+
+  // Slot symbols
+  cherry: Cherry,
+  clover: Clover,
+
+  // Promo/Feature icons
+  zap: Zap,
+  'trending-up': TrendingUp,
+  coins: Coins,
+  wallet: Wallet,
+  'credit-card': CreditCard,
+  'badge-dollar-sign': BadgeDollarSign,
+  ticket: Ticket,
+  percent: Percent,
+  'party-popper': PartyPopper,
+  medal: Medal,
+
+  // Action/misc icons
+  users: Users,
+  swords: Swords,
+  bomb: Bomb,
+  video: Video,
+  'circle-dot': CircleDot,
+  'circle-x': CircleX,
+  'layout-grid': LayoutGrid,
 }
 
 interface SidebarProps {
@@ -137,7 +179,7 @@ export default function Sidebar({ navigation }: SidebarProps) {
   )
 
   const renderNavSection = (section: NavSection, index: number) => (
-    <li key={index} className={section.showDivider ? 'mt-4 pt-4 border-t border-[var(--color-border)]' : ''}>
+    <li key={index} className={`${section.showDivider ? 'mt-4 pt-4 border-t border-[var(--color-border)]' : ''} ${section.isCollapsible ? 'pb-4 mb-2 border-b border-[var(--color-border)]' : ''}`}>
       {section.isCollapsible ? (
         <>
           <button
