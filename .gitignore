@@ -45,3 +45,6 @@
 
 # MCP tooling
 .playwright-mcp/
+
+# Local scripts
+scripts/
