@@ -70,7 +70,8 @@ export async function generateMetadata({ params, searchParams }: CategoryPagePro
   // Build title with page number for pages > 1
   const title = currentPage > 1 ? `${baseTitle} - Page ${currentPage}` : baseTitle
 
-  // Build canonical and prev/next URLs
+  // Build canonical URL - intentionally excludes sort param to avoid duplicate content
+  // All sort variations should point to the same canonical (default sort)
   const canonicalUrl = currentPage === 1 ? basePath : `${basePath}?page=${currentPage}`
 
   const alternates: Metadata['alternates'] = {
