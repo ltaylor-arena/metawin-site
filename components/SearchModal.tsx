@@ -14,6 +14,7 @@ interface SearchResult {
   slug: string
   categorySlug: string
   thumbnail?: any // Sanity image reference
+  externalThumbnailUrl?: string // CDN URL fallback
   provider?: string
 }
 
@@ -150,6 +151,13 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                             .fit('crop')
                             .auto('format')
                             .url()}
+                          alt={game.title}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : game.externalThumbnailUrl ? (
+                        <Image
+                          src={game.externalThumbnailUrl}
                           alt={game.title}
                           fill
                           className="object-cover"
