@@ -142,30 +142,54 @@ interface RawApiResponse {
 
 async function fetchGamesFromAPI(
   collection: string,
-  take: number,
-  skip: number = 0
+  limit: number
 ): Promise<{ games: MetaWinGame[]; total: number }> {
-  const response = await fetch(
-    `${API_BASE}/game/collection/${collection}?skip=${skip}&take=${take}`,
-    {
-      headers: {
-        'Accept': 'application/json, text/plain, */*',
-        'Accept-Language': 'en-US,en;q=0.9',
-        'Origin': 'https://metawin.com',
-        'Referer': 'https://metawin.com/',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-      },
-    }
-  )
+  const allGames: MetaWinGame[] = []
+  let skip = 0
+  const take = 100 // API page size
+  let totalCount = 0
 
-  if (!response.ok) {
-    throw new Error(`API error: ${response.status} ${response.statusText}`)
+  while (allGames.length < limit) {
+    const response = await fetch(
+      `${API_BASE}/game/collection/${collection}?skip=${skip}&take=${take}`,
+      {
+        headers: {
+          'Accept': 'application/json, text/plain, */*',
+          'Accept-Language': 'en-US,en;q=0.9',
+          'Origin': 'https://metawin.com',
+          'Referer': 'https://metawin.com/',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        },
+      }
+    )
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status} ${response.statusText}`)
+    }
+
+    const data: RawApiResponse = await response.json()
+    totalCount = data.totalCount || 0
+    const games = data.items?.map((item) => item.game) || []
+    allGames.push(...games)
+
+    process.stdout.write(`  Fetched ${allGames.length}/${Math.min(limit, totalCount)}...\r`)
+
+    // Stop if we got fewer than requested (end of collection) or hit the limit
+    if (games.length < take || allGames.length >= totalCount) {
+      break
+    }
+
+    skip += take
+    // Small delay to avoid rate limiting
+    await new Promise(r => setTimeout(r, 100))
   }
 
-  const data: RawApiResponse = await response.json()
-  const games = data.items?.map((item) => item.game) || []
+  console.log() // Clear the progress line
 
-  return { games, total: data.totalCount || 0 }
+  // Trim to limit if we fetched more
+  const trimmedGames = allGames.slice(0, limit)
+
+  return { games: trimmedGames, total: totalCount }
 }
 
 // ============================================================================
@@ -221,10 +245,11 @@ function createGameDocument(
     volatility: mapVolatility(game.volatility),
     isFeatured: false,
     isNew: false,
+    isPopular: collection.toLowerCase() === 'popular',
   }
 
   if (categoryId) {
-    doc.categories = [{ _type: 'reference', _ref: categoryId }]
+    doc.categories = [{ _type: 'reference', _ref: categoryId, _key: `cat_${Date.now()}_${Math.random().toString(36).slice(2, 9)}` }]
   }
 
   return doc
@@ -391,7 +416,7 @@ Options:
   --collection=<name>  API collection to import from (default: popular)
                        Available: popular, all-slots, crash, plinkos, blackjack,
                        baccarat, roulette, table-games, live-casino, originals, new
-  --limit=<number>     Max games to import (default: 250)
+  --limit=<number>     Max games to import (default: 250, use 99999 for all)
   --dry-run            Preview import without creating documents
   --help               Show this help
 

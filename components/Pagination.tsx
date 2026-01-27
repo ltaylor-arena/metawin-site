@@ -7,9 +7,10 @@ interface PaginationProps {
   currentPage: number
   totalPages: number
   basePath: string
+  preserveParams?: Record<string, string>
 }
 
-export default function Pagination({ currentPage, totalPages, basePath }: PaginationProps) {
+export default function Pagination({ currentPage, totalPages, basePath, preserveParams = {} }: PaginationProps) {
   if (totalPages <= 1) return null
 
   // Generate page numbers to display
@@ -49,10 +50,20 @@ export default function Pagination({ currentPage, totalPages, basePath }: Pagina
   }
 
   const getPageUrl = (page: number): string => {
-    if (page === 1) {
-      return basePath
+    const params = new URLSearchParams()
+
+    // Add preserved params (like sort)
+    for (const [key, value] of Object.entries(preserveParams)) {
+      if (value) params.set(key, value)
     }
-    return `${basePath}?page=${page}`
+
+    // Add page param (skip for page 1)
+    if (page > 1) {
+      params.set('page', String(page))
+    }
+
+    const queryString = params.toString()
+    return queryString ? `${basePath}?${queryString}` : basePath
   }
 
   const pageNumbers = getPageNumbers()

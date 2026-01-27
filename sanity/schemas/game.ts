@@ -29,8 +29,7 @@ export default defineType({
       title: 'MetaWin Game ID',
       type: 'number',
       group: 'basic',
-      description: 'Internal ID from MetaWin platform (auto-set during import)',
-      readOnly: true,
+      description: 'Internal ID from MetaWin platform. Set manually or auto-populated during import.',
     }),
     defineField({
       name: 'slug',
@@ -81,6 +80,14 @@ export default defineType({
       title: 'New Release',
       type: 'boolean',
       group: 'basic',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'isPopular',
+      title: 'Popular Game',
+      type: 'boolean',
+      group: 'basic',
+      description: 'Games from the Popular collection on MetaWin',
       initialValue: false,
     }),
 

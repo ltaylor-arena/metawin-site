@@ -173,6 +173,13 @@ export const homepageQuery = groq`
           title,
           description
         }
+      },
+
+      // Callout
+      _type == "callout" => {
+        title,
+        content,
+        variant
       }
     }
   }
@@ -637,7 +644,7 @@ export const categoriesWithGamesQuery = groq`
     title,
     "slug": slug.current,
     "totalGames": count(*[_type == "game" && references(^._id)]),
-    "games": *[_type == "game" && references(^._id)] | order(_createdAt desc)[0...18] {
+    "games": *[_type == "game" && references(^._id)] | order(select(count(content) > 0 => 0, 1), select(isFeatured == true => 0, 1), title asc)[0...18] {
       _id,
       title,
       "slug": slug.current,
@@ -672,9 +679,9 @@ export const gamesByCategoryQuery = groq`
   } | order(isFeatured desc, title asc)
 `
 
-// Get paginated games by category slug
-export const gamesByCategoryPaginatedQuery = groq`
-  *[_type == "game" && $categorySlug in categories[]->slug.current] | order(isFeatured desc, title asc) [$start...$end] {
+// Get paginated games by category slug with sort options
+// Sort options: 'reviews-popular' | 'popular' | 'a-z' | 'z-a' | 'rtp'
+const gameFields = `
     _id,
     title,
     "slug": slug.current,
@@ -686,7 +693,32 @@ export const gamesByCategoryPaginatedQuery = groq`
     volatility,
     isNew,
     isFeatured,
+    isPopular,
     "hasContent": count(content) > 0
+`
+
+// Order clauses for each sort type
+// Note: GROQ doesn't support 'desc' after boolean expressions, so we use select() to convert to sortable numbers
+const sortOrders: Record<string, string> = {
+  'featured': 'order(select(count(content) > 0 => 0, 1), select(isFeatured == true => 0, 1), title asc)',
+  'a-z': 'order(title asc)',
+  'z-a': 'order(title desc)',
+  'rtp': 'order(coalesce(rtp, 0) desc, title asc)',
+}
+
+export function getGamesByCategoryPaginatedQuery(sort: string = 'a-z'): string {
+  const orderClause = sortOrders[sort] || sortOrders['a-z']
+  return groq`
+    *[_type == "game" && $categorySlug in categories[]->slug.current] | ${orderClause} [$start...$end] {
+      ${gameFields}
+    }
+  `
+}
+
+// Legacy query for backwards compatibility (uses a-z sort)
+export const gamesByCategoryPaginatedQuery = groq`
+  *[_type == "game" && $categorySlug in categories[]->slug.current] | order(title asc) [$start...$end] {
+    ${gameFields}
   }
 `
 

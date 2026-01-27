@@ -9,6 +9,7 @@ import Tabs from '@/components/Tabs'
 import FAQ from '@/components/FAQ'
 import PromoCard from '@/components/PromoCard'
 import HotColdSlots from '@/components/HotColdSlots'
+import Callout from '@/components/Callout'
 import { OrganizationStructuredData } from '@/components/StructuredData'
 
 async function getHomepage() {
@@ -185,6 +186,18 @@ export default async function CasinoHomePage() {
                   coldTitle={block.coldTitle}
                   limit={block.limit || 10}
                   signUpUrl={siteSettings?.signUpUrl}
+                />
+              </section>
+            )
+
+          case 'callout':
+            if (!block.content) return null
+            return (
+              <section key={block._key} className="px-4 md:px-6 py-6">
+                <Callout
+                  title={block.title}
+                  content={block.content}
+                  variant={block.variant}
                 />
               </section>
             )

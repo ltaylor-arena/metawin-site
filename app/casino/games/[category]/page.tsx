@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { client, urlFor } from '@/lib/sanity'
-import { categoryBySlugQuery, gamesByCategoryPaginatedQuery, gamesByCategoryCountQuery, allCategoriesQuery, siteSettingsQuery } from '@/lib/queries'
+import { categoryBySlugQuery, getGamesByCategoryPaginatedQuery, gamesByCategoryCountQuery, allCategoriesQuery, siteSettingsQuery } from '@/lib/queries'
 import { PortableText } from '@portabletext/react'
 import { portableTextComponents } from '@/components/PortableTextComponents'
 import Breadcrumbs from '@/components/Breadcrumbs'
@@ -11,20 +11,25 @@ import AuthorByline from '@/components/AuthorByline'
 import AuthorBio from '@/components/AuthorBio'
 import FAQ from '@/components/FAQ'
 import Pagination from '@/components/Pagination'
+import SortDropdown, { SortOption } from '@/components/SortDropdown'
 
 const DEFAULT_GAMES_PER_PAGE = 24
 
+// Valid sort options
+const VALID_SORTS = ['featured', 'a-z', 'z-a', 'rtp'] as const
+
 interface CategoryPageProps {
   params: Promise<{ category: string }>
-  searchParams: Promise<{ page?: string }>
+  searchParams: Promise<{ page?: string; sort?: string }>
 }
 
 async function getCategory(slug: string) {
   return await client.fetch(categoryBySlugQuery, { slug })
 }
 
-async function getGamesByCategory(categorySlug: string, start: number, end: number) {
-  return await client.fetch(gamesByCategoryPaginatedQuery, { categorySlug, start, end })
+async function getGamesByCategory(categorySlug: string, start: number, end: number, sort: string = 'a-z') {
+  const query = getGamesByCategoryPaginatedQuery(sort)
+  return await client.fetch(query, { categorySlug, start, end })
 }
 
 async function getGamesCount(categorySlug: string) {
@@ -95,7 +100,7 @@ export async function generateMetadata({ params, searchParams }: CategoryPagePro
 
 export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {
   const { category } = await params
-  const { page } = await searchParams
+  const { page, sort } = await searchParams
 
   const [categoryData, siteSettings] = await Promise.all([
     getCategory(category),
@@ -106,6 +111,18 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
     notFound()
   }
 
+  // Determine if this is the slots category
+  const isSlots = category === 'slots'
+
+  // Validate and set sort option
+  const defaultSort = isSlots ? 'featured' : 'a-z'
+  const currentSort = (sort && VALID_SORTS.includes(sort as any)) ? sort as SortOption : defaultSort
+
+  // For non-slots categories, don't allow slots-only sort options
+  const validSort = (!isSlots && currentSort === 'featured')
+    ? 'a-z'
+    : currentSort
+
   // Pagination setup
   const currentPage = Math.max(1, parseInt(page || '1', 10) || 1)
   const gamesPerPage = categoryData.gamesPerPage || DEFAULT_GAMES_PER_PAGE
@@ -114,7 +131,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
   // Fetch games and count in parallel
   const [games, totalGames] = await Promise.all([
-    getGamesByCategory(category, start, end),
+    getGamesByCategory(category, start, end, validSort),
     getGamesCount(category)
   ])
 
@@ -168,7 +185,13 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
       {/* Main Content */}
       <div className="px-4 md:px-6 pb-8">
-        <div className="border-t border-[var(--color-border)] mb-6"></div>
+        {/* Sort Controls */}
+        <div className="flex items-center justify-between border-t border-[var(--color-border)] py-4 mb-4">
+          <p className="text-sm text-[var(--color-text-muted)]">
+            {totalGames.toLocaleString()} games
+          </p>
+          <SortDropdown isSlots={isSlots} currentSort={validSort} />
+        </div>
 
         {/* Games Grid */}
         {games && games.length > 0 ? (
@@ -288,6 +311,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
           currentPage={currentPage}
           totalPages={totalPages}
           basePath={basePath}
+          preserveParams={validSort !== defaultSort ? { sort: validSort } : {}}
         />
 
         {/* Additional Content - only show on page 1 */}
