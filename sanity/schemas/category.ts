@@ -77,6 +77,14 @@ export default defineType({
       group: 'basic',
       initialValue: true,
     }),
+    defineField({
+      name: 'hideFromGamesIndex',
+      title: 'Hide from Games Index',
+      type: 'boolean',
+      group: 'basic',
+      description: 'Hide this category carousel from /casino/games/',
+      initialValue: false,
+    }),
 
     // Content
     defineField({

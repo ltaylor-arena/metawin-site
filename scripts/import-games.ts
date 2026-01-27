@@ -92,6 +92,12 @@ const TYPE_TO_CATEGORY_SLUG: Record<string, string> = {
   'live': 'live-casino',
   'live-casino': 'live-casino',
   'livecasino': 'live-casino',
+
+  // Live game subtypes
+  'liveroulette': 'live-roulette',
+  'livebaccarat': 'live-baccarat',
+  'liveblackjack': 'live-blackjack',
+  'livegameshow': 'live-gameshows',
 }
 
 // Map volatility number (1-5) to string
