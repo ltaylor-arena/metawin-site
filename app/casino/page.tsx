@@ -55,16 +55,13 @@ export default async function CasinoHomePage() {
       {page.content?.map((block: any) => {
         switch (block._type) {
           case 'hero':
-            const firstSlide = block.slides?.[0]
-            if (!firstSlide) return null
             return (
-              <section key={block._key} className="px-0 md:px-6 pt-0 md:pt-6">
+              <section key={block._key}>
                 <Hero
-                  heading={firstSlide.heading}
-                  subheading={firstSlide.subheading}
-                  image={firstSlide.image ? { url: firstSlide.image, alt: firstSlide.heading } : undefined}
-                  ctaText={firstSlide.ctaText}
-                  ctaLink={firstSlide.ctaLink}
+                  eyebrow={block.eyebrow}
+                  heading={block.heading}
+                  ctaText={block.ctaText}
+                  ctaLink={block.ctaLink}
                 />
               </section>
             )

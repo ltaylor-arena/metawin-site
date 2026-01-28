@@ -243,14 +243,14 @@ export default function GameCarousel({
                 </div>
 
                 {/* Game Info */}
-                <div className="px-0.5">
+                <div className="px-0.5 text-center">
                   <h3 className="text-xs font-medium text-white truncate">
                     {game.title}
                   </h3>
 
                   {/* RTP & Volatility - always show when available */}
                   {(game.rtp || game.volatility) && (
-                    <div className="flex items-center gap-1 mt-0.5">
+                    <div className="flex items-center justify-center gap-1 mt-0.5">
                       {game.rtp && (
                         <span className="text-[11px]" style={{ color: 'rgb(0, 234, 105)' }}>
                           {game.rtp}%
@@ -268,7 +268,7 @@ export default function GameCarousel({
 
                   {/* Win Amount Display */}
                   {showWinAmounts && game.winAmount && (
-                    <div className="flex items-center gap-1 mt-0.5">
+                    <div className="flex items-center justify-center gap-1 mt-0.5">
                       <span className="text-[10px] text-[var(--color-text-muted)]">
                         {game.winner}
                       </span>
