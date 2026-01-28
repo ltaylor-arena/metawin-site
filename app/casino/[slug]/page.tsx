@@ -111,16 +111,13 @@ export default async function Page({ params }: PageProps) {
         {page.content?.map((block: any) => {
           switch (block._type) {
             case 'hero':
-              const firstSlide = block.slides?.[0]
-              if (!firstSlide) return null
               return (
-                <section key={block._key} className="mb-8">
+                <section key={block._key} className="mb-8 -mx-4 md:-mx-6">
                   <Hero
-                    heading={firstSlide.heading}
-                    subheading={firstSlide.subheading}
-                    image={firstSlide.image ? { url: firstSlide.image, alt: firstSlide.heading } : undefined}
-                    ctaText={firstSlide.ctaText}
-                    ctaLink={firstSlide.ctaLink}
+                    eyebrow={block.eyebrow}
+                    heading={block.heading}
+                    ctaText={block.ctaText}
+                    ctaLink={block.ctaLink}
                   />
                 </section>
               )
