@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, ComponentType, SVGProps } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useSidebar } from '@/contexts/SidebarContext'
@@ -26,7 +26,6 @@ import {
   Crown,
   Search,
   CircleX,
-  House,
   Gem,
   Rocket,
   Triangle,
@@ -52,12 +51,35 @@ import {
   Monitor,
   LucideIcon
 } from 'lucide-react'
+import {
+  HomeIcon,
+  SlotsIcon,
+  CrashIcon,
+  AllGamesIcon,
+  BaccaratIcon,
+  BlackjackIcon,
+  BonusBuyIcon,
+  FishingIcon,
+  GameshowsIcon,
+  LiveCasinoIcon,
+  MetawinOriginalsIcon,
+  ProvidersIcon,
+  RouletteIcon,
+  PlinkoIcon,
+  ZeroHouseEdgeIcon,
+  PromotionsIcon,
+  NewReleasesIcon,
+  MetawinnersNftIcon,
+} from '@/components/icons/GameIcons'
 import type { SidebarNavigation, NavItem, NavSection } from '@/app/casino/layout'
 import SearchModal from './SearchModal'
 
-const iconMap: Record<string, LucideIcon> = {
+// Type for icon components (both Lucide and custom SVG icons)
+type IconComponent = LucideIcon | ComponentType<SVGProps<SVGSVGElement>>
+
+const iconMap: Record<string, IconComponent> = {
   // Navigation icons
-  house: House,
+  house: HomeIcon,
   flame: Flame,
   star: Star,
   sparkles: Sparkles,
@@ -66,7 +88,26 @@ const iconMap: Record<string, LucideIcon> = {
   trophy: Trophy,
   search: Search,
 
-  // Game category icons
+  // MetaWin custom game category icons
+  'slots': SlotsIcon,
+  'crash': CrashIcon,
+  'all-games': AllGamesIcon,
+  'baccarat': BaccaratIcon,
+  'blackjack': BlackjackIcon,
+  'bonus-buy': BonusBuyIcon,
+  'fishing': FishingIcon,
+  'gameshows': GameshowsIcon,
+  'live-casino': LiveCasinoIcon,
+  'metawin-originals': MetawinOriginalsIcon,
+  'providers': ProvidersIcon,
+  'roulette': RouletteIcon,
+  'plinko': PlinkoIcon,
+  'zero-house-edge': ZeroHouseEdgeIcon,
+  'promotions': PromotionsIcon,
+  'new-releases': NewReleasesIcon,
+  'metawinners-nft': MetawinnersNftIcon,
+
+  // Lucide game category icons (fallbacks)
   gem: Gem,
   rocket: Rocket,
   triangle: Triangle,
@@ -179,7 +220,7 @@ export default function Sidebar({ navigation }: SidebarProps) {
   )
 
   const renderNavSection = (section: NavSection, index: number) => (
-    <li key={index} className={`${section.showDivider ? 'mt-4 pt-4 border-t border-[var(--color-border)]' : ''} ${section.isCollapsible ? 'pb-4 mb-2 border-b border-[var(--color-border)]' : ''}`}>
+    <li key={index} className={`${section.showDivider ? 'mt-4 pt-4' : ''} ${section.isCollapsible ? 'pb-4 mb-2' : ''}`}>
       {section.isCollapsible ? (
         <>
           <button
@@ -262,22 +303,48 @@ export default function Sidebar({ navigation }: SidebarProps) {
       {/* Sidebar */}
       <aside className={`
         fixed top-14 left-0 h-[calc(100vh-56px)] z-40
-        ${collapsed ? 'w-[72px]' : 'w-[240px]'} bg-[var(--color-bg-secondary)] border-r border-[var(--color-border)]
+        ${collapsed ? 'w-[72px]' : 'w-[260px]'} bg-[#0F1115]
         flex flex-col
         transition-all duration-300
         ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}
         lg:translate-x-0
       `}>
-        {/* Floating Collapse Toggle - positioned outside sidebar on the right */}
+        {/* Floating Collapse Toggle - aligned with tab pills */}
         <button
           onClick={toggle}
-          className="hidden lg:flex absolute -right-3 top-3 w-6 h-6 items-center justify-center rounded-full bg-[var(--color-bg-secondary)] border border-[var(--color-border)] hover:bg-[var(--color-bg-hover)] transition-colors z-50"
+          className="hidden lg:flex absolute -right-3 top-[22px] w-6 h-6 items-center justify-center rounded-full bg-[#0F1115] hover:bg-[var(--color-bg-hover)] transition-colors z-50"
         >
           <ChevronLeft className={`w-4 h-4 text-[var(--color-text-muted)] transition-transform ${collapsed ? 'rotate-180' : ''}`} />
         </button>
 
+        {/* Tab Switcher - Casino / Prizes / Sports */}
+        {!collapsed && (
+          <div className="px-4 pt-4 pb-3">
+            <div className="flex gap-2">
+              <Link
+                href="/games/"
+                className="flex-1 text-center py-2 px-3 rounded-md text-xs font-medium text-[var(--color-text-secondary)] hover:text-white active:text-white bg-[var(--color-bg-tertiary)] transition-colors"
+              >
+                Casino
+              </Link>
+              <Link
+                href="/prizes/"
+                className="flex-1 text-center py-2 px-3 rounded-md text-xs font-medium text-[var(--color-text-secondary)] hover:text-white active:text-white bg-[var(--color-bg-tertiary)] transition-colors"
+              >
+                Prizes
+              </Link>
+              <Link
+                href="/sports/"
+                className="flex-1 text-center py-2 px-3 rounded-md text-xs font-medium text-[var(--color-text-secondary)] hover:text-white active:text-white bg-[var(--color-bg-tertiary)] transition-colors"
+              >
+                Sports
+              </Link>
+            </div>
+          </div>
+        )}
+
         {/* Search Button - Mobile only */}
-        <div className="p-3 border-b border-[var(--color-border)] lg:hidden">
+        <div className="p-3 lg:hidden">
           <button
             onClick={() => setSearchOpen(true)}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[var(--color-text-secondary)] hover:text-white hover:bg-[var(--color-bg-hover)] transition-colors"

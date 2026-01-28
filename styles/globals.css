@@ -9,7 +9,7 @@
 :root {
   /* Core Colors - extracted from MetaWin */
   --color-bg-primary: #0d0f13;
-  --color-bg-secondary: #141820;
+  --color-bg-secondary: #0F1115;
   --color-bg-tertiary: #1a1f2e;
   --color-bg-card: #1e2433;
   --color-bg-hover: #252d3d;
@@ -41,7 +41,7 @@
   --shadow-card-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
   
   /* Spacing */
-  --sidebar-width: 240px;
+  --sidebar-width: 260px;
   --sidebar-collapsed-width: 72px;
   --header-height: 64px;
   
@@ -179,8 +179,6 @@ a:hover {
   }
   
   .game-card:hover {
-    transform: scale(1.03);
-    box-shadow: var(--shadow-card-hover);
   }
   
   .game-card img {
