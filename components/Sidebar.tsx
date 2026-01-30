@@ -182,6 +182,18 @@ export default function Sidebar({ navigation }: SidebarProps) {
     setMobileOpen(false)
   }, [pathname, setMobileOpen])
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [mobileOpen])
+
   const getIcon = (iconName: string) => {
     const IconComponent = iconMap[iconName] || LayoutGrid
     return <IconComponent className="w-5 h-5" />
@@ -357,7 +369,7 @@ export default function Sidebar({ navigation }: SidebarProps) {
         <div className="border-t border-[var(--color-border)]" />
 
         {/* Navigation - Scrollable */}
-        <nav className="flex-1 overflow-y-auto p-3">
+        <nav className="flex-1 overflow-y-auto overscroll-contain p-3">
           <ul className="space-y-1">
             {navigation?.items?.map((item, index) => {
               if (item._type === 'navSection') {

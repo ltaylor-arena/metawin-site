@@ -13,7 +13,7 @@ export default function TopHeader() {
   const { toggleMobile } = useSidebar()
 
   return (
-    <header className="sticky top-0 z-40 h-[62px] bg-[#0F1115] border-b border-l border-[var(--color-border)]">
+    <header className="sticky top-0 z-40 h-[62px] bg-[#0F1115] border-b lg:border-l border-[var(--color-border)]">
       <div className="flex items-center justify-between h-full px-4 lg:px-6">
         {/* Mobile Menu Button */}
         <button
