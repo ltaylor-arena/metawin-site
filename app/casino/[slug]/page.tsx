@@ -15,6 +15,7 @@ import AuthorBio from '@/components/AuthorBio'
 import AuthorByline from '@/components/AuthorByline'
 import AuthorThoughts from '@/components/AuthorThoughts'
 import Callout from '@/components/Callout'
+import CategoryCards from '@/components/CategoryCards'
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -112,12 +113,11 @@ export default async function Page({ params }: PageProps) {
           switch (block._type) {
             case 'hero':
               return (
-                <section key={block._key} className="mb-8 -mx-4 md:-mx-6">
+                <section key={block._key} className="mb-8 -mx-4 md:-mx-6 pt-4">
                   <Hero
-                    eyebrow={block.eyebrow}
-                    heading={block.heading}
-                    ctaText={block.ctaText}
-                    ctaLink={block.ctaLink}
+                    slides={block.slides}
+                    autoplay={block.autoplay}
+                    autoplaySpeed={block.autoplaySpeed}
                   />
                 </section>
               )
@@ -246,6 +246,17 @@ export default async function Page({ params }: PageProps) {
                     title={block.title}
                     content={block.content}
                     variant={block.variant}
+                  />
+                </section>
+              )
+
+            case 'categoryCards':
+              return (
+                <section key={block._key} className="mb-8 -mx-4 md:-mx-6">
+                  <CategoryCards
+                    heading={block.heading}
+                    description={block.sectionDescription}
+                    cards={block.cards || []}
                   />
                 </section>
               )

@@ -196,98 +196,101 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
         {/* Games Grid */}
         {games && games.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-2 md:gap-3">
             {games.map((game: any) => (
-              <div key={game._id} className="group">
-                <div className="game-card">
-                  {/* Thumbnail */}
-                  <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-[var(--color-bg-secondary)]">
-                    {game.thumbnail ? (
-                      <Image
-                        src={urlFor(game.thumbnail)
-                          .width(400)
-                          .height(534)
-                          .fit('crop')
-                          .auto('format')
-                          .url()}
-                        alt={game.title}
-                        fill
-                        className="object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
-                    ) : game.externalThumbnailUrl ? (
-                      <Image
-                        src={game.externalThumbnailUrl}
-                        alt={game.title}
-                        fill
-                        sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, (max-width: 1280px) 20vw, 16vw"
-                        className="object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-[var(--color-text-muted)]">
-                        No Image
+              <div key={game._id} className="group overflow-visible">
+                <div className="game-card overflow-visible">
+                  {/* Thumbnail wrapper - provides space for lift effect */}
+                  <div className="relative aspect-[3/4] mb-1.5 overflow-visible">
+                    {/* Thumbnail - moves up on hover */}
+                    <div className="absolute inset-0 transition-transform duration-200 group-hover:-translate-y-2">
+                      <div className="relative w-full h-full overflow-hidden rounded">
+                        {game.thumbnail ? (
+                          <Image
+                            src={urlFor(game.thumbnail)
+                              .width(352)
+                              .height(470)
+                              .fit('crop')
+                              .auto('format')
+                              .url()}
+                            alt={game.title}
+                            fill
+                            sizes="(max-width: 640px) 33vw, (max-width: 768px) 25vw, (max-width: 1024px) 20vw, (max-width: 1280px) 16vw, 12vw"
+                            className="object-cover"
+                          />
+                        ) : game.externalThumbnailUrl ? (
+                          <Image
+                            src={game.externalThumbnailUrl}
+                            alt={game.title}
+                            fill
+                            sizes="(max-width: 640px) 33vw, (max-width: 768px) 25vw, (max-width: 1024px) 20vw, (max-width: 1280px) 16vw, 12vw"
+                            className="object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-[var(--color-bg-tertiary)] flex items-center justify-center">
+                            <span className="text-[var(--color-text-muted)] text-xs">No image</span>
+                          </div>
+                        )}
+
+                        {/* Badges */}
+                        {(game.isNew || game.isFeatured) && (
+                          <div className="absolute top-2 left-2 flex gap-1">
+                            {game.isNew && (
+                              <span className="px-1.5 py-0.5 bg-green-500 text-white text-[10px] font-bold rounded">
+                                NEW
+                              </span>
+                            )}
+                            {game.isFeatured && (
+                              <span className="px-1.5 py-0.5 bg-[var(--color-accent-blue)] text-white text-[10px] font-bold rounded">
+                                HOT
+                              </span>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Hover Buttons - slide up from bottom */}
+                        <div className="absolute inset-x-0 bottom-0 flex flex-col translate-y-full group-hover:translate-y-0 transition-transform duration-200">
+                          <a
+                            href={signUpUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full py-2.5 bg-black text-white hover:text-white text-xs font-semibold text-center"
+                          >
+                            Play now
+                          </a>
+                          {game.hasContent && (
+                            <Link
+                              href={`/casino/games/${category}/${game.slug}/`}
+                              className="w-full py-2 bg-white/20 hover:bg-white/30 text-white hover:text-white text-xs font-semibold text-center transition-colors backdrop-blur-sm"
+                            >
+                              Game Info
+                            </Link>
+                          )}
+                        </div>
                       </div>
-                    )}
-
-                    {/* Badges */}
-                    <div className="absolute top-2 left-2 flex gap-1">
-                      {game.isNew && (
-                        <span className="px-2 py-1 bg-green-500 text-white text-xs font-bold rounded">
-                          NEW
-                        </span>
-                      )}
-                      {game.isFeatured && (
-                        <span className="px-2 py-1 bg-[var(--color-accent-blue)] text-white text-xs font-bold rounded">
-                          HOT
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Hover Overlay with Action Buttons */}
-                    <div className="game-card-overlay flex flex-col items-center justify-center gap-2 px-3">
-                      <a
-                        href={signUpUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full py-4 px-3 bg-[var(--color-accent-blue)] hover:bg-[var(--color-accent-blue-hover)] text-white hover:text-white text-sm font-semibold rounded-lg text-center transition-colors"
-                      >
-                        Play Now
-                      </a>
-                      {game.hasContent && (
-                        <Link
-                          href={`/casino/games/${category}/${game.slug}/`}
-                          className="w-full py-2 px-3 bg-white/20 hover:bg-white/30 text-white hover:text-white text-xs font-medium rounded-lg text-center transition-colors backdrop-blur-sm"
-                        >
-                          Game Info
-                        </Link>
-                      )}
                     </div>
                   </div>
 
                   {/* Game Info */}
-                  <div className="mt-2 px-1">
-                    <h3 className="text-sm font-medium text-white truncate">
+                  <div className="px-0.5 text-center">
+                    <h3 className="text-xs font-medium text-white truncate">
                       {game.title}
                     </h3>
                     {(game.rtp || game.volatility) && (
-                      <div className="flex items-center gap-1.5 mt-1">
+                      <div className="flex items-center justify-center gap-1 mt-0.5">
                         {game.rtp && (
-                          <span className="text-[12px]" style={{ color: 'rgb(0, 234, 105)' }}>
-                            RTP {game.rtp}%
+                          <span className="text-[11px]" style={{ color: 'rgb(0, 234, 105)' }}>
+                            {game.rtp}%
                           </span>
                         )}
                         {game.volatility && (
                           <img
                             src={`/images/volatility/volatility-${game.volatility}.svg`}
                             alt={`${game.volatility} volatility`}
-                            style={{ height: '8px', width: 'auto' }}
+                            style={{ height: '7px', width: 'auto' }}
                           />
                         )}
                       </div>
-                    )}
-                    {game.provider && (
-                      <p className="text-xs text-[var(--color-text-muted)] truncate">
-                        {game.provider}
-                      </p>
                     )}
                   </div>
                 </div>

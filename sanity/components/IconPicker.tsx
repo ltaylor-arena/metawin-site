@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useState } from 'react'
+import { useCallback, useState, ComponentType, SVGProps } from 'react'
 import { set, unset, StringInputProps } from 'sanity'
 import {
   Flame,
@@ -48,9 +48,50 @@ import {
   Monitor,
   type LucideIcon,
 } from 'lucide-react'
+import {
+  SlotsIcon,
+  CrashIcon,
+  AllGamesIcon,
+  BaccaratIcon,
+  BlackjackIcon,
+  BonusBuyIcon,
+  FishingIcon,
+  GameshowsIcon,
+  LiveCasinoIcon,
+  MetawinOriginalsIcon,
+  ProvidersIcon,
+  RouletteIcon,
+  PlinkoIcon,
+  ZeroHouseEdgeIcon,
+  PromotionsIcon,
+  NewReleasesIcon,
+  MetawinnersNftIcon,
+} from '../../components/icons/GameIcons'
+
+// Type for any icon component
+type IconComponent = LucideIcon | ComponentType<SVGProps<SVGSVGElement>>
 
 // Available icons - keep in sync with frontend iconMap in Sidebar.tsx
-const AVAILABLE_ICONS: { name: string; icon: LucideIcon; label: string }[] = [
+const AVAILABLE_ICONS: { name: string; icon: IconComponent; label: string; isCustom?: boolean }[] = [
+  // MetaWin custom game category icons (shown first)
+  { name: 'slots', icon: SlotsIcon, label: 'Slots', isCustom: true },
+  { name: 'crash', icon: CrashIcon, label: 'Crash', isCustom: true },
+  { name: 'all-games', icon: AllGamesIcon, label: 'All Games', isCustom: true },
+  { name: 'baccarat', icon: BaccaratIcon, label: 'Baccarat', isCustom: true },
+  { name: 'blackjack', icon: BlackjackIcon, label: 'Blackjack', isCustom: true },
+  { name: 'bonus-buy', icon: BonusBuyIcon, label: 'Bonus Buy', isCustom: true },
+  { name: 'fishing', icon: FishingIcon, label: 'Fishing', isCustom: true },
+  { name: 'gameshows', icon: GameshowsIcon, label: 'Gameshows', isCustom: true },
+  { name: 'live-casino', icon: LiveCasinoIcon, label: 'Live Casino', isCustom: true },
+  { name: 'metawin-originals', icon: MetawinOriginalsIcon, label: 'MW Originals', isCustom: true },
+  { name: 'providers', icon: ProvidersIcon, label: 'Providers', isCustom: true },
+  { name: 'roulette', icon: RouletteIcon, label: 'Roulette', isCustom: true },
+  { name: 'plinko', icon: PlinkoIcon, label: 'Plinko', isCustom: true },
+  { name: 'zero-house-edge', icon: ZeroHouseEdgeIcon, label: '0% House Edge', isCustom: true },
+  { name: 'promotions', icon: PromotionsIcon, label: 'Promotions', isCustom: true },
+  { name: 'new-releases', icon: NewReleasesIcon, label: 'New Releases', isCustom: true },
+  { name: 'metawinners-nft', icon: MetawinnersNftIcon, label: 'MW NFT', isCustom: true },
+
   // Navigation icons
   { name: 'house', icon: House, label: 'Home' },
   { name: 'flame', icon: Flame, label: 'Hot/Fire' },
@@ -61,18 +102,18 @@ const AVAILABLE_ICONS: { name: string; icon: LucideIcon; label: string }[] = [
   { name: 'trophy', icon: Trophy, label: 'Winners' },
   { name: 'search', icon: Search, label: 'Search' },
 
-  // Game category icons
-  { name: 'gem', icon: Gem, label: 'Slots' },
-  { name: 'rocket', icon: Rocket, label: 'Crash' },
+  // Lucide game category icons (fallbacks)
+  { name: 'gem', icon: Gem, label: 'Slots (alt)' },
+  { name: 'rocket', icon: Rocket, label: 'Crash (alt)' },
   { name: 'triangle', icon: Triangle, label: 'Plinko' },
-  { name: 'spade', icon: Spade, label: 'Blackjack' },
-  { name: 'club', icon: Club, label: 'Baccarat' },
-  { name: 'target', icon: Target, label: 'Roulette' },
+  { name: 'spade', icon: Spade, label: 'Blackjack (alt)' },
+  { name: 'club', icon: Club, label: 'Baccarat (alt)' },
+  { name: 'target', icon: Target, label: 'Roulette (alt)' },
   { name: 'grid-3x3', icon: Grid3x3, label: 'Keno' },
   { name: 'dice-5', icon: Dice5, label: 'Dice' },
-  { name: 'wand-2', icon: Wand2, label: 'Originals' },
-  { name: 'tv', icon: Tv, label: 'Live Casino' },
-  { name: 'fish', icon: Fish, label: 'Fishing' },
+  { name: 'wand-2', icon: Wand2, label: 'Originals (alt)' },
+  { name: 'tv', icon: Tv, label: 'Live (alt)' },
+  { name: 'fish', icon: Fish, label: 'Fishing (alt)' },
   { name: 'gamepad-2', icon: Gamepad2, label: 'Games' },
   { name: 'joystick', icon: Joystick, label: 'Arcade' },
   { name: 'monitor', icon: Monitor, label: 'Virtual' },
@@ -162,7 +203,11 @@ export function IconPicker(props: StringInputProps) {
         >
           {SelectedIconComponent ? (
             <>
-              <SelectedIconComponent size={18} />
+              {selectedIcon.isCustom ? (
+                <SelectedIconComponent width={18} height={18} />
+              ) : (
+                <SelectedIconComponent size={18} />
+              )}
               <span>{selectedIcon.label}</span>
               <span style={{ color: '#666', fontSize: '12px' }}>({value})</span>
             </>
@@ -266,7 +311,11 @@ export function IconPicker(props: StringInputProps) {
                     }
                   }}
                 >
-                  <IconComponent size={20} />
+                  {item.isCustom ? (
+                    <IconComponent width={20} height={20} />
+                  ) : (
+                    <IconComponent size={20} />
+                  )}
                   <span
                     style={{
                       fontSize: '9px',

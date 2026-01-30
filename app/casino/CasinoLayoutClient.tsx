@@ -11,9 +11,9 @@ function MainContent({ children, footer }: { children: React.ReactNode; footer: 
   const { collapsed } = useSidebar()
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className={`flex flex-col min-h-screen ${collapsed ? 'lg:ml-[72px]' : 'lg:ml-[260px]'} transition-all duration-300`}>
       <TopHeader />
-      <div className={`${collapsed ? 'lg:ml-[72px]' : 'lg:ml-[260px]'} flex flex-col flex-1 transition-all duration-300 bg-[#1A1D26]`}>
+      <div className="flex flex-col flex-1 bg-[#1A1D26]">
         <main className="flex-1 w-full lg:max-w-[75%] lg:mx-auto">
           {children}
         </main>

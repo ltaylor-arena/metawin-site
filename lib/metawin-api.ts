@@ -118,7 +118,7 @@ export interface HotColdGame {
  * @param revalidate - Cache time in seconds (default 300)
  */
 export async function getHotColdSlots(
-  limit: number = 7,
+  limit: number = 10,
   revalidate: number = 300
 ): Promise<{ hot: HotColdGame[]; cold: HotColdGame[] }> {
   // Fetch from 'all' collection for variety across game types (cached for 5 min)

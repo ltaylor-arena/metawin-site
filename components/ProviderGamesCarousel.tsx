@@ -57,7 +57,7 @@ export default function ProviderGamesCarousel({ provider, games, signUpUrl = 'ht
   if (!games || games.length === 0) return null
 
   return (
-    <section className="py-5">
+    <section className="py-5 overflow-x-clip overflow-y-visible">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl md:text-2xl font-bold text-white">
@@ -103,8 +103,12 @@ export default function ProviderGamesCarousel({ provider, games, signUpUrl = 'ht
       <div
         ref={containerRef}
         onScroll={checkScroll}
-        className="flex gap-3 md:gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-2"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        className="flex gap-2 md:gap-3 overflow-x-auto scrollbar-hide scroll-smooth pt-3 pb-1"
+        style={{
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          clipPath: 'inset(-20px 0 0 0)',
+        }}
       >
         {games.map((game) => {
           const gamePageUrl = `/casino/games/${game.categorySlug}/${game.slug}/`
@@ -122,65 +126,70 @@ export default function ProviderGamesCarousel({ provider, games, signUpUrl = 'ht
           return (
             <div
               key={game._id}
-              className="w-36 md:w-44 flex-shrink-0 group"
+              className="w-32 md:w-36 flex-shrink-0 group overflow-visible"
             >
-              <div className="game-card">
-                {/* Thumbnail */}
-                <div className="relative aspect-[3/4] overflow-hidden rounded-xl">
-                  {thumbnailSrc ? (
-                    <Image
-                      src={thumbnailSrc}
-                      alt={game.title}
-                      fill
-                      sizes="(max-width: 768px) 144px, 176px"
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-[var(--color-bg-tertiary)] flex items-center justify-center">
-                      <span className="text-[var(--color-text-muted)] text-xs">No image</span>
-                    </div>
-                  )}
+              <div className="game-card overflow-visible">
+                {/* Thumbnail wrapper - provides space for lift effect */}
+                <div className="relative aspect-[3/4] mb-1.5 overflow-visible">
+                  {/* Thumbnail - moves up on hover */}
+                  <div className="absolute inset-0 transition-transform duration-200 group-hover:-translate-y-2">
+                    <div className="relative w-full h-full overflow-hidden rounded">
+                      {thumbnailSrc ? (
+                        <Image
+                          src={thumbnailSrc}
+                          alt={game.title}
+                          fill
+                          sizes="(max-width: 768px) 128px, 144px"
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-[var(--color-bg-tertiary)] flex items-center justify-center">
+                          <span className="text-[var(--color-text-muted)] text-xs">No image</span>
+                        </div>
+                      )}
 
-                  {/* Hover Overlay with Action Buttons */}
-                  <div className="game-card-overlay flex flex-col items-center justify-center gap-2 px-3">
-                    <a
-                      href={signUpUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full py-4 px-3 bg-[var(--color-accent-blue)] hover:bg-[var(--color-accent-blue-hover)] text-white hover:text-white text-sm font-semibold rounded-lg text-center transition-colors"
-                    >
-                      Play Now
-                    </a>
-                    {game.hasContent && (
-                      <Link
-                        href={gamePageUrl}
-                        className="w-full py-2 px-3 bg-white/20 hover:bg-white/30 text-white hover:text-white text-xs font-medium rounded-lg text-center transition-colors backdrop-blur-sm"
-                      >
-                        Game Info
-                      </Link>
-                    )}
+                      {/* Hover Buttons - slide up from bottom */}
+                      <div className="absolute inset-x-0 bottom-0 flex flex-col translate-y-full group-hover:translate-y-0 transition-transform duration-200">
+                        <a
+                          href={signUpUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full py-2.5 bg-black text-white hover:text-white text-xs font-semibold text-center"
+                        >
+                          Play now
+                        </a>
+                        {game.hasContent && (
+                          <Link
+                            href={gamePageUrl}
+                            className="w-full py-2 bg-white/20 hover:bg-white/30 text-white hover:text-white text-xs font-semibold text-center transition-colors backdrop-blur-sm"
+                          >
+                            Game Info
+                          </Link>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 {/* Game Info */}
-                <div className="mt-2 px-1">
-                  <h3 className="text-sm font-medium text-white truncate">
+                <div className="px-0.5 text-center">
+                  <h3 className="text-xs font-medium text-white truncate">
                     {game.title}
                   </h3>
 
                   {/* RTP & Volatility */}
                   {(game.rtp || game.volatility) && (
-                    <div className="flex items-center gap-1.5 mt-1">
+                    <div className="flex items-center justify-center gap-1 mt-0.5">
                       {game.rtp && (
-                        <span className="text-[12px]" style={{ color: 'rgb(0, 234, 105)' }}>
-                          RTP {game.rtp}%
+                        <span className="text-[11px]" style={{ color: 'rgb(0, 234, 105)' }}>
+                          {game.rtp}%
                         </span>
                       )}
                       {game.volatility && (
                         <img
                           src={`/images/volatility/volatility-${game.volatility}.svg`}
                           alt={`${game.volatility} volatility`}
-                          style={{ height: '8px', width: 'auto' }}
+                          style={{ height: '7px', width: 'auto' }}
                         />
                       )}
                     </div>

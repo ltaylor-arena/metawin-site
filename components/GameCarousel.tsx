@@ -91,7 +91,7 @@ export default function GameCarousel({
   return (
     <section className="py-4 overflow-x-clip overflow-y-visible">
       {/* Header */}
-      <div className="flex items-center justify-between mb-3 px-4 md:px-6">
+      <div className="flex items-center justify-between mt-2 mb-2 px-4 md:px-6">
         <h2 className="text-lg md:text-xl font-bold text-white">{title}</h2>
 
         <div className="flex items-center gap-2">
@@ -158,7 +158,7 @@ export default function GameCarousel({
         <div
           ref={containerRef}
           onScroll={checkScroll}
-          className="flex gap-2 md:gap-3 overflow-x-auto scrollbar-hide scroll-smooth px-4 md:px-6 pt-4 pb-1"
+          className="flex gap-2 md:gap-3 overflow-x-auto scrollbar-hide scroll-smooth px-4 md:px-6 pt-3 pb-1"
           style={{
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
@@ -187,7 +187,7 @@ export default function GameCarousel({
                 {/* Thumbnail wrapper - provides space for lift effect */}
                 <div className="relative aspect-[3/4] mb-1.5 overflow-visible">
                   {/* Thumbnail - moves up on hover */}
-                  <div className="absolute inset-0 transition-transform duration-200 group-hover:-translate-y-3">
+                  <div className="absolute inset-0 transition-transform duration-200 group-hover:-translate-y-2">
                     <div className="relative w-full h-full overflow-hidden rounded">
                       {thumbnailSrc ? (
                         <Image
@@ -278,12 +278,6 @@ export default function GameCarousel({
                     </div>
                   )}
 
-                  {/* Provider */}
-                  {!showWinAmounts && game.provider && (
-                    <p className="text-[10px] text-[var(--color-text-muted)] truncate">
-                      {game.provider}
-                    </p>
-                  )}
                 </div>
               </div>
             </div>

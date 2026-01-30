@@ -37,9 +37,10 @@ export const homepageQuery = groq`
         autoplay,
         autoplaySpeed,
         slides[] {
+          "desktopImage": desktopImage.asset->url,
+          "mobileImage": mobileImage.asset->url,
+          eyebrow,
           heading,
-          subheading,
-          "image": image.asset->url,
           ctaText,
           ctaLink
         }
@@ -69,6 +70,9 @@ export const homepageQuery = groq`
           viewAllLink->_type == "page" && viewAllLink->isHomepage == true => "/casino/",
           viewAllLink->_type == "page" => "/casino/" + viewAllLink->slug.current + "/",
           viewAllLink->_type == "category" => "/casino/games/" + viewAllLink->slug.current + "/",
+          displayMode == "category" && defined(category) => "/casino/games/" + category->slug.current + "/",
+          displayMode == "popular" => "/casino/games/",
+          displayMode == "latest" => "/casino/games/",
           null
         ),
         "categorySlug": category->slug.current,
@@ -180,6 +184,20 @@ export const homepageQuery = groq`
         title,
         content,
         variant
+      },
+
+      // Category Cards
+      _type == "categoryCards" => {
+        heading,
+        "sectionDescription": description,
+        cards[] {
+          _key,
+          "image": image.asset->url,
+          title,
+          description,
+          ctaText,
+          ctaLink
+        }
       }
     }
   }
@@ -222,9 +240,10 @@ export const pageBySlugQuery = groq`
         autoplay,
         autoplaySpeed,
         slides[] {
+          "desktopImage": desktopImage.asset->url,
+          "mobileImage": mobileImage.asset->url,
+          eyebrow,
           heading,
-          subheading,
-          "image": image.asset->url,
           ctaText,
           ctaLink
         }
@@ -254,6 +273,9 @@ export const pageBySlugQuery = groq`
           viewAllLink->_type == "page" && viewAllLink->isHomepage == true => "/casino/",
           viewAllLink->_type == "page" => "/casino/" + viewAllLink->slug.current + "/",
           viewAllLink->_type == "category" => "/casino/games/" + viewAllLink->slug.current + "/",
+          displayMode == "category" && defined(category) => "/casino/games/" + category->slug.current + "/",
+          displayMode == "popular" => "/casino/games/",
+          displayMode == "latest" => "/casino/games/",
           null
         ),
         "categorySlug": category->slug.current,
@@ -361,6 +383,20 @@ export const pageBySlugQuery = groq`
         title,
         content,
         variant
+      },
+
+      // Category Cards
+      _type == "categoryCards" => {
+        heading,
+        "sectionDescription": description,
+        cards[] {
+          _key,
+          "image": image.asset->url,
+          title,
+          description,
+          ctaText,
+          ctaLink
+        }
       }
     }
   }

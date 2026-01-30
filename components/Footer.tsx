@@ -81,8 +81,44 @@ export default function Footer({ data }: FooterProps) {
   return (
     <footer className="bg-[var(--color-bg-secondary)] border-t border-[var(--color-border)] mt-auto">
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-12">
+        {/* Logo, Copyright & Social Links */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
+          {/* Logo & Copyright */}
+          <div className="flex flex-col items-center md:items-start gap-2">
+            <Image
+              src="/images/metawin-logo-white.svg"
+              alt="MetaWin"
+              width={120}
+              height={24}
+              className="h-6 w-auto"
+            />
+            <p className="text-sm text-[var(--color-text-muted)]">
+              {formattedCopyright}
+            </p>
+          </div>
+
+          {/* Social Links */}
+          <div className="flex items-center gap-4">
+            {socialLinks.map((social, index) => {
+              const Icon = socialIcons[social.platform] || MessageCircle
+              return (
+                <Link
+                  key={index}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-lg bg-[var(--color-bg-tertiary)] hover:bg-[var(--color-bg-hover)] transition-colors"
+                  aria-label={social.platform}
+                >
+                  <Icon className="w-5 h-5 text-[var(--color-text-secondary)]" />
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+
         {/* Footer Columns */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-8 border-t border-[var(--color-border)]">
           {columns.map((column, index) => (
             <div key={index}>
               <h3 className="text-sm font-semibold text-white mb-4">
@@ -108,44 +144,6 @@ export default function Footer({ data }: FooterProps) {
               </ul>
             </div>
           ))}
-        </div>
-        
-        {/* Divider */}
-        <div className="border-t border-[var(--color-border)] pt-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            {/* Logo & Copyright */}
-            <div className="flex flex-col items-center md:items-start gap-2">
-              <Image
-                src="/images/metawin-logo-white.svg"
-                alt="MetaWin"
-                width={120}
-                height={24}
-                className="h-6 w-auto"
-              />
-              <p className="text-sm text-[var(--color-text-muted)]">
-                {formattedCopyright}
-              </p>
-            </div>
-            
-            {/* Social Links */}
-            <div className="flex items-center gap-4">
-              {socialLinks.map((social, index) => {
-                const Icon = socialIcons[social.platform] || MessageCircle
-                return (
-                  <Link
-                    key={index}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 rounded-lg bg-[var(--color-bg-tertiary)] hover:bg-[var(--color-bg-hover)] transition-colors"
-                    aria-label={social.platform}
-                  >
-                    <Icon className="w-5 h-5 text-[var(--color-text-secondary)]" />
-                  </Link>
-                )
-              })}
-            </div>
-          </div>
         </div>
         
         {/* Crypto Coin Logos */}

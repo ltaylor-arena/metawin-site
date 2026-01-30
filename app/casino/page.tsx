@@ -10,6 +10,7 @@ import FAQ from '@/components/FAQ'
 import PromoCard from '@/components/PromoCard'
 import HotColdSlots from '@/components/HotColdSlots'
 import Callout from '@/components/Callout'
+import CategoryCards from '@/components/CategoryCards'
 import { OrganizationStructuredData } from '@/components/StructuredData'
 
 async function getHomepage() {
@@ -56,12 +57,11 @@ export default async function CasinoHomePage() {
         switch (block._type) {
           case 'hero':
             return (
-              <section key={block._key}>
+              <section key={block._key} className="sm:pt-4">
                 <Hero
-                  eyebrow={block.eyebrow}
-                  heading={block.heading}
-                  ctaText={block.ctaText}
-                  ctaLink={block.ctaLink}
+                  slides={block.slides}
+                  autoplay={block.autoplay}
+                  autoplaySpeed={block.autoplaySpeed}
                 />
               </section>
             )
@@ -70,9 +70,9 @@ export default async function CasinoHomePage() {
             const hasPromoCards = block.promoCards && block.promoCards.length > 0
             return (
               <section key={block._key} className="px-4 md:px-6 py-8">
-                <div className={`flex flex-col ${hasPromoCards ? 'lg:flex-row lg:gap-8' : ''}`}>
+                <div className={`bg-[#0F1115] rounded-lg p-4 md:p-6 flex flex-col ${hasPromoCards ? 'lg:flex-row lg:gap-8' : ''}`}>
                   {/* Left Column - Text Content */}
-                  <div className={hasPromoCards ? 'lg:w-[60%]' : 'max-w-4xl'}>
+                  <div className={hasPromoCards ? 'lg:w-[65%]' : 'max-w-4xl'}>
                     {block.heading && (
                       <h1 className="text-2xl md:text-3xl font-bold text-white mb-4">
                         {block.heading}
@@ -85,19 +85,49 @@ export default async function CasinoHomePage() {
                     )}
                   </div>
 
-                  {/* Right Column - Promo Cards */}
+                  {/* Right Column - Compact Promo Cards (stacked vertically) */}
                   {hasPromoCards && (
-                    <div className="lg:w-[40%] flex flex-col gap-4 mt-6 lg:mt-0">
-                      {block.promoCards.map((card: any) => (
-                        <PromoCard
-                          key={card._key}
-                          title={card.title}
-                          subtitle={card.subtitle}
-                          colorTheme={card.colorTheme}
-                          backgroundImage={card.backgroundImage}
-                          link={card.link}
-                        />
-                      ))}
+                    <div className="lg:w-[35%] flex flex-col gap-3 mt-6 lg:mt-0">
+                      {block.promoCards.map((card: any) => {
+                        const gradientColors: Record<string, string> = {
+                          blue: 'from-blue-600/80',
+                          orange: 'from-orange-500/80',
+                          purple: 'from-purple-600/80',
+                          green: 'from-emerald-600/80',
+                          pink: 'from-pink-500/80',
+                        }
+                        const gradient = gradientColors[card.colorTheme] || gradientColors.blue
+
+                        return (
+                          <a
+                            key={card._key}
+                            href={card.link}
+                            className="relative block w-full aspect-[16/9] rounded-md overflow-hidden group"
+                          >
+                            {/* Card Image */}
+                            {card.backgroundImage && (
+                              <img
+                                src={card.backgroundImage}
+                                alt={card.title}
+                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                              />
+                            )}
+                            {/* Gradient overlay - bottom left corner */}
+                            <div className={`absolute inset-0 bg-gradient-to-tr ${gradient} via-transparent to-transparent`} />
+                            {/* Title & subtitle overlay */}
+                            <div className="absolute bottom-2 left-2 right-2">
+                              <h4 className="text-white text-base font-semibold drop-shadow-lg">
+                                {card.title}
+                              </h4>
+                              {card.subtitle && (
+                                <p className="text-white/80 text-xs drop-shadow-lg mt-0.5 line-clamp-2">
+                                  {card.subtitle}
+                                </p>
+                              )}
+                            </div>
+                          </a>
+                        )
+                      })}
                     </div>
                   )}
                 </div>
@@ -107,7 +137,7 @@ export default async function CasinoHomePage() {
           case 'richText':
             return (
               <section key={block._key} className="px-4 md:px-6 py-8">
-                <div className="prose prose-invert prose-sm md:prose-base max-w-4xl">
+                <div className="prose prose-invert prose-sm md:prose-base max-w-none">
                   <PortableText value={block.content} />
                 </div>
               </section>
@@ -181,7 +211,7 @@ export default async function CasinoHomePage() {
                   heading={block.heading}
                   hotTitle={block.hotTitle}
                   coldTitle={block.coldTitle}
-                  limit={block.limit || 10}
+                  limit={block.limit || 5}
                   signUpUrl={siteSettings?.signUpUrl}
                 />
               </section>
@@ -197,6 +227,16 @@ export default async function CasinoHomePage() {
                   variant={block.variant}
                 />
               </section>
+            )
+
+          case 'categoryCards':
+            return (
+              <CategoryCards
+                key={block._key}
+                heading={block.heading}
+                description={block.sectionDescription}
+                cards={block.cards || []}
+              />
             )
 
           default:

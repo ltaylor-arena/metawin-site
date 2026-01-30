@@ -120,10 +120,10 @@ export default defineType({
             defineField({
               name: 'promoCards',
               title: 'Promo Cards (Right Column)',
-              description: 'Optional: Add 2 promotional cards to display in a right column (40% width on desktop)',
+              description: 'Optional: Add up to 3 promotional cards to display in a right column on desktop, stacked on mobile',
               type: 'array',
               of: [{ type: 'promoCard' }],
-              validation: (Rule) => Rule.max(2),
+              validation: (Rule) => Rule.max(3),
             }),
           ],
           preview: {
@@ -276,6 +276,12 @@ export default defineType({
         defineArrayMember({
           type: 'callout',
           title: 'Callout',
+        }),
+
+        // Category Cards (large promo cards with character images)
+        defineArrayMember({
+          type: 'categoryCards',
+          title: 'Category Cards',
         }),
 
         // Hot & Cold Slots (Live RTP Tracker)
