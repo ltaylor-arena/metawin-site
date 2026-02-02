@@ -913,3 +913,60 @@ export const allPromotionSlugsQuery = groq`
     _updatedAt
   }
 `
+
+// ==================
+// AUTHOR QUERIES
+// ==================
+
+// Get author by slug
+export const authorBySlugQuery = groq`
+  *[_type == "author" && slug.current == $slug][0] {
+    _id,
+    name,
+    "slug": slug.current,
+    image,
+    role,
+    bio,
+    expertise,
+    socialLinks
+  }
+`
+
+// Get all authors for sitemap/static generation
+export const allAuthorsQuery = groq`
+  *[_type == "author"] {
+    "slug": slug.current,
+    _updatedAt
+  }
+`
+
+// Get content written by an author (pages, games, promotions)
+export const contentByAuthorQuery = groq`
+{
+  "pages": *[_type == "page" && author._ref == $authorId && !isHomepage] | order(publishedAt desc) {
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    publishedAt,
+    "thumbnail": content[_type == "hero"][0].slides[0].desktopImage.asset->url
+  },
+  "games": *[_type == "game" && author._ref == $authorId && count(content) > 0] | order(publishedAt desc)[0...12] {
+    _id,
+    title,
+    "slug": slug.current,
+    "categorySlug": categories[0]->slug.current,
+    thumbnail,
+    externalThumbnailUrl,
+    provider,
+    publishedAt
+  },
+  "promotions": *[_type == "promotion" && author._ref == $authorId && isActive == true] | order(publishedAt desc) {
+    _id,
+    title,
+    "slug": slug.current,
+    excerpt,
+    publishedAt,
+    "thumbnail": coalesce(thumbnail.asset->url, heroImage.asset->url)
+  }
+}`

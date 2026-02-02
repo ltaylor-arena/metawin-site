@@ -2,6 +2,7 @@
 // Displays author information with profile image and bio in sidebar
 
 import Image from 'next/image'
+import Link from 'next/link'
 import { Twitter, Linkedin, Globe } from 'lucide-react'
 import { urlFor } from '@/lib/sanity'
 
@@ -66,7 +67,9 @@ export default function AuthorBio({ author }: AuthorBioProps) {
 
           {/* Author Info */}
           <div className="flex-1 min-w-0">
-            <h4 className="text-base font-semibold text-white">{author.name}</h4>
+            <Link href={`/casino/authors/${author.slug}/`} className="block">
+              <h4 className="text-base font-semibold text-white hover:text-[var(--color-accent-blue)] transition-colors">{author.name}</h4>
+            </Link>
             {author.role && (
               <p className="text-sm text-[var(--color-accent-blue)]">{author.role}</p>
             )}

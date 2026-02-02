@@ -2,6 +2,7 @@
 // Displays author name, thumbnail, and publication dates inline with page header
 
 import Image from 'next/image'
+import Link from 'next/link'
 import { Calendar, RefreshCw } from 'lucide-react'
 import { urlFor } from '@/lib/sanity'
 
@@ -46,7 +47,7 @@ export default function AuthorByline({ author, publishedAt, updatedAt }: AuthorB
       {/* Author */}
       <div className="flex items-center gap-2">
         <span>Written by</span>
-        <a href="#author" className="flex items-center gap-2 hover:text-white transition-colors">
+        <Link href={`/casino/authors/${author.slug}/`} className="flex items-center gap-2 hover:text-white transition-colors">
           {thumbnailUrl && (
             <div className="relative w-6 h-6 rounded-full overflow-hidden bg-[var(--color-bg-tertiary)]">
               <Image
@@ -58,7 +59,7 @@ export default function AuthorByline({ author, publishedAt, updatedAt }: AuthorB
             </div>
           )}
           <span className="font-medium text-white hover:text-[var(--color-accent-blue)] transition-colors">{author.name}</span>
-        </a>
+        </Link>
       </div>
 
       {/* Dates */}
