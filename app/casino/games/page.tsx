@@ -145,7 +145,7 @@ interface Category {
     externalThumbnailUrl?: string
     provider?: string
     rtp?: number
-    volatility?: 'low' | 'medium' | 'high'
+    volatility?: 'low' | 'low-medium' | 'medium' | 'medium-high' | 'high'
     hasContent?: boolean
   }>
 }

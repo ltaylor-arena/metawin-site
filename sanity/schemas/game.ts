@@ -108,7 +108,9 @@ export default defineType({
       options: {
         list: [
           { title: 'Low', value: 'low' },
+          { title: 'Low-Medium', value: 'low-medium' },
           { title: 'Medium', value: 'medium' },
+          { title: 'Medium-High', value: 'medium-high' },
           { title: 'High', value: 'high' },
         ],
       },

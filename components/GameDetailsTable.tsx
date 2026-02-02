@@ -16,7 +16,7 @@ interface GameDetailsTableProps {
   paylines?: string
   category?: Category[]
   reels?: number
-  volatility?: 'low' | 'medium' | 'high'
+  volatility?: 'low' | 'low-medium' | 'medium' | 'medium-high' | 'high'
   maxWin?: string
   minBet?: string
   maxBet?: string
@@ -30,6 +30,18 @@ interface GameDetailsTableProps {
 function formatReleaseDate(dateString: string): string {
   const date = new Date(dateString)
   return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+}
+
+// Helper to format volatility display text
+function formatVolatility(volatility: string): string {
+  const labels: Record<string, string> = {
+    'low': 'Low',
+    'low-medium': 'Low-Medium',
+    'medium': 'Medium',
+    'medium-high': 'Medium-High',
+    'high': 'High',
+  }
+  return labels[volatility] || volatility
 }
 
 // Boolean indicator component
@@ -69,10 +81,10 @@ export default function GameDetailsTable({
       value: volatility,
       render: volatility ? (
         <div className="flex items-center gap-2">
-          <span className="capitalize">{volatility}</span>
+          <span>{formatVolatility(volatility)}</span>
           <img
             src={`/images/volatility/volatility-${volatility}.svg`}
-            alt={`${volatility} volatility`}
+            alt={`${formatVolatility(volatility)} volatility`}
             className="h-3 w-auto"
           />
         </div>

@@ -16,7 +16,7 @@ interface Game {
   externalThumbnailUrl?: string // CDN URL fallback (for imported games)
   provider?: string
   rtp?: number
-  volatility?: 'low' | 'medium' | 'high'
+  volatility?: 'low' | 'low-medium' | 'medium' | 'medium-high' | 'high'
   winAmount?: string
   winner?: string
   hasContent?: boolean
