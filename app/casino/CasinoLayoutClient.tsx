@@ -4,6 +4,7 @@ import Sidebar from '@/components/Sidebar'
 import TopHeader from '@/components/TopHeader'
 import Footer from '@/components/Footer'
 import BackToTop from '@/components/BackToTop'
+import ScrollToTop from '@/components/ScrollToTop'
 import { SidebarProvider, useSidebar } from '@/contexts/SidebarContext'
 import type { SidebarNavigation, FooterData } from './layout'
 
@@ -35,6 +36,7 @@ export default function CasinoLayoutClient({
 }) {
   return (
     <SidebarProvider>
+      <ScrollToTop />
       <div className="casino-site min-h-screen">
         <Sidebar navigation={navigation} />
         <MainContent footer={footer}>{children}</MainContent>

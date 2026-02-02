@@ -77,6 +77,67 @@ export default defineType({
         }),
       ],
     }),
+    defineField({
+      name: 'yearsInIndustry',
+      title: 'Years in Industry',
+      type: 'number',
+      description: 'Number of years of experience in the gaming/casino industry',
+      validation: (Rule) => Rule.min(0).max(50),
+    }),
+    defineField({
+      name: 'favouriteGame',
+      title: 'Favourite Game',
+      type: 'reference',
+      to: [{ type: 'game' }],
+      description: 'Select the author\'s favourite game to feature on their profile',
+    }),
+    defineField({
+      name: 'favouriteQuote',
+      title: 'Favourite Quote',
+      type: 'object',
+      fields: [
+        defineField({
+          name: 'quote',
+          title: 'Quote',
+          type: 'text',
+          rows: 3,
+        }),
+        defineField({
+          name: 'attribution',
+          title: 'Attribution',
+          type: 'string',
+          description: 'Who said this quote? (optional)',
+        }),
+      ],
+    }),
+    defineField({
+      name: 'industryResources',
+      title: 'Industry Resources',
+      type: 'object',
+      description: 'How does this author stay up to date with the industry?',
+      fields: [
+        defineField({
+          name: 'heading',
+          title: 'Section Heading',
+          type: 'string',
+          initialValue: 'How I Stay Up to Date',
+        }),
+        defineField({
+          name: 'events',
+          title: 'Events & Conferences',
+          type: 'array',
+          of: [{ type: 'string' }],
+          description: 'e.g., "ICE London", "SBC Summit", "G2E Las Vegas"',
+        }),
+        defineField({
+          name: 'publications',
+          title: 'Publications & News Sources',
+          type: 'array',
+          of: [{ type: 'string' }],
+          description: 'e.g., "iGaming Business", "Casino Beats", "EGR"',
+        }),
+      ],
+    }),
   ],
   preview: {
     select: {

@@ -928,7 +928,21 @@ export const authorBySlugQuery = groq`
     role,
     bio,
     expertise,
-    socialLinks
+    socialLinks,
+    yearsInIndustry,
+    favouriteGame-> {
+      _id,
+      title,
+      "slug": slug.current,
+      "categorySlug": categories[0]->slug.current,
+      thumbnail,
+      externalThumbnailUrl,
+      provider,
+      rtp,
+      volatility
+    },
+    favouriteQuote,
+    industryResources
   }
 `
 

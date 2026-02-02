@@ -2,13 +2,25 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Twitter, Linkedin, Globe } from 'lucide-react'
+import { Twitter, Linkedin, Globe, Quote, Calendar, Newspaper, FileText } from 'lucide-react'
 import { client, urlFor } from '@/lib/sanity'
 import { authorBySlugQuery, contentByAuthorQuery, allAuthorsQuery } from '@/lib/queries'
 import Breadcrumbs from '@/components/Breadcrumbs'
 
 interface AuthorPageProps {
   params: Promise<{ slug: string }>
+}
+
+interface FavouriteGame {
+  _id: string
+  title: string
+  slug: string
+  categorySlug: string
+  thumbnail?: any
+  externalThumbnailUrl?: string
+  provider?: string
+  rtp?: number
+  volatility?: string
 }
 
 interface Author {
@@ -23,6 +35,17 @@ interface Author {
     twitter?: string
     linkedin?: string
     website?: string
+  }
+  yearsInIndustry?: number
+  favouriteGame?: FavouriteGame
+  favouriteQuote?: {
+    quote?: string
+    attribution?: string
+  }
+  industryResources?: {
+    heading?: string
+    events?: string[]
+    publications?: string[]
   }
 }
 
@@ -214,6 +237,142 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
                   {tag}
                 </span>
               ))}
+            </div>
+          </section>
+        )}
+
+        {/* Stats & Highlights Grid */}
+        {(author.yearsInIndustry || author.favouriteGame || allContent.length > 0) && (
+          <section className="mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* Years in Industry */}
+              {author.yearsInIndustry && (
+                <div className="bg-[var(--color-bg-secondary)] rounded-xl p-6 border border-[var(--color-border)] text-center">
+                  <Calendar className="w-8 h-8 text-[var(--color-accent-blue)] mx-auto mb-3" />
+                  <div className="text-4xl md:text-5xl font-bold text-white mb-2">
+                    {author.yearsInIndustry}+
+                  </div>
+                  <p className="text-sm text-[var(--color-text-muted)]">Years in the Industry</p>
+                </div>
+              )}
+
+              {/* Articles Written */}
+              {allContent.length > 0 && (
+                <div className="bg-[var(--color-bg-secondary)] rounded-xl p-6 border border-[var(--color-border)] text-center">
+                  <FileText className="w-8 h-8 text-[var(--color-accent-green)] mx-auto mb-3" />
+                  <div className="text-4xl md:text-5xl font-bold text-white mb-2">
+                    {allContent.length}
+                  </div>
+                  <p className="text-sm text-[var(--color-text-muted)]">Articles Written</p>
+                </div>
+              )}
+
+              {/* Favourite Game */}
+              {author.favouriteGame && (
+                <Link
+                  href={`/casino/games/${author.favouriteGame.categorySlug}/${author.favouriteGame.slug}/`}
+                  className="bg-[var(--color-bg-secondary)] rounded-xl p-6 border border-[var(--color-border)] hover:border-[var(--color-border-hover)] transition-colors group"
+                >
+                  <p className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider mb-3">Favourite Game</p>
+                  <div className="flex items-center gap-4">
+                    <div className="relative w-16 h-20 rounded-lg overflow-hidden bg-[var(--color-bg-tertiary)] flex-shrink-0">
+                      {author.favouriteGame.thumbnail ? (
+                        <Image
+                          src={urlFor(author.favouriteGame.thumbnail).width(128).height(160).fit('crop').auto('format').url()}
+                          alt={author.favouriteGame.title}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : author.favouriteGame.externalThumbnailUrl ? (
+                        <Image
+                          src={author.favouriteGame.externalThumbnailUrl}
+                          alt={author.favouriteGame.title}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : null}
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className="text-base font-semibold text-white group-hover:text-[var(--color-accent-blue)] transition-colors truncate">
+                        {author.favouriteGame.title}
+                      </h4>
+                      {author.favouriteGame.provider && (
+                        <p className="text-sm text-[var(--color-text-muted)]">{author.favouriteGame.provider}</p>
+                      )}
+                      {author.favouriteGame.rtp && (
+                        <p className="text-sm mt-1">
+                          <span className="text-[rgb(0,234,105)]">{author.favouriteGame.rtp}% RTP</span>
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* Favourite Quote */}
+        {author.favouriteQuote?.quote && (
+          <section className="mb-8">
+            <div className="bg-gradient-to-br from-[var(--color-bg-secondary)] to-[var(--color-bg-tertiary)] rounded-xl p-6 md:p-8 border border-[var(--color-border)] relative overflow-hidden">
+              <Quote className="absolute top-4 left-4 w-12 h-12 text-[var(--color-accent-blue)]/20" />
+              <blockquote className="relative z-10">
+                <p className="text-lg md:text-xl text-white italic leading-relaxed pl-8">
+                  "{author.favouriteQuote.quote}"
+                </p>
+                {author.favouriteQuote.attribution && (
+                  <footer className="mt-4 pl-8 text-sm text-[var(--color-text-muted)]">
+                    — {author.favouriteQuote.attribution}
+                  </footer>
+                )}
+              </blockquote>
+            </div>
+          </section>
+        )}
+
+        {/* Industry Resources */}
+        {author.industryResources && (author.industryResources.events?.length || author.industryResources.publications?.length) && (
+          <section className="mb-8">
+            <h2 className="text-xl font-bold text-white mb-4">
+              {author.industryResources.heading || 'How I Stay Up to Date'}
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Events */}
+              {author.industryResources.events && author.industryResources.events.length > 0 && (
+                <div className="bg-[var(--color-bg-secondary)] rounded-xl p-6 border border-[var(--color-border)]">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Calendar className="w-5 h-5 text-[var(--color-accent-blue)]" />
+                    <h3 className="text-base font-semibold text-white">Events & Conferences</h3>
+                  </div>
+                  <ul className="space-y-2">
+                    {author.industryResources.events.map((event, index) => (
+                      <li key={index} className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent-blue)]" />
+                        {event}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Publications */}
+              {author.industryResources.publications && author.industryResources.publications.length > 0 && (
+                <div className="bg-[var(--color-bg-secondary)] rounded-xl p-6 border border-[var(--color-border)]">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Newspaper className="w-5 h-5 text-[var(--color-accent-blue)]" />
+                    <h3 className="text-base font-semibold text-white">Publications & News</h3>
+                  </div>
+                  <ul className="space-y-2">
+                    {author.industryResources.publications.map((pub, index) => (
+                      <li key={index} className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent-blue)]" />
+                        {pub}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </section>
         )}
