@@ -15,7 +15,7 @@ function MainContent({ children, footer }: { children: React.ReactNode; footer: 
     <div className={`flex flex-col min-h-screen ${collapsed ? 'lg:ml-[72px]' : 'lg:ml-[260px]'} transition-all duration-300`}>
       <TopHeader />
       <div className="flex flex-col flex-1 bg-[#1A1D26]">
-        <main className="flex-1 w-full lg:max-w-[75%] lg:mx-auto">
+        <main className="flex-1 w-full lg:max-w-[90%] lg:mx-auto">
           {children}
         </main>
 

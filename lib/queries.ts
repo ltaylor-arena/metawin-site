@@ -984,3 +984,20 @@ export const contentByAuthorQuery = groq`
     "thumbnail": coalesce(thumbnail.asset->url, heroImage.asset->url)
   }
 }`
+
+// Get all authors for index page with article counts, ordered by most articles
+export const authorsIndexQuery = groq`
+  *[_type == "author"] {
+    _id,
+    name,
+    "slug": slug.current,
+    image,
+    role,
+    bio,
+    expertise,
+    "articleCount": count(*[
+      ((_type == "page" && author._ref == ^._id && !isHomepage) ||
+       (_type == "game" && author._ref == ^._id && count(content) > 0) ||
+       (_type == "promotion" && author._ref == ^._id && isActive == true))
+    ])
+  } | order(articleCount desc, name asc)`
