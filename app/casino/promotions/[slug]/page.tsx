@@ -100,6 +100,7 @@ export default async function PromotionPage({ params }: PromotionPageProps) {
           <div className="mt-3">
             <AuthorByline
               author={promotion.author}
+              factChecker={promotion.factChecker}
               publishedAt={promotion.publishedAt}
               updatedAt={promotion.updatedAt}
             />
@@ -231,8 +232,15 @@ export default async function PromotionPage({ params }: PromotionPageProps) {
 
         {/* Author Bio */}
         {promotion.showAuthorInfo && promotion.author && (
-          <div id="author" className="mt-7 xl:max-w-[calc(100%-312px)]">
+          <div className="mt-7 xl:max-w-[calc(100%-312px)] space-y-4">
             <AuthorBio author={promotion.author} />
+            {promotion.factChecker && (
+              <AuthorBio
+                author={promotion.factChecker}
+                title="Fact Checked By"
+                id="fact-checker-info"
+              />
+            )}
           </div>
         )}
       </div>

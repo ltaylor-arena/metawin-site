@@ -74,12 +74,12 @@ export default async function CasinoHomePage() {
                   {/* Left Column - Text Content */}
                   <div className={hasPromoCards ? 'lg:w-[65%]' : 'max-w-4xl'}>
                     {block.heading && (
-                      <h1 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                      <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
                         {block.heading}
-                      </h1>
+                      </h2>
                     )}
                     {block.text && (
-                      <div className="prose prose-invert prose-sm md:prose-base max-w-none">
+                      <div className="prose prose-invert prose-sm md:prose-base max-w-none prose-p:text-[0.9rem] prose-p:leading-[1.6] prose-h2:mt-[1em] prose-h2:mb-[0.5em]">
                         <PortableText value={block.text} />
                       </div>
                     )}
@@ -137,8 +137,10 @@ export default async function CasinoHomePage() {
           case 'richText':
             return (
               <section key={block._key} className="px-4 md:px-6 py-8">
-                <div className="prose prose-invert prose-sm md:prose-base max-w-none">
-                  <PortableText value={block.content} />
+                <div className="bg-[#0F1115] rounded-lg p-4 md:p-6">
+                  <div className="prose prose-invert prose-sm md:prose-base max-w-none prose-p:text-[0.9rem] prose-p:leading-[1.6] prose-h2:mt-[1em] prose-h2:mb-[0.5em]">
+                    <PortableText value={block.content} />
+                  </div>
                 </div>
               </section>
             )

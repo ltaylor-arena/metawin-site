@@ -155,6 +155,14 @@ export default defineType({
       group: 'content',
     }),
     defineField({
+      name: 'factChecker',
+      title: 'Fact Checked By',
+      type: 'reference',
+      to: [{ type: 'author' }],
+      group: 'content',
+      description: 'Optional: Select an author who fact-checked this content',
+    }),
+    defineField({
       name: 'publishedAt',
       title: 'Published Date',
       type: 'datetime',

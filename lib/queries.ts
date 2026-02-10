@@ -19,6 +19,15 @@ export const homepageQuery = groq`
       expertise,
       socialLinks
     },
+    factChecker-> {
+      name,
+      "slug": slug.current,
+      image,
+      role,
+      bio,
+      expertise,
+      socialLinks
+    },
     seo {
       metaTitle,
       metaDescription,
@@ -215,6 +224,15 @@ export const pageBySlugQuery = groq`
     publishedAt,
     updatedAt,
     author-> {
+      name,
+      "slug": slug.current,
+      image,
+      role,
+      bio,
+      expertise,
+      socialLinks
+    },
+    factChecker-> {
       name,
       "slug": slug.current,
       image,
@@ -603,6 +621,15 @@ export const gameBySlugQuery = groq`
       expertise,
       socialLinks
     },
+    factChecker-> {
+      name,
+      "slug": slug.current,
+      image,
+      role,
+      bio,
+      expertise,
+      socialLinks
+    },
 
     // SEO
     seo {
@@ -646,6 +673,15 @@ export const categoryBySlugQuery = groq`
     publishedAt,
     updatedAt,
     author-> {
+      name,
+      "slug": slug.current,
+      image,
+      role,
+      bio,
+      expertise,
+      socialLinks
+    },
+    factChecker-> {
       name,
       "slug": slug.current,
       image,
@@ -826,6 +862,15 @@ export const promotionBySlugQuery = groq`
     publishedAt,
     updatedAt,
     author-> {
+      name,
+      "slug": slug.current,
+      image,
+      role,
+      bio,
+      expertise,
+      socialLinks
+    },
+    factChecker-> {
       name,
       "slug": slug.current,
       image,

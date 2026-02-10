@@ -92,6 +92,7 @@ export default async function Page({ params }: PageProps) {
           <div className="mt-3 pb-3 border-b border-[var(--color-border)]">
             <AuthorByline
               author={page.author}
+              factChecker={page.factChecker}
               publishedAt={page.publishedAt}
               updatedAt={page.updatedAt}
             />
@@ -134,7 +135,7 @@ export default async function Page({ params }: PageProps) {
                         </h2>
                       )}
                       {block.text && (
-                        <div className="prose prose-invert prose-sm md:prose-base max-w-none">
+                        <div className="prose prose-invert prose-sm md:prose-base max-w-none prose-p:text-[0.9rem] prose-p:leading-[1.6] prose-h2:mt-[1em] prose-h2:mb-[0.5em]">
                           <PortableText value={block.text} components={portableTextComponents} />
                         </div>
                       )}
@@ -160,8 +161,10 @@ export default async function Page({ params }: PageProps) {
             case 'richText':
               return (
                 <section key={block._key} className="mb-8">
-                  <div className="prose prose-invert prose-sm md:prose-base max-w-4xl">
-                    <PortableText value={block.content} components={portableTextComponents} />
+                  <div className="bg-[#0F1115] rounded-lg p-4 md:p-6">
+                    <div className="prose prose-invert prose-sm md:prose-base max-w-none prose-p:text-[0.9rem] prose-p:leading-[1.6] prose-h2:mt-[1em] prose-h2:mb-[0.5em]">
+                      <PortableText value={block.content} components={portableTextComponents} />
+                    </div>
                   </div>
                 </section>
               )
@@ -269,8 +272,15 @@ export default async function Page({ params }: PageProps) {
 
         {/* Author Bio */}
         {page.showAuthorInfo && page.author && (
-          <div id="author" className="mt-8 max-w-4xl">
+          <div className="mt-8 max-w-4xl space-y-4">
             <AuthorBio author={page.author} />
+            {page.factChecker && (
+              <AuthorBio
+                author={page.factChecker}
+                title="Fact Checked By"
+                id="fact-checker-info"
+              />
+            )}
           </div>
         )}
       </div>

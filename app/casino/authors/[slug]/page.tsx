@@ -93,8 +93,12 @@ export async function generateMetadata({ params }: AuthorPageProps): Promise<Met
     }
   }
 
+  const titleParts = [author.name]
+  if (author.role) titleParts.push(author.role)
+  titleParts.push('MetaWin Casino')
+
   return {
-    title: `${author.name} | MetaWin`,
+    title: titleParts.join(' | '),
     description: author.bio || `Read articles and game reviews by ${author.name} at MetaWin.`,
     robots: { index: true, follow: true },
   }

@@ -172,6 +172,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
           <div className="mt-3 pb-3 border-b border-[var(--color-border)]">
             <AuthorByline
               author={categoryData.author}
+              factChecker={categoryData.factChecker}
               publishedAt={categoryData.publishedAt}
               updatedAt={categoryData.updatedAt}
             />
@@ -337,8 +338,15 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
         {/* Author Bio - only show on page 1 */}
         {currentPage === 1 && categoryData.showAuthorInfo && categoryData.author && (
-          <div id="author" className="mt-8">
+          <div className="mt-8 space-y-4">
             <AuthorBio author={categoryData.author} />
+            {categoryData.factChecker && (
+              <AuthorBio
+                author={categoryData.factChecker}
+                title="Fact Checked By"
+                id="fact-checker-info"
+              />
+            )}
           </div>
         )}
       </div>

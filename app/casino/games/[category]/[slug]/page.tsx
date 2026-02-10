@@ -199,6 +199,7 @@ export default async function GamePage({ params }: GamePageProps) {
           <div className="mt-3">
             <AuthorByline
               author={game.author}
+              factChecker={game.factChecker}
               publishedAt={game.publishedAt}
               updatedAt={game.updatedAt}
             />
@@ -307,8 +308,15 @@ export default async function GamePage({ params }: GamePageProps) {
 
         {/* Author Bio */}
         {game.showAuthorInfo && game.author && (
-          <div id="author" className="mt-7 xl:max-w-[calc(100%-312px)]">
+          <div className="mt-7 xl:max-w-[calc(100%-312px)] space-y-4">
             <AuthorBio author={game.author} />
+            {game.factChecker && (
+              <AuthorBio
+                author={game.factChecker}
+                title="Fact Checked By"
+                id="fact-checker-info"
+              />
+            )}
           </div>
         )}
 

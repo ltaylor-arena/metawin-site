@@ -31,9 +31,11 @@ interface Author {
 
 interface AuthorBioProps {
   author: Author
+  title?: string
+  id?: string
 }
 
-export default function AuthorBio({ author }: AuthorBioProps) {
+export default function AuthorBio({ author, title = 'About the Author', id = 'author-info' }: AuthorBioProps) {
   if (!author) return null
 
   // Generate optimized thumbnail URL (128px for 2x retina on 64px display)
@@ -42,10 +44,10 @@ export default function AuthorBio({ author }: AuthorBioProps) {
     : null
 
   return (
-    <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)] overflow-hidden">
+    <div id={id} className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)] overflow-hidden scroll-mt-4">
       {/* Header */}
       <div className="px-5 py-3 bg-[#111111] border-b border-[var(--color-border)]">
-        <h3 className="text-sm font-semibold text-white">About the Author</h3>
+        <h3 className="text-sm font-semibold text-white">{title}</h3>
       </div>
 
       {/* Content */}
