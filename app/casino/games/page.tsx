@@ -13,6 +13,7 @@ import Callout from '@/components/Callout'
 import FAQ from '@/components/FAQ'
 import FeatureCards from '@/components/FeatureCards'
 import PromoCard from '@/components/PromoCard'
+import ExpandableRichText from '@/components/ExpandableRichText'
 
 // Custom query for games page with full content block expansion
 const gamesPageQuery = groq`
@@ -56,7 +57,8 @@ const gamesPageQuery = groq`
 
       // Rich text
       _type == "richText" => {
-        content
+        content,
+        maxLines
       },
 
       // FAQ Section
@@ -132,9 +134,10 @@ async function getSiteSettings() {
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPage()
+  const title = page?.seo?.metaTitle || 'All Games'
 
   return {
-    title: page?.seo?.metaTitle || 'All Games',
+    title: page?.seo?.hideKicker ? { absolute: title } : title,
     description: page?.seo?.metaDescription || 'Browse all casino games at MetaWin. Slots, table games, crash games, and more.',
     robots: { index: false, follow: false },
   }
@@ -230,9 +233,10 @@ export default async function GamesIndexPage() {
             return (
               <section key={block._key} className="px-4 md:px-6 py-6">
                 <div className="bg-[#0F1115] rounded-lg p-4 md:p-6">
-                  <div className="prose prose-invert prose-sm md:prose-base max-w-none prose-p:text-[0.9rem] prose-p:leading-[1.6] prose-h2:mt-[1em] prose-h2:mb-[0.5em]">
-                    <PortableText value={block.content} components={portableTextComponents} />
-                  </div>
+                  <ExpandableRichText
+                    content={block.content}
+                    maxLines={block.maxLines || 6}
+                  />
                 </div>
               </section>
             )
@@ -249,7 +253,7 @@ export default async function GamesIndexPage() {
                       </h2>
                     )}
                     {block.text && (
-                      <div className="prose prose-invert prose-sm md:prose-base max-w-none prose-p:text-[0.9rem] prose-p:leading-[1.6] prose-h2:mt-[1em] prose-h2:mb-[0.5em]">
+                      <div className="prose prose-invert prose-sm md:prose-base max-w-none prose-p:text-[0.9rem] prose-p:leading-[1.6]">
                         <PortableText value={block.text} components={portableTextComponents} />
                       </div>
                     )}

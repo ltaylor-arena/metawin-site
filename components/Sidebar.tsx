@@ -155,6 +155,7 @@ const iconMap: Record<string, IconComponent> = {
 
 interface SidebarProps {
   navigation: SidebarNavigation | null
+  signUpUrl?: string
 }
 
 function HighlightBadge({ highlight }: { highlight?: string }) {
@@ -171,7 +172,7 @@ function HighlightBadge({ highlight }: { highlight?: string }) {
   )
 }
 
-export default function Sidebar({ navigation }: SidebarProps) {
+export default function Sidebar({ navigation, signUpUrl = 'https://metawin.com' }: SidebarProps) {
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({})
   const [searchOpen, setSearchOpen] = useState(false)
   const { collapsed, toggle, mobileOpen, setMobileOpen } = useSidebar()
@@ -384,7 +385,7 @@ export default function Sidebar({ navigation }: SidebarProps) {
         <div className="p-3 border-t border-[var(--color-border)]">
           {/* Deposit Button */}
           <a
-            href="https://metawin.com/deposit"
+            href={signUpUrl}
             target="_blank"
             rel="noopener noreferrer"
             className={`block w-full py-3 rounded-lg bg-[var(--color-accent-blue)] hover:bg-[var(--color-accent-blue-hover)] text-white hover:text-white font-semibold text-center transition-colors ${collapsed ? 'px-2 text-xs' : ''}`}

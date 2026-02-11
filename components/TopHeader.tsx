@@ -9,7 +9,11 @@ import Image from 'next/image'
 import { Menu } from 'lucide-react'
 import { useSidebar } from '@/contexts/SidebarContext'
 
-export default function TopHeader() {
+interface TopHeaderProps {
+  signUpUrl?: string
+}
+
+export default function TopHeader({ signUpUrl = 'https://metawin.com/' }: TopHeaderProps) {
   const { toggleMobile } = useSidebar()
 
   return (
@@ -42,7 +46,7 @@ export default function TopHeader() {
         <div className="flex items-center gap-3">
           {/* Sign In Button */}
           <Link
-            href="https://metawin.com/signin"
+            href={signUpUrl}
             className="group relative px-6 py-2 rounded font-semibold text-sm bg-[var(--color-accent-blue)] text-white hover:bg-[var(--color-accent-blue-hover)] hover:text-white transition-all duration-300 overflow-hidden"
           >
             <span className="relative z-10">Sign In</span>

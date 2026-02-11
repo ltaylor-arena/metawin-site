@@ -16,6 +16,7 @@ import AuthorByline from '@/components/AuthorByline'
 import AuthorThoughts from '@/components/AuthorThoughts'
 import Callout from '@/components/Callout'
 import CategoryCards from '@/components/CategoryCards'
+import ExpandableRichText from '@/components/ExpandableRichText'
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -53,8 +54,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
   }
 
+  const title = page.seo?.metaTitle || page.title
   return {
-    title: page.seo?.metaTitle || `${page.title} | MetaWin Casino`,
+    title: page.seo?.hideKicker ? { absolute: title } : title,
     description: page.seo?.metaDescription || page.description,
     robots: { index: false, follow: false },
   }
@@ -119,6 +121,7 @@ export default async function Page({ params }: PageProps) {
                     slides={block.slides}
                     autoplay={block.autoplay}
                     autoplaySpeed={block.autoplaySpeed}
+                    signUpUrl={siteSettings?.signUpUrl}
                   />
                 </section>
               )
@@ -135,7 +138,7 @@ export default async function Page({ params }: PageProps) {
                         </h2>
                       )}
                       {block.text && (
-                        <div className="prose prose-invert prose-sm md:prose-base max-w-none prose-p:text-[0.9rem] prose-p:leading-[1.6] prose-h2:mt-[1em] prose-h2:mb-[0.5em]">
+                        <div className="prose prose-invert prose-sm md:prose-base max-w-none prose-p:text-[0.9rem] prose-p:leading-[1.6]">
                           <PortableText value={block.text} components={portableTextComponents} />
                         </div>
                       )}
@@ -162,9 +165,10 @@ export default async function Page({ params }: PageProps) {
               return (
                 <section key={block._key} className="mb-8">
                   <div className="bg-[#0F1115] rounded-lg p-4 md:p-6">
-                    <div className="prose prose-invert prose-sm md:prose-base max-w-none prose-p:text-[0.9rem] prose-p:leading-[1.6] prose-h2:mt-[1em] prose-h2:mb-[0.5em]">
-                      <PortableText value={block.content} components={portableTextComponents} />
-                    </div>
+                    <ExpandableRichText
+                      content={block.content}
+                      maxLines={block.maxLines || 6}
+                    />
                   </div>
                 </section>
               )

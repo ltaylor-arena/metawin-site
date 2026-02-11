@@ -16,6 +16,13 @@ export default defineType({
       validation: (Rule) => Rule.max(70).warning('Keep under 60 characters for best results'),
     }),
     defineField({
+      name: 'hideKicker',
+      title: 'Hide Title Kicker',
+      type: 'boolean',
+      description: 'Remove the " | MetaWin Casino" suffix from the title',
+      initialValue: false,
+    }),
+    defineField({
       name: 'metaDescription',
       title: 'Meta Description',
       type: 'text',

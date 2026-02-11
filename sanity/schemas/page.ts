@@ -204,10 +204,20 @@ export default defineType({
                 { type: 'image' },
               ],
             }),
+            defineField({
+              name: 'maxLines',
+              title: 'Max Lines Before Collapse',
+              type: 'number',
+              description: 'Number of lines to show before "Read More" button. Set to 0 or leave empty to show all content.',
+              initialValue: 6,
+              validation: (Rule) => Rule.min(0).integer(),
+            }),
           ],
           preview: {
-            prepare: () => ({
+            select: { maxLines: 'maxLines' },
+            prepare: ({ maxLines }) => ({
               title: 'Rich Text Block',
+              subtitle: maxLines ? `Collapses after ${maxLines} lines` : 'Full content',
             }),
           },
         }),

@@ -2,6 +2,9 @@
 // Reorderable content blocks for game pages (middle section only)
 
 import { defineType, defineField } from 'sanity'
+import { gameTable } from './gameTable'
+
+export { gameTable }
 
 // Quick Summary Block
 export const gameQuickSummary = defineType({

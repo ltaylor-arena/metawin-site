@@ -75,7 +75,7 @@ export default defineType({
               title: 'CTA Button Link',
               type: 'string',
               description: 'External URL or internal path',
-              initialValue: 'https://metawin.com/signin',
+              initialValue: 'https://metawin.com/',
             }),
           ],
           preview: {

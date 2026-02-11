@@ -241,6 +241,62 @@ a:hover {
   }
 }
 
+/* Prose H2/H3 margins */
+.prose h2 {
+  margin-top: 1.25em;
+  margin-bottom: 0.5em;
+}
+
+.prose h3 {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+/* Remove top margin when H2/H3 is first child */
+.prose > h2:first-child,
+.prose > h3:first-child {
+  margin-top: 0;
+}
+
+/* Prose Ordered List Styling - Styled number circles */
+.prose ol {
+  list-style: none;
+  counter-reset: styled-counter;
+  padding-left: 0;
+}
+
+.prose ol > li {
+  position: relative;
+  padding-left: 2.5rem;
+  counter-increment: styled-counter;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.prose ol > li::before {
+  content: counter(styled-counter);
+  position: absolute;
+  left: 0;
+  top: 0.1em;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: var(--color-accent-blue);
+  color: white;
+  font-weight: 700;
+  font-size: 0.75rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Prose Unordered List Styling - Match font size */
+.prose ul > li {
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
 /* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }

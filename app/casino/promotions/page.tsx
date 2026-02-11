@@ -12,6 +12,7 @@ interface PageData {
   slug: string
   seo?: {
     metaTitle?: string
+    hideKicker?: boolean
     metaDescription?: string
     breadcrumbText?: string
   }
@@ -73,9 +74,10 @@ async function getAllPromotionTypes(): Promise<string[]> {
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPageData()
+  const titleText = page?.seo?.metaTitle || page?.title || 'Promotions'
 
   return {
-    title: page?.seo?.metaTitle || page?.title || 'Promotions | MetaWin Casino',
+    title: page?.seo?.hideKicker ? { absolute: titleText } : titleText,
     description: page?.seo?.metaDescription || 'Discover the latest promotions, competitions, and exclusive offers at MetaWin Casino.',
     robots: { index: false, follow: false },
   }

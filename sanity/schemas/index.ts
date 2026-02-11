@@ -24,6 +24,7 @@ import {
   gameProsAndCons,
   gameRichText,
   gameAuthorThoughts,
+  gameTable,
 } from './gameContentBlocks'
 
 export const schemaTypes = [
@@ -54,4 +55,5 @@ export const schemaTypes = [
   gameProsAndCons,
   gameRichText,
   gameAuthorThoughts,
+  gameTable,
 ]

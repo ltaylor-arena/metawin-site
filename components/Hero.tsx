@@ -17,12 +17,14 @@ interface HeroProps {
   slides?: HeroSlide[]
   autoplay?: boolean
   autoplaySpeed?: number
+  signUpUrl?: string
 }
 
 export default function Hero({
   slides,
   autoplay = true,
-  autoplaySpeed = 5000
+  autoplaySpeed = 5000,
+  signUpUrl = 'https://metawin.com/',
 }: HeroProps) {
   const [currentSlide, setCurrentSlide] = useState(0)
 
@@ -60,7 +62,7 @@ export default function Hero({
             The World&apos;s Best Crypto Casino & Prize Winning Platform
           </h1>
           <Link
-            href="https://metawin.com/signin"
+            href={signUpUrl}
             className="w-fit px-8 py-3.5 bg-[var(--color-accent-blue)] hover:bg-[var(--color-accent-blue-hover)] font-semibold text-white hover:text-white text-center rounded transition-colors"
           >
             Sign In
@@ -137,7 +139,7 @@ export default function Hero({
           {/* CTA Button */}
           {slide.ctaText && (
             <Link
-              href={slide.ctaLink || '#'}
+              href={slide.ctaLink || signUpUrl}
               className="group relative w-fit px-8 py-3.5 bg-[var(--color-accent-blue)] hover:bg-[var(--color-accent-blue-hover)] font-semibold text-white hover:text-white text-center rounded transition-all duration-300 overflow-hidden"
             >
               <span className="relative z-10">{slide.ctaText}</span>

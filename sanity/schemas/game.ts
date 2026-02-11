@@ -259,6 +259,12 @@ export default defineType({
           type: 'callout',
           title: 'Callout',
         }),
+
+        // Data Table
+        defineArrayMember({
+          type: 'gameTable',
+          title: 'Data Table',
+        }),
       ],
     }),
 

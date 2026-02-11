@@ -45,7 +45,7 @@ export default function GameCarousel({
   totalGames,
   showSeeMore = true,
   badge,
-  signUpUrl = 'https://metawin.com/signup',
+  signUpUrl = 'https://metawin.com/',
 }: GameCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)

@@ -40,8 +40,9 @@ export async function generateMetadata({ params }: PromotionPageProps): Promise<
     }
   }
 
+  const title = promotion.seo?.metaTitle || promotion.title
   return {
-    title: promotion.seo?.metaTitle || `${promotion.title} | MetaWin Casino`,
+    title: promotion.seo?.hideKicker ? { absolute: title } : title,
     description: promotion.seo?.metaDescription || promotion.excerpt,
     robots: { index: false, follow: false },
   }

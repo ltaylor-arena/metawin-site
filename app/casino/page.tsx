@@ -11,6 +11,7 @@ import PromoCard from '@/components/PromoCard'
 import HotColdSlots from '@/components/HotColdSlots'
 import Callout from '@/components/Callout'
 import CategoryCards from '@/components/CategoryCards'
+import ExpandableRichText from '@/components/ExpandableRichText'
 import { OrganizationStructuredData } from '@/components/StructuredData'
 
 async function getHomepage() {
@@ -23,9 +24,10 @@ async function getSiteSettings() {
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getHomepage()
-  
+  const title = page?.seo?.metaTitle || "The World's Best Crypto Casino"
+
   return {
-    title: page?.seo?.metaTitle || "The World's Best Crypto Casino",
+    title: page?.seo?.hideKicker ? { absolute: title } : title,
     description: page?.seo?.metaDescription || "Play thousands of casino games with instant crypto withdrawals.",
     robots: { index: false, follow: false },
   }
@@ -62,6 +64,7 @@ export default async function CasinoHomePage() {
                   slides={block.slides}
                   autoplay={block.autoplay}
                   autoplaySpeed={block.autoplaySpeed}
+                  signUpUrl={siteSettings?.signUpUrl}
                 />
               </section>
             )
@@ -79,7 +82,7 @@ export default async function CasinoHomePage() {
                       </h2>
                     )}
                     {block.text && (
-                      <div className="prose prose-invert prose-sm md:prose-base max-w-none prose-p:text-[0.9rem] prose-p:leading-[1.6] prose-h2:mt-[1em] prose-h2:mb-[0.5em]">
+                      <div className="prose prose-invert prose-sm md:prose-base max-w-none prose-p:text-[0.9rem] prose-p:leading-[1.6]">
                         <PortableText value={block.text} />
                       </div>
                     )}
@@ -138,9 +141,10 @@ export default async function CasinoHomePage() {
             return (
               <section key={block._key} className="px-4 md:px-6 py-8">
                 <div className="bg-[#0F1115] rounded-lg p-4 md:p-6">
-                  <div className="prose prose-invert prose-sm md:prose-base max-w-none prose-p:text-[0.9rem] prose-p:leading-[1.6] prose-h2:mt-[1em] prose-h2:mb-[0.5em]">
-                    <PortableText value={block.content} />
-                  </div>
+                  <ExpandableRichText
+                    content={block.content}
+                    maxLines={block.maxLines || 6}
+                  />
                 </div>
               </section>
             )

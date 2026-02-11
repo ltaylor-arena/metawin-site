@@ -1,5 +1,5 @@
 import { sanityFetch } from '@/lib/sanity'
-import { sidebarNavigationQuery, footerQuery } from '@/lib/queries'
+import { sidebarNavigationQuery, footerQuery, siteSettingsQuery } from '@/lib/queries'
 import CasinoLayoutClient from './CasinoLayoutClient'
 
 // Sidebar types
@@ -100,6 +100,31 @@ async function getFooterData(): Promise<FooterData | null> {
   }
 }
 
+export interface SiteSettings {
+  siteName?: string
+  logo?: string
+  logoAlt?: string
+  mainSiteUrl?: string
+  signInUrl?: string
+  signUpUrl?: string
+}
+
+async function getSiteSettings(): Promise<SiteSettings | null> {
+  const start = Date.now()
+  console.log('[Layout] Fetching site settings...')
+  try {
+    const result = await sanityFetch<SiteSettings | null>({
+      query: siteSettingsQuery,
+      tags: ['siteSettings'],
+    })
+    console.log(`[Layout] Site settings fetched in ${Date.now() - start}ms`)
+    return result
+  } catch (error) {
+    console.error(`[Layout] Site settings FAILED after ${Date.now() - start}ms:`, error)
+    return null
+  }
+}
+
 export default async function CasinoLayout({
   children,
 }: {
@@ -108,15 +133,16 @@ export default async function CasinoLayout({
   const layoutStart = Date.now()
   console.log('[Layout] CasinoLayout render started')
 
-  const [navigation, footer] = await Promise.all([
+  const [navigation, footer, siteSettings] = await Promise.all([
     getSidebarNavigation(),
     getFooterData(),
+    getSiteSettings(),
   ])
 
   console.log(`[Layout] CasinoLayout data fetched in ${Date.now() - layoutStart}ms total`)
 
   return (
-    <CasinoLayoutClient navigation={navigation} footer={footer}>
+    <CasinoLayoutClient navigation={navigation} footer={footer} siteSettings={siteSettings}>
       {children}
     </CasinoLayoutClient>
   )

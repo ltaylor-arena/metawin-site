@@ -13,6 +13,7 @@ import QuickSummary from '@/components/QuickSummary'
 import ProsAndCons from '@/components/ProsAndCons'
 import AuthorThoughts from '@/components/AuthorThoughts'
 import Callout from '@/components/Callout'
+import GameTable from '@/components/GameTable'
 import AuthorBio from '@/components/AuthorBio'
 import AuthorByline from '@/components/AuthorByline'
 import FAQ from '@/components/FAQ'
@@ -59,8 +60,9 @@ export async function generateMetadata({ params }: GamePageProps): Promise<Metad
     }
   }
 
+  const title = game.seo?.metaTitle || game.title
   return {
-    title: game.seo?.metaTitle || `${game.title} | Play at MetaWin`,
+    title: game.seo?.hideKicker ? { absolute: title } : title,
     description: game.seo?.metaDescription || `Play ${game.title} by ${game.provider} at MetaWin. ${game.rtp ? `RTP: ${game.rtp}%` : ''}`,
     robots: { index: false, follow: false },
   }
@@ -100,8 +102,10 @@ function GameContentBlock({
     case 'gameRichText':
       if (!block.content || block.content.length === 0) return null
       return (
-        <div className="prose prose-invert prose-sm md:prose-base max-w-none">
-          <PortableText value={block.content} components={portableTextComponents} />
+        <div className="bg-[#0F1115] rounded-lg p-4 md:p-6">
+          <div className="prose prose-invert prose-sm md:prose-base max-w-none prose-p:text-[0.9rem] prose-p:leading-[1.6]">
+            <PortableText value={block.content} components={portableTextComponents} />
+          </div>
         </div>
       )
 
@@ -122,6 +126,27 @@ function GameContentBlock({
           content={block.content}
           variant={block.variant}
         />
+      )
+
+    case 'gameTable':
+      if (!block.tableData?.headers || block.tableData.headers.length === 0) return null
+      return (
+        <div className="bg-[#0F1115] rounded-lg p-4 md:p-6">
+          {block.introText && block.introText.length > 0 && (
+            <div className="prose prose-invert prose-sm md:prose-base max-w-none mb-6 prose-p:text-[0.9rem] prose-p:leading-[1.6]">
+              <PortableText value={block.introText} components={portableTextComponents} />
+            </div>
+          )}
+          {block.title && (
+            <h3 className="text-lg font-semibold text-white mb-4">{block.title}</h3>
+          )}
+          <GameTable
+            tableData={block.tableData}
+            caption={block.caption}
+            highlightFirstColumn={block.highlightFirstColumn}
+            striped={block.striped}
+          />
+        </div>
       )
 
     default:

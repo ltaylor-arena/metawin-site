@@ -30,6 +30,7 @@ export const homepageQuery = groq`
     },
     seo {
       metaTitle,
+      hideKicker,
       metaDescription,
       breadcrumbText,
       canonicalUrl,
@@ -86,7 +87,7 @@ export const homepageQuery = groq`
         ),
         "categorySlug": category->slug.current,
         "games": select(
-          displayMode == "category" => *[_type == "game" && references(^.category._ref)] | order(isFeatured desc, title asc)[0...12] {
+          displayMode == "category" => *[_type == "game" && references(^.category._ref)] | order(select(count(content) > 0 => 0, 1), select(isFeatured == true => 0, 1), title asc)[0...12] {
             _id,
             title,
             "slug": slug.current,
@@ -114,7 +115,7 @@ export const homepageQuery = groq`
             isFeatured,
             "hasContent": count(content) > 0
           },
-          displayMode == "popular" => *[_type == "game" && isFeatured == true] | order(title asc)[0...12] {
+          displayMode == "popular" => *[_type == "game" && isFeatured == true] | order(select(count(content) > 0 => 0, 1), title asc)[0...12] {
             _id,
             title,
             "slug": slug.current,
@@ -155,7 +156,8 @@ export const homepageQuery = groq`
       
       // Rich text
       _type == "richText" => {
-        content
+        content,
+        maxLines
       },
       
       // CTA Banner
@@ -243,6 +245,7 @@ export const pageBySlugQuery = groq`
     },
     seo {
       metaTitle,
+      hideKicker,
       metaDescription,
       breadcrumbText,
       canonicalUrl,
@@ -298,7 +301,7 @@ export const pageBySlugQuery = groq`
         ),
         "categorySlug": category->slug.current,
         "games": select(
-          displayMode == "category" => *[_type == "game" && references(^.category._ref)] | order(isFeatured desc, title asc)[0...12] {
+          displayMode == "category" => *[_type == "game" && references(^.category._ref)] | order(select(count(content) > 0 => 0, 1), select(isFeatured == true => 0, 1), title asc)[0...12] {
             _id,
             title,
             "slug": slug.current,
@@ -326,7 +329,7 @@ export const pageBySlugQuery = groq`
             isFeatured,
             "hasContent": count(content) > 0
           },
-          displayMode == "popular" => *[_type == "game" && isFeatured == true] | order(title asc)[0...12] {
+          displayMode == "popular" => *[_type == "game" && isFeatured == true] | order(select(count(content) > 0 => 0, 1), title asc)[0...12] {
             _id,
             title,
             "slug": slug.current,
@@ -359,7 +362,8 @@ export const pageBySlugQuery = groq`
 
       // Rich text
       _type == "richText" => {
-        content
+        content,
+        maxLines
       },
 
       // CTA Banner
@@ -598,6 +602,22 @@ export const gameBySlugQuery = groq`
         title,
         content,
         variant
+      },
+
+      // Data Table
+      _type == "gameTable" => {
+        title,
+        introText,
+        tableData {
+          headers,
+          rows[] {
+            _key,
+            cells
+          }
+        },
+        caption,
+        highlightFirstColumn,
+        striped
       }
     },
 
@@ -634,6 +654,7 @@ export const gameBySlugQuery = groq`
     // SEO
     seo {
       metaTitle,
+      hideKicker,
       metaDescription,
       breadcrumbText,
       canonicalUrl,
@@ -692,6 +713,7 @@ export const categoryBySlugQuery = groq`
     },
     seo {
       metaTitle,
+      hideKicker,
       metaDescription,
       breadcrumbText,
       canonicalUrl,
@@ -883,6 +905,7 @@ export const promotionBySlugQuery = groq`
     // SEO
     seo {
       metaTitle,
+      hideKicker,
       metaDescription,
       breadcrumbText,
       canonicalUrl,

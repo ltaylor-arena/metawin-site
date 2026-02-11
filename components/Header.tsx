@@ -8,7 +8,11 @@ import Link from 'next/link'
 import { Menu, Search, X } from 'lucide-react'
 import SearchModal from './SearchModal'
 
-export default function Header() {
+interface HeaderProps {
+  signUpUrl?: string
+}
+
+export default function Header({ signUpUrl = 'https://metawin.com/' }: HeaderProps) {
   const [searchOpen, setSearchOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   
@@ -42,7 +46,7 @@ export default function Header() {
           </button>
           
           <Link
-            href="https://metawin.com/signin"
+            href={signUpUrl}
             className="btn-primary text-sm py-2 px-4"
           >
             Sign In

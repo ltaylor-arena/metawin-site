@@ -64,11 +64,12 @@ export async function generateMetadata({ params, searchParams }: CategoryPagePro
   const totalPages = Math.ceil(totalGames / gamesPerPage)
 
   const basePath = `/casino/games/${category}/`
-  const baseTitle = categoryData.seo?.metaTitle || `${categoryData.title} | MetaWin Casino`
+  const baseTitle = categoryData.seo?.metaTitle || categoryData.title
   const baseDescription = categoryData.seo?.metaDescription || `Play the best ${categoryData.title} games at MetaWin Casino.`
 
   // Build title with page number for pages > 1
-  const title = currentPage > 1 ? `${baseTitle} - Page ${currentPage}` : baseTitle
+  const titleString = currentPage > 1 ? `${baseTitle} - Page ${currentPage}` : baseTitle
+  const title = categoryData.seo?.hideKicker ? { absolute: titleString } : titleString
 
   // Build canonical URL - intentionally excludes sort param to avoid duplicate content
   // All sort variations should point to the same canonical (default sort)

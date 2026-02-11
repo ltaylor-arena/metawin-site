@@ -70,8 +70,8 @@ export default function AuthorThoughts({ author, content }: AuthorThoughtsProps)
           </div>
         </div>
 
-        {/* Quote Content - Italic text */}
-        <div className="prose prose-invert prose-sm max-w-none [&>p]:italic [&>p]:text-[var(--color-text-secondary)] [&>p]:leading-relaxed [&>p:last-child]:mb-0">
+        {/* Quote Content - Prominent quote styling */}
+        <div className="prose prose-invert max-w-none [&>p]:italic [&>p]:text-white [&>p]:text-base [&>p]:md:text-lg [&>p]:font-medium [&>p]:leading-relaxed [&>p:last-child]:mb-0">
           <PortableText value={content} />
         </div>
       </div>

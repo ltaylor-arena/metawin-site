@@ -65,13 +65,15 @@ export default defineType({
       name: 'signInUrl',
       title: 'Sign In URL',
       type: 'string',
-      initialValue: 'https://metawin.com/signin',
+      description: 'URL for sign-in CTAs. Links to MetaWin homepage where users can click Sign In.',
+      initialValue: 'https://metawin.com/',
     }),
     defineField({
       name: 'signUpUrl',
       title: 'Sign Up URL',
       type: 'string',
-      initialValue: 'https://metawin.com/signup',
+      description: 'URL for "Play Now" and sign-up CTAs. Links to MetaWin homepage where users can register.',
+      initialValue: 'https://metawin.com/',
     }),
     
     // Analytics
