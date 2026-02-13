@@ -2,6 +2,7 @@
 // Collapsible FAQ section with structured data support
 
 import { defineType, defineField } from 'sanity'
+import { richTextBlockSimple } from './richTextBlock'
 
 export default defineType({
   name: 'faq',
@@ -34,7 +35,7 @@ export default defineType({
               name: 'answer',
               title: 'Answer',
               type: 'array',
-              of: [{ type: 'block' }],
+              of: [richTextBlockSimple],
               validation: (Rule) => Rule.required(),
             }),
           ],

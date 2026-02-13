@@ -273,10 +273,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
 
               {/* Favourite Game */}
               {author.favouriteGame && (
-                <Link
-                  href={`/casino/games/${author.favouriteGame.categorySlug}/${author.favouriteGame.slug}/`}
-                  className="bg-[var(--color-bg-secondary)] rounded-xl p-6 border border-[var(--color-border)] hover:border-[var(--color-border-hover)] transition-colors group"
-                >
+                <div className="bg-[var(--color-bg-secondary)] rounded-xl p-6 border border-[var(--color-border)]">
                   <p className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider mb-3">Favourite Game</p>
                   <div className="flex items-center gap-4">
                     <div className="relative w-16 h-20 rounded-lg overflow-hidden bg-[var(--color-bg-tertiary)] flex-shrink-0">
@@ -297,7 +294,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
                       ) : null}
                     </div>
                     <div className="min-w-0">
-                      <h4 className="text-base font-semibold text-white group-hover:text-[var(--color-accent-blue)] transition-colors truncate">
+                      <h4 className="text-base font-semibold text-white truncate">
                         {author.favouriteGame.title}
                       </h4>
                       {author.favouriteGame.provider && (
@@ -310,7 +307,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
                       )}
                     </div>
                   </div>
-                </Link>
+                </div>
               )}
             </div>
           </section>

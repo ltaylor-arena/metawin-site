@@ -2,6 +2,7 @@
 // Attention box with icon, title, and body text
 
 import { defineType, defineField } from 'sanity'
+import { richTextBlockSimple } from './richTextBlock'
 
 export default defineType({
   name: 'callout',
@@ -18,7 +19,7 @@ export default defineType({
       name: 'content',
       title: 'Content',
       type: 'array',
-      of: [{ type: 'block' }],
+      of: [richTextBlockSimple],
       description: 'Body text for the callout',
     }),
     defineField({

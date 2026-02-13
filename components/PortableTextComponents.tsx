@@ -1,7 +1,8 @@
 // Custom PortableText components for rendering rich text content
-// Includes support for images with captions and callouts
+// Includes support for images with captions, callouts, and smart links
 
 import Image from 'next/image'
+import Link from 'next/link'
 import { PortableTextComponents, PortableText } from '@portabletext/react'
 import { urlFor } from '@/lib/sanity'
 import { AlertCircle, Info, CheckCircle, Lightbulb } from 'lucide-react'
@@ -21,6 +22,14 @@ interface CalloutValue {
   title?: string
   content?: any[]
   variant?: 'info' | 'warning' | 'success' | 'tip'
+}
+
+interface LinkValue {
+  _type: 'link'
+  linkType?: 'internal' | 'external'
+  href?: string // For external links and resolved internal links
+  nofollow?: boolean // External links only
+  openInNewTab?: boolean // External links only
 }
 
 const calloutStyles = {
@@ -58,6 +67,44 @@ const calloutIcons = {
 }
 
 export const portableTextComponents: PortableTextComponents = {
+  marks: {
+    // Custom link annotation handler
+    link: ({ value, children }: { value?: LinkValue; children: React.ReactNode }) => {
+      if (!value?.href) {
+        return <>{children}</>
+      }
+
+      const isExternal = value.linkType === 'external'
+
+      if (isExternal) {
+        // External link with optional nofollow and new tab
+        const relValues: string[] = []
+        if (value.nofollow) relValues.push('nofollow')
+        if (value.openInNewTab) relValues.push('noopener', 'noreferrer')
+
+        return (
+          <a
+            href={value.href}
+            target={value.openInNewTab ? '_blank' : undefined}
+            rel={relValues.length > 0 ? relValues.join(' ') : undefined}
+            className="text-[var(--color-accent-blue)] hover:text-[var(--color-accent-blue-hover)] underline"
+          >
+            {children}
+          </a>
+        )
+      }
+
+      // Internal link - use Next.js Link
+      return (
+        <Link
+          href={value.href}
+          className="text-[var(--color-accent-blue)] hover:text-[var(--color-accent-blue-hover)] underline"
+        >
+          {children}
+        </Link>
+      )
+    },
+  },
   types: {
     image: ({ value }: { value: ImageValue }) => {
       if (!value?.asset?._ref) {

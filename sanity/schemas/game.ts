@@ -3,6 +3,7 @@
 
 import React from 'react'
 import { defineType, defineField, defineArrayMember } from 'sanity'
+import { richTextBlockSimple } from './richTextBlock'
 
 export default defineType({
   name: 'game',
@@ -291,7 +292,7 @@ export default defineType({
               name: 'answer',
               title: 'Answer',
               type: 'array',
-              of: [{ type: 'block' }],
+              of: [richTextBlockSimple],
               validation: (Rule) => Rule.required(),
             }),
           ],

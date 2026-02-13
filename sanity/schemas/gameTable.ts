@@ -3,6 +3,7 @@
 
 import { defineType, defineField } from 'sanity'
 import TableInput from '../components/TableInput'
+import { richTextBlock } from './richTextBlock'
 
 export const gameTable = defineType({
   name: 'gameTable',
@@ -13,8 +14,8 @@ export const gameTable = defineType({
       name: 'introText',
       title: 'Introduction Text',
       type: 'array',
-      of: [{ type: 'block' }],
-      description: 'Optional rich text displayed before the table',
+      of: [richTextBlock],
+      description: 'Optional rich text displayed before the table (supports headings)',
     }),
     defineField({
       name: 'title',

@@ -84,8 +84,8 @@ function GameContentBlock({
           title={game.title}
           intro={block.intro}
           thumbnail={game.thumbnail}
+          externalThumbnailUrl={game.externalThumbnailUrl}
           isNew={game.isNew}
-          isFeatured={game.isFeatured}
         />
       )
 
@@ -262,17 +262,15 @@ export default async function GamePage({ params }: GamePageProps) {
             ) : null}
 
             {/* FIXED: Play Button (always after screenshots) */}
-            {game.externalGameUrl && (
-              <Link
-                href={game.externalGameUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative w-full py-4 px-8 bg-[var(--color-accent-blue)] hover:bg-[var(--color-accent-blue-hover)] font-bold text-white hover:text-white text-center rounded-lg transition-all duration-300 overflow-hidden flex items-center justify-center gap-2"
-              >
-                <span className="relative z-10">Play {game.title}</span>
-                <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/25 to-transparent" />
-              </Link>
-            )}
+            <a
+              href={signUpUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative w-full py-4 px-8 bg-[var(--color-accent-blue)] hover:bg-[var(--color-accent-blue-hover)] font-bold text-white hover:text-white text-center rounded-lg transition-all duration-300 overflow-hidden flex items-center justify-center gap-2"
+            >
+              <span className="relative z-10">Play {game.title}</span>
+              <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+            </a>
 
             {/* REORDERABLE: Content Blocks (Quick Summary, Pros/Cons, Rich Text) */}
             {contentBlocks.map((block) => (
@@ -305,17 +303,15 @@ export default async function GamePage({ params }: GamePageProps) {
             />
 
             {/* Mobile Play Button */}
-            {game.externalGameUrl && (
-              <Link
-                href={game.externalGameUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="xl:hidden group relative w-full py-4 px-8 bg-[var(--color-accent-blue)] hover:bg-[var(--color-accent-blue-hover)] font-bold text-white hover:text-white text-center rounded-lg transition-all duration-300 overflow-hidden flex items-center justify-center gap-2"
-              >
-                <span className="relative z-10">Play Now</span>
-                <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/25 to-transparent" />
-              </Link>
-            )}
+            <a
+              href={signUpUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="xl:hidden group relative w-full py-4 px-8 bg-[var(--color-accent-blue)] hover:bg-[var(--color-accent-blue-hover)] font-bold text-white hover:text-white text-center rounded-lg transition-all duration-300 overflow-hidden flex items-center justify-center gap-2"
+            >
+              <span className="relative z-10">Play Now</span>
+              <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+            </a>
           </div>
         </div>
 

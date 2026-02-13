@@ -1,6 +1,31 @@
 // Sanity GROQ Queries
 import { groq } from 'next-sanity'
 
+// Helper: Resolve internal links in Portable Text markDefs
+// This projection resolves document references to URLs
+const resolveInternalLinks = `
+  markDefs[] {
+    ...,
+    _type == "link" && linkType == "internal" => {
+      "href": select(
+        reference->_type == "page" && reference->isHomepage == true => "/casino/",
+        reference->_type == "page" => "/casino/" + reference->slug.current + "/",
+        reference->_type == "game" => "/casino/games/" + reference->categories[0]->slug.current + "/" + reference->slug.current + "/",
+        reference->_type == "category" => "/casino/games/" + reference->slug.current + "/",
+        reference->_type == "promotion" => "/casino/promotions/" + reference->slug.current + "/",
+        reference->_type == "author" => "/casino/authors/" + reference->slug.current + "/",
+        null
+      )
+    }
+  }
+`
+
+// Helper: Rich text block with resolved internal links
+const richTextWithLinks = `
+  ...,
+  ${resolveInternalLinks}
+`
+
 // Get homepage
 export const homepageQuery = groq`
   *[_type == "page" && isHomepage == true][0] {
@@ -59,7 +84,7 @@ export const homepageQuery = groq`
       // Intro section
       _type == "introSection" => {
         heading,
-        text,
+        "text": text[] { ${richTextWithLinks} },
         promoCards[] {
           _key,
           title,
@@ -87,7 +112,7 @@ export const homepageQuery = groq`
         ),
         "categorySlug": category->slug.current,
         "games": select(
-          displayMode == "category" => *[_type == "game" && references(^.category._ref)] | order(select(count(content) > 0 => 0, 1), select(isFeatured == true => 0, 1), title asc)[0...12] {
+          displayMode == "category" => *[_type == "game" && references(^.category._ref)] | order(select(count(content) > 0 && isFeatured == true => 0, count(content) > 0 => 1, isFeatured == true => 2, 3), title asc)[0...12] {
             _id,
             title,
             "slug": slug.current,
@@ -150,13 +175,13 @@ export const homepageQuery = groq`
       _type == "tabSection" => {
         tabs[] {
           label,
-          content
+          "content": content[] { ${richTextWithLinks} }
         }
       },
       
       // Rich text
       _type == "richText" => {
-        content,
+        "content": content[] { ${richTextWithLinks} },
         maxLines
       },
       
@@ -175,7 +200,7 @@ export const homepageQuery = groq`
         items[] {
           _key,
           question,
-          answer
+          "answer": answer[] { ${richTextWithLinks} }
         }
       },
 
@@ -193,7 +218,7 @@ export const homepageQuery = groq`
       // Callout
       _type == "callout" => {
         title,
-        content,
+        "content": content[] { ${richTextWithLinks} },
         variant
       },
 
@@ -273,7 +298,7 @@ export const pageBySlugQuery = groq`
       // Intro section
       _type == "introSection" => {
         heading,
-        text,
+        "text": text[] { ${richTextWithLinks} },
         promoCards[] {
           _key,
           title,
@@ -301,7 +326,7 @@ export const pageBySlugQuery = groq`
         ),
         "categorySlug": category->slug.current,
         "games": select(
-          displayMode == "category" => *[_type == "game" && references(^.category._ref)] | order(select(count(content) > 0 => 0, 1), select(isFeatured == true => 0, 1), title asc)[0...12] {
+          displayMode == "category" => *[_type == "game" && references(^.category._ref)] | order(select(count(content) > 0 && isFeatured == true => 0, count(content) > 0 => 1, isFeatured == true => 2, 3), title asc)[0...12] {
             _id,
             title,
             "slug": slug.current,
@@ -362,7 +387,7 @@ export const pageBySlugQuery = groq`
 
       // Rich text
       _type == "richText" => {
-        content,
+        "content": content[] { ${richTextWithLinks} },
         maxLines
       },
 
@@ -397,13 +422,13 @@ export const pageBySlugQuery = groq`
 
       // Author's Thoughts
       _type == "gameAuthorThoughts" => {
-        content
+        "content": content[] { ${richTextWithLinks} }
       },
 
       // Callout
       _type == "callout" => {
         title,
-        content,
+        "content": content[] { ${richTextWithLinks} },
         variant
       },
 
@@ -566,6 +591,7 @@ export const gameBySlugQuery = groq`
 
     // Media
     thumbnail,
+    externalThumbnailUrl,
     "screenshots": screenshots[] {
       asset,
       alt
@@ -578,7 +604,7 @@ export const gameBySlugQuery = groq`
 
       // Quick Summary
       _type == "gameQuickSummary" => {
-        intro
+        "intro": intro[] { ${richTextWithLinks} }
       },
 
       // Pros and Cons
@@ -589,25 +615,25 @@ export const gameBySlugQuery = groq`
 
       // Rich Text
       _type == "gameRichText" => {
-        content
+        "content": content[] { ${richTextWithLinks} }
       },
 
       // Author's Thoughts
       _type == "gameAuthorThoughts" => {
-        content
+        "content": content[] { ${richTextWithLinks} }
       },
 
       // Callout
       _type == "callout" => {
         title,
-        content,
+        "content": content[] { ${richTextWithLinks} },
         variant
       },
 
       // Data Table
       _type == "gameTable" => {
         title,
-        introText,
+        "introText": introText[] { ${richTextWithLinks} },
         tableData {
           headers,
           rows[] {
@@ -625,7 +651,7 @@ export const gameBySlugQuery = groq`
     faq[] {
       _key,
       question,
-      answer
+      "answer": answer[] { ${richTextWithLinks} }
     },
 
     // Authorship
@@ -684,11 +710,48 @@ export const categoryBySlugQuery = groq`
     "slug": slug.current,
     description,
     gamesPerPage,
-    additionalContent,
+    // Content Blocks (reorderable)
+    content[] {
+      _type,
+      _key,
+
+      // Rich Text
+      _type == "gameRichText" => {
+        "content": content[] { ${richTextWithLinks} }
+      },
+
+      // Author's Thoughts
+      _type == "gameAuthorThoughts" => {
+        "content": content[] { ${richTextWithLinks} }
+      },
+
+      // Callout
+      _type == "callout" => {
+        title,
+        "content": content[] { ${richTextWithLinks} },
+        variant
+      },
+
+      // Data Table
+      _type == "gameTable" => {
+        title,
+        "introText": introText[] { ${richTextWithLinks} },
+        tableData {
+          headers,
+          rows[] {
+            _key,
+            cells
+          }
+        },
+        caption,
+        highlightFirstColumn,
+        striped
+      }
+    },
     faq[] {
       _key,
       question,
-      answer
+      "answer": answer[] { ${richTextWithLinks} }
     },
     showAuthorInfo,
     publishedAt,
@@ -738,7 +801,7 @@ export const categoriesWithGamesQuery = groq`
     title,
     "slug": slug.current,
     "totalGames": count(*[_type == "game" && references(^._id)]),
-    "games": *[_type == "game" && references(^._id)] | order(select(count(content) > 0 => 0, 1), select(isFeatured == true => 0, 1), title asc)[0...18] {
+    "games": *[_type == "game" && references(^._id)] | order(select(count(content) > 0 && isFeatured == true => 0, count(content) > 0 => 1, isFeatured == true => 2, 3), title asc)[0...18] {
       _id,
       title,
       "slug": slug.current,
@@ -793,8 +856,21 @@ const gameFields = `
 
 // Order clauses for each sort type
 // Note: GROQ doesn't support 'desc' after boolean expressions, so we use select() to convert to sortable numbers
+// Featured sort priority:
+//   0: Has content + featured
+//   1: Has content only
+//   2: Featured only (no content)
+//   3: Everything else (A-Z)
 const sortOrders: Record<string, string> = {
-  'featured': 'order(select(count(content) > 0 => 0, 1), select(isFeatured == true => 0, 1), title asc)',
+  'featured': `order(
+    select(
+      count(content) > 0 && isFeatured == true => 0,
+      count(content) > 0 => 1,
+      isFeatured == true => 2,
+      3
+    ),
+    title asc
+  )`,
   'a-z': 'order(title asc)',
   'z-a': 'order(title desc)',
   'rtp': 'order(coalesce(rtp, 0) desc, title asc)',
@@ -831,8 +907,17 @@ export const allGamesWithCategoriesQuery = groq`
 `
 
 // Get games by provider (for "More from Provider" carousel)
+// Priority: featured+content > content > featured > rest (by _id for pseudo-random)
 export const gamesByProviderQuery = groq`
-  *[_type == "game" && provider == $provider && slug.current != $excludeSlug && count(categories) > 0] | order(_createdAt desc)[0...6] {
+  *[_type == "game" && provider == $provider && slug.current != $excludeSlug && count(categories) > 0] | order(
+    select(
+      count(content) > 0 && isFeatured == true => 0,
+      count(content) > 0 => 1,
+      isFeatured == true => 2,
+      3
+    ),
+    _id asc
+  )[0...12] {
     _id,
     title,
     "slug": slug.current,
@@ -871,12 +956,12 @@ export const promotionBySlugQuery = groq`
     "thumbnail": coalesce(thumbnail.asset->url, heroImage.asset->url),
 
     // Content
-    content,
-    termsAndConditions,
+    "content": content[] { ${richTextWithLinks} },
+    "termsAndConditions": termsAndConditions[] { ${richTextWithLinks} },
     faq[] {
       _key,
       question,
-      answer
+      "answer": answer[] { ${richTextWithLinks} }
     },
 
     // Authorship

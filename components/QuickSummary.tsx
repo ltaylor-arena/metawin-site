@@ -10,16 +10,16 @@ interface QuickSummaryProps {
   title: string
   intro: any[] // Portable Text blocks
   thumbnail?: any // Sanity image reference
+  externalThumbnailUrl?: string // CDN fallback URL
   isNew?: boolean
-  isFeatured?: boolean
 }
 
 export default function QuickSummary({
   title,
   intro,
   thumbnail,
+  externalThumbnailUrl,
   isNew,
-  isFeatured
 }: QuickSummaryProps) {
   if (!intro || intro.length === 0) {
     return null
@@ -33,26 +33,27 @@ export default function QuickSummary({
       </h2>
 
       <div className="flex gap-4 md:gap-5">
-        {/* Thumbnail */}
-        {thumbnail && (
+        {/* Thumbnail - use Sanity image or CDN fallback */}
+        {(thumbnail || externalThumbnailUrl) && (
           <div className="flex-shrink-0 w-20 sm:w-24 md:w-28">
             <div className="relative aspect-[3/4] rounded-lg overflow-hidden bg-[var(--color-bg-primary)]">
               <Image
-                src={urlFor(thumbnail)
-                  .width(224)
-                  .height(300)
-                  .fit('crop')
-                  .auto('format')
-                  .url()}
+                src={thumbnail
+                  ? urlFor(thumbnail)
+                      .width(224)
+                      .height(300)
+                      .fit('crop')
+                      .auto('format')
+                      .url()
+                  : externalThumbnailUrl!
+                }
                 alt={title}
                 fill
                 className="object-cover"
               />
-              {(isNew || isFeatured) && (
-                <span className={`absolute top-1 left-1 px-1.5 py-0.5 text-white text-[10px] font-bold rounded ${
-                  isNew ? 'bg-green-500' : 'bg-[var(--color-accent-blue)]'
-                }`}>
-                  {isNew ? 'NEW' : 'HOT'}
+              {isNew && (
+                <span className="absolute top-1 left-1 px-1.5 py-0.5 text-white text-[10px] font-bold rounded bg-green-500">
+                  NEW
                 </span>
               )}
             </div>

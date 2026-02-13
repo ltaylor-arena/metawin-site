@@ -2,6 +2,7 @@
 // Flexible page builder with modular content blocks
 
 import { defineType, defineField, defineArrayMember } from 'sanity'
+import { richTextBlock, richTextBlockSimple, richTextBlockWithImages } from './richTextBlock'
 
 export default defineType({
   name: 'page',
@@ -123,7 +124,7 @@ export default defineType({
               name: 'text',
               title: 'Intro Text',
               type: 'array',
-              of: [{ type: 'block' }],
+              of: [richTextBlockSimple],
             }),
             defineField({
               name: 'promoCards',
@@ -173,7 +174,7 @@ export default defineType({
                       name: 'content',
                       title: 'Tab Content',
                       type: 'array',
-                      of: [{ type: 'block' }],
+                      of: [richTextBlock],
                     }),
                   ],
                 },
@@ -199,10 +200,7 @@ export default defineType({
               name: 'content',
               title: 'Content',
               type: 'array',
-              of: [
-                { type: 'block' },
-                { type: 'image' },
-              ],
+              of: richTextBlockWithImages,
             }),
             defineField({
               name: 'maxLines',

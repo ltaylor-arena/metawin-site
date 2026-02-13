@@ -2,6 +2,7 @@
 // Game categories (Slots, Live Casino, Blackjack, etc.)
 
 import { defineType, defineField } from 'sanity'
+import { richTextBlockSimple } from './richTextBlock'
 
 export default defineType({
   name: 'category',
@@ -86,32 +87,34 @@ export default defineType({
       initialValue: false,
     }),
 
-    // Content
+    // Content Blocks (reorderable)
     defineField({
-      name: 'additionalContent',
-      title: 'Additional Content',
+      name: 'content',
+      title: 'Page Content',
       type: 'array',
       group: 'content',
-      description: 'Rich content displayed below the games grid',
+      description: 'Drag and drop to reorder these content blocks. Displayed below the games grid on page 1.',
       of: [
-        { type: 'block' },
+        // Rich Text
         {
-          type: 'image',
-          options: { hotspot: true },
-          fields: [
-            defineField({
-              name: 'alt',
-              title: 'Alt Text',
-              type: 'string',
-            }),
-            defineField({
-              name: 'caption',
-              title: 'Caption',
-              type: 'string',
-            }),
-          ],
+          type: 'gameRichText',
+          title: 'Rich Text',
         },
-        { type: 'callout' },
+        // Author's Thoughts
+        {
+          type: 'gameAuthorThoughts',
+          title: "Author's Thoughts",
+        },
+        // Callout
+        {
+          type: 'callout',
+          title: 'Callout',
+        },
+        // Data Table
+        {
+          type: 'gameTable',
+          title: 'Data Table',
+        },
       ],
     }),
     defineField({
@@ -135,7 +138,7 @@ export default defineType({
               name: 'answer',
               title: 'Answer',
               type: 'array',
-              of: [{ type: 'block' }],
+              of: [richTextBlockSimple],
               validation: (Rule) => Rule.required(),
             }),
           ],

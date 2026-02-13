@@ -9,14 +9,24 @@ import { portableTextComponents } from '@/components/PortableTextComponents'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import AuthorByline from '@/components/AuthorByline'
 import AuthorBio from '@/components/AuthorBio'
+import AuthorThoughts from '@/components/AuthorThoughts'
+import Callout from '@/components/Callout'
+import GameTable from '@/components/GameTable'
 import FAQ from '@/components/FAQ'
 import Pagination from '@/components/Pagination'
 import SortDropdown, { SortOption } from '@/components/SortDropdown'
+import ExpandableText from '@/components/ExpandableText'
 
 const DEFAULT_GAMES_PER_PAGE = 24
 
 // Valid sort options
 const VALID_SORTS = ['featured', 'a-z', 'z-a', 'rtp'] as const
+
+interface ContentBlock {
+  _type: string
+  _key: string
+  [key: string]: any
+}
 
 interface CategoryPageProps {
   params: Promise<{ category: string }>
@@ -100,6 +110,70 @@ export async function generateMetadata({ params, searchParams }: CategoryPagePro
   }
 }
 
+// Content Block Renderer Component
+function CategoryContentBlock({
+  block,
+  author,
+}: {
+  block: ContentBlock
+  author?: any
+}) {
+  switch (block._type) {
+    case 'gameRichText':
+      if (!block.content || block.content.length === 0) return null
+      return (
+        <div className="bg-[#0F1115] rounded-lg p-4 md:p-6">
+          <div className="prose prose-invert prose-sm md:prose-base max-w-none prose-p:text-[0.9rem] prose-p:leading-[1.6]">
+            <PortableText value={block.content} components={portableTextComponents} />
+          </div>
+        </div>
+      )
+
+    case 'gameAuthorThoughts':
+      if (!block.content || block.content.length === 0 || !author) return null
+      return (
+        <AuthorThoughts
+          author={author}
+          content={block.content}
+        />
+      )
+
+    case 'callout':
+      if (!block.content || block.content.length === 0) return null
+      return (
+        <Callout
+          title={block.title}
+          content={block.content}
+          variant={block.variant}
+        />
+      )
+
+    case 'gameTable':
+      if (!block.tableData?.headers || block.tableData.headers.length === 0) return null
+      return (
+        <div className="bg-[#0F1115] rounded-lg p-4 md:p-6">
+          {block.introText && block.introText.length > 0 && (
+            <div className="prose prose-invert prose-sm md:prose-base max-w-none mb-6 prose-p:text-[0.9rem] prose-p:leading-[1.6]">
+              <PortableText value={block.introText} components={portableTextComponents} />
+            </div>
+          )}
+          {block.title && (
+            <h3 className="text-lg font-semibold text-white mb-4">{block.title}</h3>
+          )}
+          <GameTable
+            tableData={block.tableData}
+            caption={block.caption}
+            highlightFirstColumn={block.highlightFirstColumn}
+            striped={block.striped}
+          />
+        </div>
+      )
+
+    default:
+      return null
+  }
+}
+
 export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {
   const { category } = await params
   const { page, sort } = await searchParams
@@ -180,9 +254,9 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
           </div>
         )}
         {categoryData.description && (
-          <p className="text-[var(--color-text-muted)] mt-4">
-            {categoryData.description}
-          </p>
+          <div className="mt-4">
+            <ExpandableText text={categoryData.description} maxLinesMobile={2} />
+          </div>
         )}
       </header>
 
@@ -235,18 +309,11 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
                         )}
 
                         {/* Badges */}
-                        {(game.isNew || game.isFeatured) && (
-                          <div className="absolute top-2 left-2 flex gap-1">
-                            {game.isNew && (
-                              <span className="px-1.5 py-0.5 bg-green-500 text-white text-[10px] font-bold rounded">
-                                NEW
-                              </span>
-                            )}
-                            {game.isFeatured && (
-                              <span className="px-1.5 py-0.5 bg-[var(--color-accent-blue)] text-white text-[10px] font-bold rounded">
-                                HOT
-                              </span>
-                            )}
+                        {game.isNew && (
+                          <div className="absolute top-2 left-2">
+                            <span className="px-1.5 py-0.5 bg-green-500 text-white text-[10px] font-bold rounded">
+                              NEW
+                            </span>
                           </div>
                         )}
 
@@ -320,10 +387,16 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
           preserveParams={validSort !== defaultSort ? { sort: validSort } : {}}
         />
 
-        {/* Additional Content - only show on page 1 */}
-        {currentPage === 1 && categoryData.additionalContent && categoryData.additionalContent.length > 0 && (
-          <div className="prose prose-invert prose-sm md:prose-base max-w-none mt-8">
-            <PortableText value={categoryData.additionalContent} components={portableTextComponents} />
+        {/* Content Blocks - only show on page 1 */}
+        {currentPage === 1 && categoryData.content && categoryData.content.length > 0 && (
+          <div className="space-y-6 mt-8">
+            {categoryData.content.map((block: ContentBlock) => (
+              <CategoryContentBlock
+                key={block._key}
+                block={block}
+                author={categoryData.author}
+              />
+            ))}
           </div>
         )}
 

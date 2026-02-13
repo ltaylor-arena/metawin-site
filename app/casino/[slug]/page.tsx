@@ -17,6 +17,7 @@ import AuthorThoughts from '@/components/AuthorThoughts'
 import Callout from '@/components/Callout'
 import CategoryCards from '@/components/CategoryCards'
 import ExpandableRichText from '@/components/ExpandableRichText'
+import ExpandableText from '@/components/ExpandableText'
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -101,9 +102,9 @@ export default async function Page({ params }: PageProps) {
           </div>
         )}
         {page.description && (
-          <p className="mt-4 text-[var(--color-text-muted)]">
-            {page.description}
-          </p>
+          <div className="mt-4">
+            <ExpandableText text={page.description} maxLinesMobile={2} />
+          </div>
         )}
       </header>
 

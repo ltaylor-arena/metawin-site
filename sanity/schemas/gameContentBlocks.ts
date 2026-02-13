@@ -3,6 +3,7 @@
 
 import { defineType, defineField } from 'sanity'
 import { gameTable } from './gameTable'
+import { richTextBlock, richTextBlockSimple } from './richTextBlock'
 
 export { gameTable }
 
@@ -16,7 +17,7 @@ export const gameQuickSummary = defineType({
       name: 'intro',
       title: 'Intro Text',
       type: 'array',
-      of: [{ type: 'block' }],
+      of: [richTextBlockSimple],
       description: 'Rich text introduction for the game',
     }),
   ],
@@ -69,7 +70,7 @@ export const gameRichText = defineType({
       title: 'Content',
       type: 'array',
       of: [
-        { type: 'block' },
+        richTextBlock,
         {
           type: 'image',
           options: { hotspot: true },
@@ -112,7 +113,7 @@ export const gameAuthorThoughts = defineType({
       name: 'content',
       title: 'Content',
       type: 'array',
-      of: [{ type: 'block' }],
+      of: [richTextBlockSimple],
       description: "The author's personal thoughts or opinions (displayed in italics)",
     }),
   ],

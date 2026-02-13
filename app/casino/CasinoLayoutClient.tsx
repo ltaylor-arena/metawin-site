@@ -1,10 +1,12 @@
 'use client'
 
+import { Suspense } from 'react'
 import Sidebar from '@/components/Sidebar'
 import TopHeader from '@/components/TopHeader'
 import Footer from '@/components/Footer'
 import BackToTop from '@/components/BackToTop'
 import ScrollToTop from '@/components/ScrollToTop'
+import NavigationProgress from '@/components/NavigationProgress'
 import { SidebarProvider, useSidebar } from '@/contexts/SidebarContext'
 import type { SidebarNavigation, FooterData, SiteSettings } from './layout'
 
@@ -39,6 +41,9 @@ export default function CasinoLayoutClient({
   return (
     <SidebarProvider>
       <ScrollToTop />
+      <Suspense fallback={null}>
+        <NavigationProgress />
+      </Suspense>
       <div className="casino-site min-h-screen">
         <Sidebar navigation={navigation} signUpUrl={siteSettings?.signUpUrl} />
         <MainContent footer={footer} signUpUrl={siteSettings?.signUpUrl}>{children}</MainContent>

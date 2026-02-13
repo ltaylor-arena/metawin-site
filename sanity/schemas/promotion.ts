@@ -2,6 +2,7 @@
 // Full promotion pages with content, T&Cs, and categorization
 
 import { defineType, defineField } from 'sanity'
+import { richTextBlock, richTextBlockSimple } from './richTextBlock'
 
 export default defineType({
   name: 'promotion',
@@ -153,7 +154,7 @@ export default defineType({
       type: 'array',
       group: 'content',
       of: [
-        { type: 'block' },
+        richTextBlock,
         {
           type: 'image',
           options: { hotspot: true },
@@ -178,7 +179,7 @@ export default defineType({
       title: 'Terms and Conditions',
       type: 'array',
       group: 'content',
-      of: [{ type: 'block' }],
+      of: [richTextBlockSimple],
       description: 'Legal terms and conditions for the promotion',
     }),
     defineField({
@@ -202,7 +203,7 @@ export default defineType({
               name: 'answer',
               title: 'Answer',
               type: 'array',
-              of: [{ type: 'block' }],
+              of: [richTextBlockSimple],
               validation: (Rule) => Rule.required(),
             }),
           ],

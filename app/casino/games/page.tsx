@@ -14,12 +14,14 @@ import FAQ from '@/components/FAQ'
 import FeatureCards from '@/components/FeatureCards'
 import PromoCard from '@/components/PromoCard'
 import ExpandableRichText from '@/components/ExpandableRichText'
+import ExpandableText from '@/components/ExpandableText'
 
 // Custom query for games page with full content block expansion
 const gamesPageQuery = groq`
   *[_type == "page" && slug.current == "games"][0] {
     _id,
     title,
+    h1,
     description,
     "slug": slug.current,
     showAuthorInfo,
@@ -186,7 +188,7 @@ export default async function GamesIndexPage() {
       {/* Page Header */}
       <header className="px-4 md:px-6 pt-6 pb-4">
         <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">
-          {page?.title || 'All Games'}
+          {page?.h1 || page?.title || 'All Games'}
         </h1>
         {page?.showAuthorInfo && page?.author && (
           <div className="mt-3 pb-3 border-b border-[var(--color-border)]">
@@ -199,9 +201,9 @@ export default async function GamesIndexPage() {
           </div>
         )}
         {page?.description && (
-          <p className="text-[var(--color-text-muted)] mt-4 pb-4 border-b border-[var(--color-border)]">
-            {page.description}
-          </p>
+          <div className="mt-4 pb-4 border-b border-[var(--color-border)]">
+            <ExpandableText text={page.description} maxLinesMobile={2} />
+          </div>
         )}
       </header>
 

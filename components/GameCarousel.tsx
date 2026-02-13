@@ -204,18 +204,11 @@ export default function GameCarousel({
                       )}
 
                       {/* Badges */}
-                      {(game.isNew || game.isFeatured) && (
-                        <div className="absolute top-2 left-2 flex gap-1">
-                          {game.isNew && (
-                            <span className="px-1.5 py-0.5 bg-green-500 text-white text-[10px] font-bold rounded">
-                              NEW
-                            </span>
-                          )}
-                          {game.isFeatured && (
-                            <span className="px-1.5 py-0.5 bg-[var(--color-accent-blue)] text-white text-[10px] font-bold rounded">
-                              HOT
-                            </span>
-                          )}
+                      {game.isNew && (
+                        <div className="absolute top-2 left-2">
+                          <span className="px-1.5 py-0.5 bg-green-500 text-white text-[10px] font-bold rounded">
+                            NEW
+                          </span>
                         </div>
                       )}
 
