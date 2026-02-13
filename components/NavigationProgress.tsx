@@ -85,10 +85,20 @@ export default function NavigationProgress() {
   }, [])
 
   // Handle browser back/forward
+  // Track last pathname to detect actual page changes vs hash-only changes
   useEffect(() => {
+    let lastPathname = window.location.pathname
+
     const handlePopState = () => {
-      NProgress.start()
-      setIsNavigating(true)
+      const currentPathname = window.location.pathname
+
+      // Only start progress if the pathname actually changed (not just hash)
+      if (currentPathname !== lastPathname) {
+        NProgress.start()
+        setIsNavigating(true)
+      }
+
+      lastPathname = currentPathname
     }
 
     window.addEventListener('popstate', handlePopState)
