@@ -39,10 +39,8 @@ export default function NavigationProgress() {
       const href = anchor.getAttribute('href')
       if (!href) return
 
-      // Skip external links, hash links, and non-navigation clicks
+      // Skip non-navigation clicks
       if (
-        href.startsWith('http') ||
-        href.startsWith('#') ||
         href.startsWith('mailto:') ||
         href.startsWith('tel:') ||
         anchor.target === '_blank' ||
@@ -50,6 +48,30 @@ export default function NavigationProgress() {
         e.metaKey ||
         e.shiftKey
       ) {
+        return
+      }
+
+      // Skip pure hash links
+      if (href.startsWith('#')) {
+        return
+      }
+
+      // Skip same-page hash links (full URLs or paths with hash to current page)
+      try {
+        const url = new URL(href, window.location.origin)
+        const currentPath = window.location.pathname
+
+        // If it's a hash link to the current page, skip
+        if (url.hash && url.pathname === currentPath) {
+          return
+        }
+
+        // Skip external links (different origin)
+        if (url.origin !== window.location.origin) {
+          return
+        }
+      } catch {
+        // If URL parsing fails, skip to be safe
         return
       }
 
