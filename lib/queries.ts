@@ -615,6 +615,7 @@ export const gameBySlugQuery = groq`
 
       // Rich Text
       _type == "gameRichText" => {
+        tocTitle,
         "content": content[] { ${richTextWithLinks} }
       },
 
@@ -717,6 +718,7 @@ export const categoryBySlugQuery = groq`
 
       // Rich Text
       _type == "gameRichText" => {
+        tocTitle,
         "content": content[] { ${richTextWithLinks} }
       },
 

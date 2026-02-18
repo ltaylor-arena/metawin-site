@@ -19,6 +19,7 @@ import AuthorByline from '@/components/AuthorByline'
 import FAQ from '@/components/FAQ'
 import ProviderGamesCarousel from '@/components/ProviderGamesCarousel'
 import { GameStructuredData } from '@/components/StructuredData'
+import TableOfContents, { TOCItem } from '@/components/TableOfContents'
 
 interface GamePageProps {
   params: Promise<{ category: string; slug: string }>
@@ -68,6 +69,73 @@ export async function generateMetadata({ params }: GamePageProps): Promise<Metad
   }
 }
 
+// Helper to extract first H2 heading from Portable Text content
+// Only H2s are used as section titles - H3s are subheadings
+function extractFirstH2(content: any[]): string | null {
+  if (!content || !Array.isArray(content)) return null
+
+  for (const block of content) {
+    if (block._type === 'block' && block.style === 'h2' && block.children) {
+      const text = block.children.map((child: any) => child.text || '').join('')
+      if (text.trim()) return text.trim()
+    }
+  }
+
+  return null
+}
+
+// Helper to generate TOC items from content blocks
+function buildTOCItems(contentBlocks: ContentBlock[], game: any): TOCItem[] {
+  const items: TOCItem[] = []
+
+  contentBlocks.forEach((block) => {
+    switch (block._type) {
+      case 'gameQuickSummary':
+        if (block.intro && block.intro.length > 0) {
+          items.push({ id: 'quick-summary', title: 'Quick Summary' })
+        }
+        break
+      case 'gameProsAndCons':
+        if ((block.pros && block.pros.length > 0) || (block.cons && block.cons.length > 0)) {
+          items.push({ id: 'pros-and-cons', title: 'Pros & Cons' })
+        }
+        break
+      case 'gameRichText':
+        if (block.content && block.content.length > 0) {
+          // Priority: tocTitle > first H2 in content > fallback "Overview"
+          const headingTitle = extractFirstH2(block.content)
+          const title = block.tocTitle || headingTitle || 'Overview'
+          items.push({ id: `section-${block._key}`, title })
+        }
+        break
+      case 'callout':
+        // Skip callouts from TOC
+        break
+      case 'gameTable':
+        if (block.tableData?.headers && block.tableData.headers.length > 0) {
+          // Priority: heading from introText > explicit title > first table header > "Data Table"
+          // (introText heading is the main section title, table title is a subtitle)
+          let title = null
+          if (block.introText) {
+            title = extractFirstH2(block.introText)
+          }
+          if (!title) {
+            title = block.title
+          }
+          if (!title && block.tableData.headers[0]) {
+            title = block.tableData.headers[0]
+          }
+          title = title || 'Data Table'
+          items.push({ id: `table-${block._key}`, title })
+        }
+        break
+      // Exclude gameAuthorThoughts from TOC
+    }
+  })
+
+  return items
+}
+
 // Content Block Renderer Component (for reorderable middle section)
 function GameContentBlock({
   block,
@@ -80,33 +148,39 @@ function GameContentBlock({
     case 'gameQuickSummary':
       if (!block.intro || block.intro.length === 0) return null
       return (
-        <QuickSummary
-          title={game.title}
-          intro={block.intro}
-          thumbnail={game.thumbnail}
-          externalThumbnailUrl={game.externalThumbnailUrl}
-          isNew={game.isNew}
-        />
+        <section id="quick-summary" className="scroll-mt-48 xl:scroll-mt-28">
+          <QuickSummary
+            title={game.title}
+            intro={block.intro}
+            thumbnail={game.thumbnail}
+            externalThumbnailUrl={game.externalThumbnailUrl}
+            isNew={game.isNew}
+          />
+        </section>
       )
 
     case 'gameProsAndCons':
       if ((!block.pros || block.pros.length === 0) && (!block.cons || block.cons.length === 0)) return null
       return (
-        <ProsAndCons
-          title={game.title}
-          pros={block.pros}
-          cons={block.cons}
-        />
+        <section id="pros-and-cons" className="scroll-mt-48 xl:scroll-mt-28">
+          <ProsAndCons
+            title={game.title}
+            pros={block.pros}
+            cons={block.cons}
+          />
+        </section>
       )
 
     case 'gameRichText':
       if (!block.content || block.content.length === 0) return null
       return (
-        <div className="bg-[#0F1115] rounded-lg p-4 md:p-6">
-          <div className="prose prose-invert prose-sm md:prose-base max-w-none prose-p:text-[0.9rem] prose-p:leading-[1.6]">
-            <PortableText value={block.content} components={portableTextComponents} />
+        <section id={`section-${block._key}`} className="scroll-mt-48 xl:scroll-mt-28">
+          <div className="bg-[#0F1115] rounded-lg p-4 md:p-6">
+            <div className="prose prose-invert prose-sm md:prose-base max-w-none prose-p:text-[0.9rem] prose-p:leading-[1.6]">
+              <PortableText value={block.content} components={portableTextComponents} />
+            </div>
           </div>
-        </div>
+        </section>
       )
 
     case 'gameAuthorThoughts':
@@ -131,22 +205,24 @@ function GameContentBlock({
     case 'gameTable':
       if (!block.tableData?.headers || block.tableData.headers.length === 0) return null
       return (
-        <div className="bg-[#0F1115] rounded-lg p-4 md:p-6">
-          {block.introText && block.introText.length > 0 && (
-            <div className="prose prose-invert prose-sm md:prose-base max-w-none mb-6 prose-p:text-[0.9rem] prose-p:leading-[1.6]">
-              <PortableText value={block.introText} components={portableTextComponents} />
-            </div>
-          )}
-          {block.title && (
-            <h3 className="text-lg font-semibold text-white mb-4">{block.title}</h3>
-          )}
-          <GameTable
-            tableData={block.tableData}
-            caption={block.caption}
-            highlightFirstColumn={block.highlightFirstColumn}
-            striped={block.striped}
-          />
-        </div>
+        <section id={`table-${block._key}`} className="scroll-mt-48 xl:scroll-mt-28">
+          <div className="bg-[#0F1115] rounded-lg p-4 md:p-6">
+            {block.introText && block.introText.length > 0 && (
+              <div className="prose prose-invert prose-sm md:prose-base max-w-none mb-6 prose-p:text-[0.9rem] prose-p:leading-[1.6]">
+                <PortableText value={block.introText} components={portableTextComponents} />
+              </div>
+            )}
+            {block.title && (
+              <h3 className="text-lg font-semibold text-white mb-4">{block.title}</h3>
+            )}
+            <GameTable
+              tableData={block.tableData}
+              caption={block.caption}
+              highlightFirstColumn={block.highlightFirstColumn}
+              striped={block.striped}
+            />
+          </div>
+        </section>
       )
 
     default:
@@ -191,6 +267,19 @@ export default async function GamePage({ params }: GamePageProps) {
   // Get content blocks (reorderable middle section)
   const contentBlocks: ContentBlock[] = game.content || []
 
+  // Build TOC items from content blocks + fixed sections
+  const tocItems: TOCItem[] = buildTOCItems(contentBlocks, game)
+
+  // Add FAQ to TOC if present
+  if (game.faq && game.faq.length > 0) {
+    tocItems.push({ id: 'faq', title: 'FAQ' })
+  }
+
+  // Add Author Bio to TOC if present
+  if (game.showAuthorInfo && game.author) {
+    tocItems.push({ id: 'author-info', title: 'About the Author' })
+  }
+
   return (
     <div className="min-h-screen">
       {/* Structured Data */}
@@ -233,9 +322,14 @@ export default async function GamePage({ params }: GamePageProps) {
       </header>
 
       {/* Main Content */}
-      <div className="px-4 md:px-6 pb-8">
-        <div className="border-t border-[var(--color-border)] mb-4"></div>
-        <div className="grid grid-cols-1 xl:grid-cols-[1fr_280px] gap-8">
+      <div className="pb-8">
+        {/* Mobile Table of Contents - Sticky under header */}
+        {tocItems.length > 1 && (
+          <TableOfContents items={tocItems} variant="mobile" />
+        )}
+
+        <div className="px-4 md:px-6">
+          <div className="grid grid-cols-1 xl:grid-cols-[1fr_280px] gap-8">
           {/* Left Column - Content */}
           <div className="space-y-6">
             {/* FIXED: Screenshots / Thumbnail (always at top) */}
@@ -302,6 +396,11 @@ export default async function GamePage({ params }: GamePageProps) {
               releaseDate={game.releaseDate}
             />
 
+            {/* Desktop Table of Contents - Sticky after details */}
+            {tocItems.length > 1 && (
+              <TableOfContents items={tocItems} variant="desktop" />
+            )}
+
             {/* Mobile Play Button */}
             <a
               href={signUpUrl}
@@ -319,12 +418,12 @@ export default async function GamePage({ params }: GamePageProps) {
 
         {/* FAQ Section */}
         {game.faq && game.faq.length > 0 && (
-          <div className="mt-7 xl:max-w-[calc(100%-312px)]">
+          <section id="faq" className="mt-7 xl:max-w-[calc(100%-312px)] scroll-mt-48 xl:scroll-mt-28">
             <FAQ
               heading={`${game.title} FAQ`}
               items={game.faq}
             />
-          </div>
+          </section>
         )}
 
         {/* Author Bio */}
@@ -351,6 +450,7 @@ export default async function GamePage({ params }: GamePageProps) {
             />
           </div>
         )}
+        </div>
       </div>
     </div>
   )
