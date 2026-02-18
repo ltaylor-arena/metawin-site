@@ -1156,3 +1156,59 @@ export const authorsIndexQuery = groq`
        (_type == "promotion" && author._ref == ^._id && isActive == true))
     ])
   } | order(articleCount desc, name asc)`
+
+// ============================================
+// SITEMAP QUERIES
+// Only include pages with content to avoid indexing empty pages
+// ============================================
+
+// Sitemap: Pages with content
+export const sitemapPagesQuery = groq`
+  *[_type == "page" && (isHomepage == true || count(content) > 0)] {
+    "slug": slug.current,
+    isHomepage,
+    _updatedAt
+  }
+`
+
+// Sitemap: Games with content (reviews, not just catalog entries)
+export const sitemapGamesQuery = groq`
+  *[_type == "game" && count(content) > 0] {
+    title,
+    "slug": slug.current,
+    "categorySlug": categories[0]->slug.current,
+    "thumbnail": thumbnail.asset->url,
+    externalThumbnailUrl,
+    "screenshots": screenshots[].asset->url,
+    _updatedAt
+  }
+`
+
+// Sitemap: Categories with content
+export const sitemapCategoriesQuery = groq`
+  *[_type == "category" && count(content) > 0] {
+    "slug": slug.current,
+    _updatedAt
+  }
+`
+
+// Sitemap: Active promotions with content
+export const sitemapPromotionsQuery = groq`
+  *[_type == "promotion" && isActive == true && count(content) > 0] {
+    title,
+    "slug": slug.current,
+    "heroImage": heroImage.asset->url,
+    "thumbnail": thumbnail.asset->url,
+    _updatedAt
+  }
+`
+
+// Sitemap: Authors with bio (ensures they have meaningful content)
+export const sitemapAuthorsQuery = groq`
+  *[_type == "author" && defined(bio)] {
+    name,
+    "slug": slug.current,
+    "image": image.asset->url,
+    _updatedAt
+  }
+`
