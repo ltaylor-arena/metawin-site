@@ -70,10 +70,10 @@ function escapeXml(str: string): string {
 }
 
 export async function GET() {
-  // Fetch all content with 24hr cache
+  // Fetch all content - only revalidates when webhook triggers
   const fetchOptions = {
     next: {
-      revalidate: 86400, // 24 hours
+      revalidate: false as const, // Only revalidate via webhook
     },
   }
 
