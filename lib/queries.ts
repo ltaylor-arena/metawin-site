@@ -1281,6 +1281,32 @@ export const blogSettingsQuery = groq`
   }
 `
 
+// Get blog navigation settings (for blog layout)
+export const blogNavigationQuery = groq`
+  *[_type == "blogSettings"][0] {
+    "navLogo": navLogo.asset->url,
+    navHomeLabel,
+    navHomeUrl,
+    "navCategories": select(
+      count(navCategories) > 0 => navCategories[]-> {
+        _id,
+        title,
+        "slug": slug.current,
+        color,
+        icon
+      },
+      *[_type == "blogCategory" && showInNav == true] | order(coalesce(order, 999) asc) {
+        _id,
+        title,
+        "slug": slug.current,
+        color,
+        icon
+      }
+    ),
+    navCta
+  }
+`
+
 // Get featured blog posts (fallback if not manually selected)
 export const featuredBlogPostsQuery = groq`
   *[_type == "blogPost" && isFeatured == true] | order(publishedAt desc)[0...$limit] {
