@@ -1212,3 +1212,265 @@ export const sitemapAuthorsQuery = groq`
     _updatedAt
   }
 `
+
+// ==================
+// BLOG QUERIES
+// ==================
+
+// Helper: Blog post card fields (reusable projection)
+const blogPostCardFields = `
+  _id,
+  title,
+  "slug": slug.current,
+  excerpt,
+  "heroImage": heroImage.asset->url,
+  "heroImageAlt": heroImage.alt,
+  publishedAt,
+  isFeatured,
+  "categories": categories[]-> {
+    _id,
+    title,
+    "slug": slug.current,
+    color
+  },
+  author-> {
+    name,
+    "slug": slug.current,
+    image
+  }
+`
+
+// Get blog settings (homepage config)
+export const blogSettingsQuery = groq`
+  *[_type == "blogSettings"][0] {
+    heroHeading,
+    heroSubtext,
+    "heroImage": heroImage.asset->url,
+    "heroImageAlt": heroImage.alt,
+    heroCta,
+    "introText": introText[] { ${richTextWithLinks} },
+    featuredPostsHeading,
+    "featuredPosts": featuredPosts[]-> {
+      ${blogPostCardFields}
+    },
+    featuredLimit,
+    latestPostsHeading,
+    showLatestPosts,
+    latestLimit,
+    showByCategory,
+    categoryPostsLimit,
+    navLogo,
+    navHomeLabel,
+    navHomeUrl,
+    "navCategories": navCategories[]-> {
+      _id,
+      title,
+      "slug": slug.current,
+      color
+    },
+    recentPostsLimit,
+    navCta,
+    seo {
+      metaTitle,
+      hideKicker,
+      metaDescription,
+      canonicalUrl,
+      noIndex,
+      "ogImage": ogImage.asset->url
+    }
+  }
+`
+
+// Get featured blog posts (fallback if not manually selected)
+export const featuredBlogPostsQuery = groq`
+  *[_type == "blogPost" && isFeatured == true] | order(publishedAt desc)[0...$limit] {
+    ${blogPostCardFields}
+  }
+`
+
+// Get latest blog posts
+export const latestBlogPostsQuery = groq`
+  *[_type == "blogPost"] | order(publishedAt desc)[0...$limit] {
+    ${blogPostCardFields}
+  }
+`
+
+// Get blog post by slug
+export const blogPostBySlugQuery = groq`
+  *[_type == "blogPost" && slug.current == $slug][0] {
+    _id,
+    title,
+    "slug": slug.current,
+    excerpt,
+    "heroImage": heroImage.asset->url,
+    "heroImageAlt": heroImage.alt,
+    "heroImageCaption": heroImage.caption,
+    publishedAt,
+    updatedAt,
+    isFeatured,
+    showToc,
+    showAuthorBio,
+    "categories": categories[]-> {
+      _id,
+      title,
+      "slug": slug.current,
+      color
+    },
+    "content": content[] {
+      ...,
+      _type == "block" => { ${richTextWithLinks} },
+      _type == "image" => {
+        ...,
+        "url": asset->url,
+        alt,
+        caption
+      },
+      _type == "callout" => {
+        title,
+        "content": content[] { ${richTextWithLinks} },
+        variant
+      }
+    },
+    author-> {
+      name,
+      "slug": slug.current,
+      image,
+      role,
+      bio,
+      expertise,
+      socialLinks
+    },
+    factChecker-> {
+      name,
+      "slug": slug.current,
+      image,
+      role,
+      bio,
+      expertise,
+      socialLinks
+    },
+    "relatedPosts": relatedPosts[]-> {
+      ${blogPostCardFields}
+    },
+    "relatedGames": relatedGames[]-> {
+      _id,
+      title,
+      "slug": slug.current,
+      "categorySlug": categories[0]->slug.current,
+      thumbnail,
+      externalThumbnailUrl,
+      provider,
+      rtp
+    },
+    seo {
+      metaTitle,
+      hideKicker,
+      metaDescription,
+      breadcrumbText,
+      canonicalUrl,
+      noIndex,
+      "ogImage": ogImage.asset->url
+    }
+  }
+`
+
+// Get blog category by slug
+export const blogCategoryBySlugQuery = groq`
+  *[_type == "blogCategory" && slug.current == $slug][0] {
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    "heroImage": heroImage.asset->url,
+    "heroImageAlt": heroImage.alt,
+    "introText": introText[] { ${richTextWithLinks} },
+    color,
+    postsPerPage,
+    seo {
+      metaTitle,
+      hideKicker,
+      metaDescription,
+      breadcrumbText,
+      canonicalUrl,
+      noIndex,
+      "ogImage": ogImage.asset->url
+    }
+  }
+`
+
+// Get blog posts by category (paginated)
+export const blogPostsByCategoryQuery = groq`
+  *[_type == "blogPost" && $categorySlug in categories[]->slug.current] | order(publishedAt desc)[$start...$end] {
+    ${blogPostCardFields}
+  }
+`
+
+// Get total count of posts in a category
+export const blogPostsByCategoryCountQuery = groq`
+  count(*[_type == "blogPost" && $categorySlug in categories[]->slug.current])
+`
+
+// Get all blog categories for navigation
+export const allBlogCategoriesQuery = groq`
+  *[_type == "blogCategory" && showInNav == true] | order(coalesce(order, 999) asc, title asc) {
+    _id,
+    title,
+    "slug": slug.current,
+    color,
+    "postCount": count(*[_type == "blogPost" && references(^._id)])
+  }
+`
+
+// Get all blog posts for sitemap
+export const allBlogPostSlugsQuery = groq`
+  *[_type == "blogPost"] {
+    "slug": slug.current,
+    _updatedAt
+  }
+`
+
+// Get all blog categories for sitemap
+export const allBlogCategorySlugsQuery = groq`
+  *[_type == "blogCategory"] {
+    "slug": slug.current,
+    _updatedAt
+  }
+`
+
+// Sitemap: Blog posts with content
+export const sitemapBlogPostsQuery = groq`
+  *[_type == "blogPost" && count(content) > 0] {
+    title,
+    "slug": slug.current,
+    "heroImage": heroImage.asset->url,
+    _updatedAt
+  }
+`
+
+// Sitemap: Blog categories
+export const sitemapBlogCategoriesQuery = groq`
+  *[_type == "blogCategory"] {
+    "slug": slug.current,
+    _updatedAt
+  }
+`
+
+// Get posts by category for homepage sections
+export const blogPostsByCategorySectionQuery = groq`
+  *[_type == "blogCategory" && showInNav == true] | order(coalesce(order, 999) asc) {
+    _id,
+    title,
+    "slug": slug.current,
+    color,
+    "posts": *[_type == "blogPost" && references(^._id)] | order(publishedAt desc)[0...$limit] {
+      ${blogPostCardFields}
+    }
+  }
+`
+
+// Add blog posts to author content query
+export const blogPostsByAuthorQuery = groq`
+  *[_type == "blogPost" && author._ref == $authorId] | order(publishedAt desc)[0...$limit] {
+    ${blogPostCardFields}
+  }
+`

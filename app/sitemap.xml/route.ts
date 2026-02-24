@@ -9,6 +9,8 @@ import {
   sitemapCategoriesQuery,
   sitemapPromotionsQuery,
   sitemapAuthorsQuery,
+  sitemapBlogPostsQuery,
+  sitemapBlogCategoriesQuery,
 } from '@/lib/queries'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://metawin.com'
@@ -19,11 +21,14 @@ const SITEMAP_CONFIG = {
   gamesIndex: { changefreq: 'daily', priority: '0.9' },
   promotionsIndex: { changefreq: 'daily', priority: '0.8' },
   authorsIndex: { changefreq: 'monthly', priority: '0.5' },
+  blogIndex: { changefreq: 'daily', priority: '0.8' },
   page: { changefreq: 'weekly', priority: '0.6' },
   category: { changefreq: 'weekly', priority: '0.8' },
   game: { changefreq: 'monthly', priority: '0.6' },
   promotion: { changefreq: 'weekly', priority: '0.7' },
   author: { changefreq: 'monthly', priority: '0.5' },
+  blogPost: { changefreq: 'weekly', priority: '0.7' },
+  blogCategory: { changefreq: 'weekly', priority: '0.6' },
 }
 
 interface SitemapPage {
@@ -56,6 +61,17 @@ interface SitemapAuthor {
   _updatedAt: string
 }
 
+interface SitemapBlogPost {
+  title: string
+  slug: string
+  _updatedAt: string
+}
+
+interface SitemapBlogCategory {
+  slug: string
+  _updatedAt: string
+}
+
 function formatDate(date: string): string {
   return new Date(date).toISOString().split('T')[0]
 }
@@ -77,12 +93,14 @@ export async function GET() {
     },
   }
 
-  const [pages, games, categories, promotions, authors] = await Promise.all([
+  const [pages, games, categories, promotions, authors, blogPosts, blogCategories] = await Promise.all([
     client.fetch<SitemapPage[]>(sitemapPagesQuery, {}, fetchOptions),
     client.fetch<SitemapGame[]>(sitemapGamesQuery, {}, fetchOptions),
     client.fetch<SitemapCategory[]>(sitemapCategoriesQuery, {}, fetchOptions),
     client.fetch<SitemapPromotion[]>(sitemapPromotionsQuery, {}, fetchOptions),
     client.fetch<SitemapAuthor[]>(sitemapAuthorsQuery, {}, fetchOptions),
+    client.fetch<SitemapBlogPost[]>(sitemapBlogPostsQuery, {}, fetchOptions),
+    client.fetch<SitemapBlogCategory[]>(sitemapBlogCategoriesQuery, {}, fetchOptions),
   ])
 
   const urls: string[] = []
@@ -195,6 +213,45 @@ export async function GET() {
       <lastmod>${formatDate(author._updatedAt)}</lastmod>
       <changefreq>${SITEMAP_CONFIG.author.changefreq}</changefreq>
       <priority>${SITEMAP_CONFIG.author.priority}</priority>
+    </url>`)
+    }
+  }
+
+  // Add blog index
+  const latestBlogUpdate = blogPosts.length > 0
+    ? blogPosts.reduce((latest, p) => p._updatedAt > latest ? p._updatedAt : latest, blogPosts[0]._updatedAt)
+    : new Date().toISOString()
+
+  urls.push(`
+    <url>
+      <loc>${SITE_URL}/casino/blog/</loc>
+      <lastmod>${formatDate(latestBlogUpdate)}</lastmod>
+      <changefreq>${SITEMAP_CONFIG.blogIndex.changefreq}</changefreq>
+      <priority>${SITEMAP_CONFIG.blogIndex.priority}</priority>
+    </url>`)
+
+  // Add blog categories
+  for (const blogCat of blogCategories) {
+    if (blogCat.slug) {
+      urls.push(`
+    <url>
+      <loc>${SITE_URL}/casino/blog/category/${escapeXml(blogCat.slug)}/</loc>
+      <lastmod>${formatDate(blogCat._updatedAt)}</lastmod>
+      <changefreq>${SITEMAP_CONFIG.blogCategory.changefreq}</changefreq>
+      <priority>${SITEMAP_CONFIG.blogCategory.priority}</priority>
+    </url>`)
+    }
+  }
+
+  // Add blog posts
+  for (const post of blogPosts) {
+    if (post.slug) {
+      urls.push(`
+    <url>
+      <loc>${SITE_URL}/casino/blog/${escapeXml(post.slug)}/</loc>
+      <lastmod>${formatDate(post._updatedAt)}</lastmod>
+      <changefreq>${SITEMAP_CONFIG.blogPost.changefreq}</changefreq>
+      <priority>${SITEMAP_CONFIG.blogPost.priority}</priority>
     </url>`)
     }
   }

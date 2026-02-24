@@ -26,6 +26,9 @@ import {
   gameAuthorThoughts,
   gameTable,
 } from './gameContentBlocks'
+import blogPost from './blogPost'
+import blogCategory from './blogCategory'
+import blogSettings from './blogSettings'
 
 export const schemaTypes = [
   // Documents
@@ -37,6 +40,11 @@ export const schemaTypes = [
   siteSettings,
   navigation,
   footer,
+
+  // Blog
+  blogPost,
+  blogCategory,
+  blogSettings,
 
   // Objects (reusable components)
   seo,
