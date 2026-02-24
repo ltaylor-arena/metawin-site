@@ -1,5 +1,6 @@
+import { headers } from 'next/headers'
 import { sanityFetch } from '@/lib/sanity'
-import { sidebarNavigationQuery, footerQuery, siteSettingsQuery } from '@/lib/queries'
+import { sidebarNavigationQuery, footerQuery, siteSettingsQuery, blogNavigationQuery } from '@/lib/queries'
 import CasinoLayoutClient from './CasinoLayoutClient'
 
 // Sidebar types
@@ -66,8 +67,89 @@ export interface FooterData {
   badges?: FooterBadge[]
 }
 
-async function getSidebarNavigation(): Promise<SidebarNavigation | null> {
+interface BlogCategory {
+  _id: string
+  title: string
+  slug: string
+  color?: string
+  icon?: string
+}
+
+interface BlogNavigation {
+  navLogo?: string
+  navHomeLabel?: string
+  navHomeUrl?: string
+  navCategories?: BlogCategory[]
+  navCta?: {
+    text?: string
+    link?: string
+    secondaryText?: string
+    secondaryLink?: string
+  }
+}
+
+// Transform blog navigation into sidebar navigation format
+function transformBlogToSidebarNav(blogNav: BlogNavigation | null): SidebarNavigation {
+  const items: NavElement[] = []
+
+  // Add home link
+  items.push({
+    _type: 'navItem',
+    label: blogNav?.navHomeLabel || 'Home',
+    icon: 'house',
+    href: blogNav?.navHomeUrl || '/casino/',
+  })
+
+  // Add blog home link
+  items.push({
+    _type: 'navItem',
+    label: 'Blog',
+    icon: 'sparkles',
+    href: '/casino/blog/',
+  })
+
+  // Add categories as a section
+  if (blogNav?.navCategories && blogNav.navCategories.length > 0) {
+    const categoryItems = blogNav.navCategories.map((cat) => ({
+      label: cat.title,
+      icon: cat.icon || 'star',
+      href: `/casino/blog/category/${cat.slug}/`,
+    }))
+
+    items.push({
+      _type: 'navSection',
+      sectionTitle: 'Categories',
+      isCollapsible: true,
+      defaultOpen: true,
+      showDivider: true,
+      items: categoryItems,
+    })
+  }
+
+  return {
+    title: 'Blog Sidebar',
+    items,
+  }
+}
+
+async function getSidebarNavigation(isBlogSection: boolean): Promise<SidebarNavigation | null> {
   const start = Date.now()
+
+  if (isBlogSection) {
+    console.log('[Layout] Fetching blog navigation...')
+    try {
+      const blogNav = await sanityFetch<BlogNavigation | null>({
+        query: blogNavigationQuery,
+        tags: ['blogSettings', 'blogCategory'],
+      })
+      console.log(`[Layout] Blog navigation fetched in ${Date.now() - start}ms`)
+      return transformBlogToSidebarNav(blogNav)
+    } catch (error) {
+      console.error(`[Layout] Blog navigation FAILED after ${Date.now() - start}ms:`, error)
+      return null
+    }
+  }
+
   console.log('[Layout] Fetching sidebar navigation...')
   try {
     const result = await sanityFetch<SidebarNavigation | null>({
@@ -133,8 +215,14 @@ export default async function CasinoLayout({
   const layoutStart = Date.now()
   console.log('[Layout] CasinoLayout render started')
 
+  // Detect if we're in the blog section by checking the URL
+  const headersList = await headers()
+  const pathname = headersList.get('x-pathname') || headersList.get('x-invoke-path') || ''
+  const referer = headersList.get('referer') || ''
+  const isBlogSection = pathname.includes('/blog') || referer.includes('/casino/blog')
+
   const [navigation, footer, siteSettings] = await Promise.all([
-    getSidebarNavigation(),
+    getSidebarNavigation(isBlogSection),
     getFooterData(),
     getSiteSettings(),
   ])
