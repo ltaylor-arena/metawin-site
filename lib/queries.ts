@@ -1249,11 +1249,9 @@ export const blogSettingsQuery = groq`
     "heroImageAlt": heroImage.alt,
     heroCta,
     "introText": introText[] { ${richTextWithLinks} },
-    featuredPostsHeading,
-    "featuredPosts": featuredPosts[]-> {
+    "featuredPost": featuredPost-> {
       ${blogPostCardFields}
     },
-    featuredLimit,
     latestPostsHeading,
     showLatestPosts,
     latestLimit,
@@ -1307,9 +1305,9 @@ export const blogNavigationQuery = groq`
   }
 `
 
-// Get featured blog posts (fallback if not manually selected)
-export const featuredBlogPostsQuery = groq`
-  *[_type == "blogPost" && isFeatured == true] | order(publishedAt desc)[0...$limit] {
+// Get single featured blog post (fallback if not manually selected in settings)
+export const featuredBlogPostQuery = groq`
+  *[_type == "blogPost" && isFeatured == true] | order(publishedAt desc)[0] {
     ${blogPostCardFields}
   }
 `

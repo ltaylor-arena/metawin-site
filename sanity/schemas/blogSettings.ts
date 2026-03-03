@@ -88,36 +88,14 @@ export default defineType({
       description: 'Optional intro text below the hero',
     }),
 
-    // Featured Posts
+    // Featured Post
     defineField({
-      name: 'featuredPostsHeading',
-      title: 'Featured Section Heading',
-      type: 'string',
+      name: 'featuredPost',
+      title: 'Featured Post',
+      type: 'reference',
+      to: [{ type: 'blogPost' }],
       group: 'homepage',
-      initialValue: 'Featured Articles',
-    }),
-    defineField({
-      name: 'featuredPosts',
-      title: 'Featured Posts',
-      type: 'array',
-      group: 'homepage',
-      description: 'Manually select featured posts. Leave empty to auto-select posts marked as featured.',
-      of: [
-        {
-          type: 'reference',
-          to: [{ type: 'blogPost' }],
-        },
-      ],
-      validation: (Rule) => Rule.max(6),
-    }),
-    defineField({
-      name: 'featuredLimit',
-      title: 'Featured Posts Limit',
-      type: 'number',
-      group: 'homepage',
-      description: 'Max featured posts to show (default: 3)',
-      initialValue: 3,
-      validation: (Rule) => Rule.min(1).max(6).integer(),
+      description: 'Select a single post to feature prominently at the top of the blog homepage. Leave empty to auto-select the most recent post marked as featured.',
     }),
 
     // Latest Posts

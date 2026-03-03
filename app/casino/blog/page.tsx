@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { client } from '@/lib/sanity'
 import {
   blogSettingsQuery,
-  featuredBlogPostsQuery,
+  featuredBlogPostQuery,
   latestBlogPostsQuery,
   allBlogCategoriesQuery,
   blogPostsByCategorySectionQuery,
@@ -13,6 +13,7 @@ import { PortableText } from '@portabletext/react'
 import { portableTextComponents } from '@/components/PortableTextComponents'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import PostCard from '@/components/blog/PostCard'
+import FeaturedPostHero from '@/components/blog/FeaturedPostHero'
 
 interface BlogSettings {
   heroHeading?: string
@@ -24,9 +25,7 @@ interface BlogSettings {
     link?: string
   }
   introText?: any[]
-  featuredPostsHeading?: string
-  featuredPosts?: BlogPost[]
-  featuredLimit?: number
+  featuredPost?: BlogPost
   latestPostsHeading?: string
   showLatestPosts?: boolean
   latestLimit?: number
@@ -69,8 +68,8 @@ async function getBlogSettings(): Promise<BlogSettings | null> {
   return await client.fetch(blogSettingsQuery)
 }
 
-async function getFeaturedPosts(limit: number): Promise<BlogPost[]> {
-  return await client.fetch(featuredBlogPostsQuery, { limit })
+async function getFeaturedPost(): Promise<BlogPost | null> {
+  return await client.fetch(featuredBlogPostQuery)
 }
 
 async function getLatestPosts(limit: number): Promise<BlogPost[]> {
@@ -98,11 +97,8 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function BlogPage() {
   const settings = await getBlogSettings()
 
-  // Get featured posts - either from manual selection or auto-select
-  const featuredLimit = settings?.featuredLimit || 3
-  const featuredPosts = settings?.featuredPosts?.length
-    ? settings.featuredPosts.slice(0, featuredLimit)
-    : await getFeaturedPosts(featuredLimit)
+  // Get featured post - either from manual selection or auto-select
+  const featuredPost = settings?.featuredPost || await getFeaturedPost()
 
   // Get latest posts
   const latestLimit = settings?.latestLimit || 6
@@ -122,7 +118,7 @@ export default async function BlogPage() {
   const breadcrumbItems = [{ label: 'Blog' }]
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen lg:max-w-[67%]">
       {/* Breadcrumbs */}
       <div className="px-4 md:px-6 pt-4">
         <Breadcrumbs items={breadcrumbItems} />
@@ -211,26 +207,9 @@ export default async function BlogPage() {
           </div>
         )}
 
-        {/* Featured Posts */}
-        {featuredPosts.length > 0 && (
-          <section className="mb-12">
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-6">
-              {settings?.featuredPostsHeading || 'Featured Articles'}
-            </h2>
-            <div className="grid gap-6">
-              {/* First featured post - large */}
-              <PostCard {...featuredPosts[0]} variant="featured" />
-
-              {/* Rest - grid */}
-              {featuredPosts.length > 1 && (
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {featuredPosts.slice(1).map((post) => (
-                    <PostCard key={post._id} {...post} />
-                  ))}
-                </div>
-              )}
-            </div>
-          </section>
+        {/* Featured Post Hero */}
+        {featuredPost && (
+          <FeaturedPostHero {...featuredPost} />
         )}
 
         {/* Latest Posts */}
@@ -272,7 +251,7 @@ export default async function BlogPage() {
         ))}
 
         {/* Empty State */}
-        {featuredPosts.length === 0 && latestPosts.length === 0 && (
+        {!featuredPost && latestPosts.length === 0 && (
           <div className="text-center py-12">
             <p className="text-[var(--color-text-muted)]">No blog posts available yet.</p>
           </div>
