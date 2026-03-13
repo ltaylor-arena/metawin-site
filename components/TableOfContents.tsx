@@ -1,5 +1,6 @@
 // Table of Contents Component
 // Sticky under header on mobile, sticky in sidebar on desktop
+// Universal variant shows mobile-style dropdown on all screen sizes
 
 'use client'
 
@@ -14,7 +15,7 @@ export interface TOCItem {
 interface TableOfContentsProps {
   items: TOCItem[]
   title?: string
-  variant: 'mobile' | 'desktop'
+  variant: 'mobile' | 'desktop' | 'universal'
 }
 
 export default function TableOfContents({
@@ -69,6 +70,55 @@ export default function TableOfContents({
 
   if (!items || items.length === 0) {
     return null
+  }
+
+  // Universal: Collapsible bar on all screen sizes (mobile style everywhere)
+  if (variant === 'universal') {
+    return (
+      <div className="mb-4">
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg bg-[var(--color-bg-secondary)] border border-[var(--color-border)] text-white"
+          aria-expanded={isExpanded}
+        >
+          <span className="flex items-center gap-2 text-sm font-medium">
+            <List className="w-4 h-4" />
+            {title}
+          </span>
+          <ChevronDown
+            className={`w-4 h-4 text-[var(--color-text-muted)] transition-transform duration-200 ${
+              isExpanded ? 'rotate-180' : ''
+            }`}
+          />
+        </button>
+
+        {/* Expandable dropdown */}
+        <div
+          className={`overflow-hidden transition-all duration-200 ${
+            isExpanded ? 'max-h-[400px] mt-2' : 'max-h-0'
+          }`}
+        >
+          <nav className="rounded-lg bg-[var(--color-bg-secondary)] border border-[var(--color-border)] p-2">
+            <ul className="space-y-0.5">
+              {items.map((item) => (
+                <li key={item.id}>
+                  <button
+                    onClick={() => handleClick(item.id)}
+                    className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                      activeId === item.id
+                        ? 'bg-[var(--color-accent-blue)]/10 text-[var(--color-accent-blue)]'
+                        : 'text-[var(--color-text-secondary)] hover:text-white hover:bg-[var(--color-bg-hover)]'
+                    }`}
+                  >
+                    {item.title}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+      </div>
+    )
   }
 
   // Mobile: Sticky collapsible bar
