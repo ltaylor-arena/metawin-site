@@ -120,6 +120,7 @@ export const portableTextComponents: PortableTextComponents = {
               src={imageUrl}
               alt={value.alt || 'Image'}
               fill
+              sizes="(max-width: 768px) 100vw, 800px"
               className="object-cover"
             />
           </div>

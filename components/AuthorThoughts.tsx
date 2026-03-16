@@ -55,6 +55,7 @@ export default function AuthorThoughts({ author, content }: AuthorThoughtsProps)
                   src={thumbnailUrl}
                   alt={author.name}
                   fill
+                  sizes="48px"
                   className="object-cover"
                 />
               </div>

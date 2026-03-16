@@ -61,6 +61,7 @@ export default function AuthorBio({ author, title = 'About the Author', id = 'au
                   src={thumbnailUrl}
                   alt={author.name}
                   fill
+                  sizes="64px"
                   className="object-cover"
                 />
               </div>

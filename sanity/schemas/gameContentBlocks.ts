@@ -66,6 +66,12 @@ export const gameRichText = defineType({
   type: 'object',
   fields: [
     defineField({
+      name: 'tocTitle',
+      title: 'TOC Title',
+      type: 'string',
+      description: 'Title shown in table of contents (e.g., "Game Features", "How to Play"). Defaults to "Overview" if not set.',
+    }),
+    defineField({
       name: 'content',
       title: 'Content',
       type: 'array',
@@ -91,12 +97,12 @@ export const gameRichText = defineType({
     }),
   ],
   preview: {
-    select: { content: 'content' },
-    prepare: ({ content }) => {
+    select: { content: 'content', tocTitle: 'tocTitle' },
+    prepare: ({ content, tocTitle }) => {
       const firstBlock = content?.find((block: any) => block._type === 'block')
       const text = firstBlock?.children?.map((child: any) => child.text).join('') || ''
       return {
-        title: 'Rich Text',
+        title: tocTitle || 'Rich Text',
         subtitle: text.substring(0, 50) + (text.length > 50 ? '...' : ''),
       }
     },

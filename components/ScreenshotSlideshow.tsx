@@ -56,6 +56,7 @@ export default function ScreenshotSlideshow({
           src={getMainImageUrl(screenshots[activeIndex])}
           alt={screenshots[activeIndex].alt || `${gameTitle} screenshot ${activeIndex + 1}`}
           fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 70vw, 900px"
           className="object-cover"
         />
 
@@ -104,6 +105,7 @@ export default function ScreenshotSlideshow({
                 src={getThumbnailUrl(screenshot)}
                 alt={screenshot.alt || `${gameTitle} thumbnail ${index + 1}`}
                 fill
+                sizes="80px"
                 className="object-cover"
               />
             </button>

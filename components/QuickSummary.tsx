@@ -49,6 +49,7 @@ export default function QuickSummary({
                 }
                 alt={title}
                 fill
+                sizes="(max-width: 640px) 80px, (max-width: 768px) 96px, 112px"
                 className="object-cover"
               />
               {isNew && (

@@ -35,6 +35,8 @@ const linkAnnotation = {
         { type: 'category' },
         { type: 'promotion' },
         { type: 'author' },
+        { type: 'blogPost' },
+        { type: 'blogCategory' },
       ],
       options: {
         disableNew: true,

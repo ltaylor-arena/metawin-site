@@ -153,6 +153,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                             .url()}
                           alt={game.title}
                           fill
+                          sizes="48px"
                           className="object-cover"
                         />
                       ) : game.externalThumbnailUrl ? (
@@ -160,6 +161,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                           src={game.externalThumbnailUrl}
                           alt={game.title}
                           fill
+                          sizes="48px"
                           className="object-cover"
                         />
                       ) : (
