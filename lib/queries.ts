@@ -12,8 +12,10 @@ const resolveInternalLinks = `
         reference->_type == "page" => "/casino/" + reference->slug.current + "/",
         reference->_type == "game" => "/casino/games/" + reference->categories[0]->slug.current + "/" + reference->slug.current + "/",
         reference->_type == "category" => "/casino/games/" + reference->slug.current + "/",
-        reference->_type == "promotion" => "/casino/promotions/" + reference->slug.current + "/",
+        reference->_type == "promotion" => "/casino/promo-code/",
         reference->_type == "author" => "/casino/authors/" + reference->slug.current + "/",
+        reference->_type == "guide" => "/casino/guides/" + reference->slug.current + "/",
+        reference->_type == "guideCategory" => "/casino/guides/category/" + reference->slug.current + "/",
         null
       )
     }
@@ -88,6 +90,7 @@ export const homepageQuery = groq`
         promoCards[] {
           _key,
           title,
+          headingLevel,
           subtitle,
           colorTheme,
           "backgroundImage": backgroundImage.asset->url,
@@ -95,12 +98,11 @@ export const homepageQuery = groq`
         }
       },
 
-      // Game carousel
+      // Game table
       _type == "gameCarousel" => {
         title,
+        headingLevel,
         displayMode,
-        showWinAmounts,
-        cardSize,
         "viewAllHref": select(
           viewAllLink->_type == "page" && viewAllLink->isHomepage == true => "/casino/",
           viewAllLink->_type == "page" => "/casino/" + viewAllLink->slug.current + "/",
@@ -126,7 +128,7 @@ export const homepageQuery = groq`
             isFeatured,
             "hasContent": count(content) > 0
           },
-          displayMode == "latest" => *[_type == "game"] | order(_createdAt desc)[0...12] {
+          displayMode == "latest" => *[_type == "game"] | order(select(count(content) > 0 && (provider == "MetaWin Studios" || provider == "Gladiator Games") => 0, count(content) > 0 => 1, 2), _createdAt desc)[0...12] {
             _id,
             title,
             "slug": slug.current,
@@ -302,6 +304,7 @@ export const pageBySlugQuery = groq`
         promoCards[] {
           _key,
           title,
+          headingLevel,
           subtitle,
           colorTheme,
           "backgroundImage": backgroundImage.asset->url,
@@ -309,12 +312,11 @@ export const pageBySlugQuery = groq`
         }
       },
 
-      // Game carousel
+      // Game table
       _type == "gameCarousel" => {
         title,
+        headingLevel,
         displayMode,
-        showWinAmounts,
-        cardSize,
         "viewAllHref": select(
           viewAllLink->_type == "page" && viewAllLink->isHomepage == true => "/casino/",
           viewAllLink->_type == "page" => "/casino/" + viewAllLink->slug.current + "/",
@@ -340,7 +342,7 @@ export const pageBySlugQuery = groq`
             isFeatured,
             "hasContent": count(content) > 0
           },
-          displayMode == "latest" => *[_type == "game"] | order(_createdAt desc)[0...12] {
+          displayMode == "latest" => *[_type == "game"] | order(select(count(content) > 0 && (provider == "MetaWin Studios" || provider == "Gladiator Games") => 0, count(content) > 0 => 1, 2), _createdAt desc)[0...12] {
             _id,
             title,
             "slug": slug.current,
@@ -484,6 +486,10 @@ export const sidebarNavigationQuery = groq`
         linkType,
         "href": select(
           linkType == "internal" && internalLink->isHomepage == true => "/casino/",
+          linkType == "internal" && internalLink->_type == "blogSettings" => "/casino/blog/",
+          linkType == "internal" && internalLink->_type == "blogPost" => "/casino/blog/" + internalLink->slug.current + "/",
+          linkType == "internal" && internalLink->_type == "guideSettings" => "/casino/guides/",
+          linkType == "internal" && internalLink->_type == "guide" => "/casino/guides/" + internalLink->slug.current + "/",
           linkType == "internal" => "/casino/" + internalLink->slug.current + "/",
           linkType == "category" => "/casino/games/" + categoryLink->slug.current + "/",
           linkType == "external" => externalUrl
@@ -503,6 +509,10 @@ export const sidebarNavigationQuery = groq`
           linkType,
           "href": select(
             linkType == "internal" && internalLink->isHomepage == true => "/casino/",
+            linkType == "internal" && internalLink->_type == "blogSettings" => "/casino/blog/",
+            linkType == "internal" && internalLink->_type == "blogPost" => "/casino/blog/" + internalLink->slug.current + "/",
+            linkType == "internal" && internalLink->_type == "guideSettings" => "/casino/guides/",
+            linkType == "internal" && internalLink->_type == "guide" => "/casino/guides/" + internalLink->slug.current + "/",
             linkType == "internal" => "/casino/" + internalLink->slug.current + "/",
             linkType == "category" => "/casino/games/" + categoryLink->slug.current + "/",
             linkType == "game" => "/casino/games/" + gameLink->categories[0]->slug.current + "/" + gameLink->slug.current + "/",
@@ -542,6 +552,10 @@ export const footerQuery = groq`
           internalLink->_type == "page" => "/casino/" + internalLink->slug.current + "/",
           internalLink->_type == "category" => "/casino/games/" + internalLink->slug.current + "/",
           internalLink->_type == "game" => "/casino/games/" + internalLink->categories[0]->slug.current + "/" + internalLink->slug.current + "/",
+          internalLink->_type == "blogSettings" => "/casino/blog/",
+          internalLink->_type == "blogPost" => "/casino/blog/" + internalLink->slug.current + "/",
+          internalLink->_type == "guideSettings" => "/casino/guides/",
+          internalLink->_type == "guide" => "/casino/guides/" + internalLink->slug.current + "/",
           null
         )
       }
@@ -1496,5 +1510,272 @@ export const blogPostsByCategorySectionQuery = groq`
 export const blogPostsByAuthorQuery = groq`
   *[_type == "blogPost" && author._ref == $authorId] | order(publishedAt desc)[0...$limit] {
     ${blogPostCardFields}
+  }
+`
+
+// ==================
+// GUIDE QUERIES
+// ==================
+
+// Helper: Guide card fields (reusable projection)
+const guideCardFields = `
+  _id,
+  title,
+  "slug": slug.current,
+  excerpt,
+  "heroImage": heroImage.asset->url,
+  "heroImageAlt": heroImage.alt,
+  publishedAt,
+  updatedAt,
+  difficulty,
+  readingTime,
+  "categories": categories[]-> {
+    _id,
+    title,
+    "slug": slug.current,
+    color
+  },
+  author-> {
+    name,
+    "slug": slug.current,
+    image
+  }
+`
+
+// Get guide settings (homepage config)
+export const guideSettingsQuery = groq`
+  *[_type == "guideSettings"][0] {
+    heroHeading,
+    heroSubtext,
+    "heroImage": heroImage.asset->url,
+    "heroImageAlt": heroImage.alt,
+    "introText": introText[] { ${richTextWithLinks} },
+    latestGuidesHeading,
+    showLatestGuides,
+    latestLimit,
+    showByCategory,
+    categoryGuidesLimit,
+    seo {
+      metaTitle,
+      hideKicker,
+      metaDescription,
+      canonicalUrl,
+      noIndex,
+      "ogImage": ogImage.asset->url
+    }
+  }
+`
+
+// Get guide navigation settings (for guides layout)
+export const guideNavigationQuery = groq`
+  *[_type == "guideSettings"][0] {
+    "navLogo": navLogo.asset->url,
+    navHomeLabel,
+    navHomeUrl,
+    "navCategories": select(
+      count(navCategories) > 0 => navCategories[]-> {
+        _id,
+        title,
+        "slug": slug.current,
+        color,
+        icon
+      },
+      *[_type == "guideCategory" && showInNav == true] | order(coalesce(order, 999) asc) {
+        _id,
+        title,
+        "slug": slug.current,
+        color,
+        icon
+      }
+    ),
+    navCta
+  }
+`
+
+// Get latest guides (ordered by updatedAt for evergreen content)
+export const latestGuidesQuery = groq`
+  *[_type == "guide"] | order(coalesce(updatedAt, publishedAt) desc)[0...$limit] {
+    ${guideCardFields}
+  }
+`
+
+// Get guide by slug
+export const guideBySlugQuery = groq`
+  *[_type == "guide" && slug.current == $slug][0] {
+    _id,
+    title,
+    "slug": slug.current,
+    excerpt,
+    "heroImage": heroImage.asset->url,
+    "heroImageAlt": heroImage.alt,
+    "heroImageCaption": heroImage.caption,
+    publishedAt,
+    updatedAt,
+    difficulty,
+    readingTime,
+    showToc,
+    showAuthorBio,
+    "categories": categories[]-> {
+      _id,
+      title,
+      "slug": slug.current,
+      color
+    },
+    "content": content[] {
+      ...,
+      _type == "block" => { ${richTextWithLinks} },
+      _type == "image" => {
+        ...,
+        "url": asset->url,
+        alt,
+        caption
+      },
+      _type == "callout" => {
+        title,
+        "content": content[] { ${richTextWithLinks} },
+        variant
+      }
+    },
+    author-> {
+      name,
+      "slug": slug.current,
+      image,
+      role,
+      bio,
+      expertise,
+      socialLinks
+    },
+    factChecker-> {
+      name,
+      "slug": slug.current,
+      image,
+      role,
+      bio,
+      expertise,
+      socialLinks
+    },
+    "relatedGuides": relatedGuides[]-> {
+      ${guideCardFields}
+    },
+    "relatedGames": relatedGames[]-> {
+      _id,
+      title,
+      "slug": slug.current,
+      "categorySlug": categories[0]->slug.current,
+      thumbnail,
+      externalThumbnailUrl,
+      provider,
+      rtp
+    },
+    seo {
+      metaTitle,
+      hideKicker,
+      metaDescription,
+      breadcrumbText,
+      canonicalUrl,
+      noIndex,
+      "ogImage": ogImage.asset->url
+    }
+  }
+`
+
+// Get guide category by slug
+export const guideCategoryBySlugQuery = groq`
+  *[_type == "guideCategory" && slug.current == $slug][0] {
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    "heroImage": heroImage.asset->url,
+    "heroImageAlt": heroImage.alt,
+    "introText": introText[] { ${richTextWithLinks} },
+    color,
+    guidesPerPage,
+    seo {
+      metaTitle,
+      hideKicker,
+      metaDescription,
+      breadcrumbText,
+      canonicalUrl,
+      noIndex,
+      "ogImage": ogImage.asset->url
+    }
+  }
+`
+
+// Get guides by category (paginated)
+export const guidesByCategoryQuery = groq`
+  *[_type == "guide" && $categorySlug in categories[]->slug.current] | order(coalesce(updatedAt, publishedAt) desc)[$start...$end] {
+    ${guideCardFields}
+  }
+`
+
+// Get total count of guides in a category
+export const guidesByCategoryCountQuery = groq`
+  count(*[_type == "guide" && $categorySlug in categories[]->slug.current])
+`
+
+// Get all guide categories for navigation
+export const allGuideCategoriesQuery = groq`
+  *[_type == "guideCategory" && showInNav == true] | order(coalesce(order, 999) asc, title asc) {
+    _id,
+    title,
+    "slug": slug.current,
+    color,
+    "guideCount": count(*[_type == "guide" && references(^._id)])
+  }
+`
+
+// Get all guide slugs for static generation
+export const allGuideSlugsQuery = groq`
+  *[_type == "guide"] {
+    "slug": slug.current,
+    _updatedAt
+  }
+`
+
+// Get all guide category slugs for static generation
+export const allGuideCategorySlugsQuery = groq`
+  *[_type == "guideCategory"] {
+    "slug": slug.current,
+    _updatedAt
+  }
+`
+
+// Sitemap: Guides with content
+export const sitemapGuidesQuery = groq`
+  *[_type == "guide" && count(content) > 0] {
+    title,
+    "slug": slug.current,
+    "heroImage": heroImage.asset->url,
+    _updatedAt
+  }
+`
+
+// Sitemap: Guide categories
+export const sitemapGuideCategoriesQuery = groq`
+  *[_type == "guideCategory"] {
+    "slug": slug.current,
+    _updatedAt
+  }
+`
+
+// Get guides by category for homepage sections
+export const guidesByCategorySectionQuery = groq`
+  *[_type == "guideCategory" && showInNav == true] | order(coalesce(order, 999) asc) {
+    _id,
+    title,
+    "slug": slug.current,
+    color,
+    "guides": *[_type == "guide" && references(^._id)] | order(coalesce(updatedAt, publishedAt) desc)[0...$limit] {
+      ${guideCardFields}
+    }
+  }
+`
+
+// Get guides by author
+export const guidesByAuthorQuery = groq`
+  *[_type == "guide" && author._ref == $authorId] | order(coalesce(updatedAt, publishedAt) desc)[0...$limit] {
+    ${guideCardFields}
   }
 `

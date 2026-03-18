@@ -66,7 +66,30 @@ const calloutIcons = {
   tip: Lightbulb,
 }
 
+// Generate URL-friendly ID from heading text (must match extractTocItems logic)
+function headingId(children: React.ReactNode): string {
+  const text = typeof children === 'string'
+    ? children
+    : Array.isArray(children)
+      ? children.map((c) => (typeof c === 'string' ? c : '')).join('')
+      : ''
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .trim()
+}
+
 export const portableTextComponents: PortableTextComponents = {
+  block: {
+    h2: ({ children }) => (
+      <h2 id={headingId(children)}>{children}</h2>
+    ),
+    h3: ({ children }) => (
+      <h3 id={headingId(children)}>{children}</h3>
+    ),
+  },
   marks: {
     // Custom link annotation handler
     link: ({ value, children }: { value?: LinkValue; children: React.ReactNode }) => {

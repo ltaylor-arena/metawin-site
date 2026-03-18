@@ -59,7 +59,7 @@ export default defineType({
               name: 'internalLink',
               title: 'Internal Page',
               type: 'reference',
-              to: [{ type: 'page' }],
+              to: [{ type: 'page' }, { type: 'blogPost' }, { type: 'blogSettings' }, { type: 'guide' }, { type: 'guideSettings' }],
               hidden: ({ parent }) => parent?.linkType !== 'internal',
             }),
             defineField({
@@ -196,7 +196,7 @@ export default defineType({
                       name: 'internalLink',
                       title: 'Internal Page',
                       type: 'reference',
-                      to: [{ type: 'page' }],
+                      to: [{ type: 'page' }, { type: 'blogPost' }, { type: 'blogSettings' }, { type: 'guide' }, { type: 'guideSettings' }],
                       hidden: ({ parent }) => parent?.linkType !== 'internal',
                     }),
                     defineField({

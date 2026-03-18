@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { client, urlFor } from '@/lib/sanity'
-import { gameBySlugQuery, allGamesWithCategoriesQuery, gamesByProviderQuery, siteSettingsQuery } from '@/lib/queries'
+import { gameBySlugQuery, allGamesWithCategoriesQuery, siteSettingsQuery } from '@/lib/queries'
 import { PortableText } from '@portabletext/react'
 import { portableTextComponents } from '@/components/PortableTextComponents'
 import Breadcrumbs from '@/components/Breadcrumbs'
@@ -17,7 +17,6 @@ import GameTable from '@/components/GameTable'
 import AuthorBio from '@/components/AuthorBio'
 import AuthorByline from '@/components/AuthorByline'
 import FAQ from '@/components/FAQ'
-import ProviderGamesCarousel from '@/components/ProviderGamesCarousel'
 import { GameStructuredData } from '@/components/StructuredData'
 import TableOfContents, { TOCItem } from '@/components/TableOfContents'
 
@@ -33,10 +32,6 @@ interface ContentBlock {
 
 async function getGame(slug: string) {
   return await client.fetch(gameBySlugQuery, { slug })
-}
-
-async function getGamesByProvider(provider: string, excludeSlug: string) {
-  return await client.fetch(gamesByProviderQuery, { provider, excludeSlug })
 }
 
 async function getSiteSettings() {
@@ -241,11 +236,6 @@ export default async function GamePage({ params }: GamePageProps) {
     notFound()
   }
 
-  // Fetch related games from the same provider
-  const providerGames = game.provider
-    ? await getGamesByProvider(game.provider, slug)
-    : []
-
   const signUpUrl = siteSettings?.signUpUrl || 'https://metawin.com/signup'
 
   // Verify the game belongs to this category
@@ -437,17 +427,6 @@ export default async function GamePage({ params }: GamePageProps) {
                 id="fact-checker-info"
               />
             )}
-          </div>
-        )}
-
-        {/* More from Provider */}
-        {providerGames && providerGames.length > 0 && (
-          <div className="mt-7 xl:max-w-[calc(100%-312px)]">
-            <ProviderGamesCarousel
-              provider={game.provider}
-              games={providerGames}
-              signUpUrl={signUpUrl}
-            />
           </div>
         )}
         </div>

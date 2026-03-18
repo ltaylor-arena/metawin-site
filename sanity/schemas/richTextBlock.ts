@@ -37,6 +37,8 @@ const linkAnnotation = {
         { type: 'author' },
         { type: 'blogPost' },
         { type: 'blogCategory' },
+        { type: 'guide' },
+        { type: 'guideCategory' },
       ],
       options: {
         disableNew: true,

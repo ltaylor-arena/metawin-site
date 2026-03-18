@@ -26,19 +26,49 @@ export default function CategoryLoading() {
           <div className="h-8 w-32 bg-[var(--color-bg-tertiary)] rounded" />
         </div>
 
-        {/* Games grid skeleton */}
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-2 md:gap-3">
-          {Array.from({ length: 24 }).map((_, i) => (
-            <div key={i} className="flex flex-col">
-              <div className="aspect-[3/4] bg-[var(--color-bg-tertiary)] rounded mb-1.5" />
-              <div className="h-3 w-full bg-[var(--color-bg-tertiary)] rounded mx-auto" />
-              <div className="h-2 w-12 bg-[var(--color-bg-tertiary)] rounded mx-auto mt-1" />
+        {/* Games table skeleton */}
+        <div className="overflow-hidden rounded-lg border border-[var(--color-border)]">
+          {/* Table header */}
+          <div className="bg-[var(--color-bg-tertiary)] px-4 py-3 flex items-center gap-4">
+            <div className="h-4 w-32 bg-[var(--color-bg-secondary)] rounded" />
+            <div className="h-4 w-20 bg-[var(--color-bg-secondary)] rounded hidden sm:block" />
+            <div className="h-4 w-12 bg-[var(--color-bg-secondary)] rounded" />
+            <div className="h-4 w-20 bg-[var(--color-bg-secondary)] rounded hidden md:block" />
+            <div className="h-4 w-16 bg-[var(--color-bg-secondary)] rounded ml-auto" />
+          </div>
+
+          {/* Table rows */}
+          {Array.from({ length: 12 }).map((_, i) => (
+            <div
+              key={i}
+              className={`px-4 py-3 flex items-center gap-4 border-t border-[var(--color-border)] ${
+                i % 2 === 1 ? 'bg-[var(--color-bg-secondary)]' : ''
+              }`}
+            >
+              {/* Game name with thumbnail */}
+              <div className="flex items-center gap-3 flex-1">
+                <div className="w-10 h-10 bg-[var(--color-bg-tertiary)] rounded flex-shrink-0" />
+                <div className="h-4 w-32 bg-[var(--color-bg-tertiary)] rounded" />
+              </div>
+              {/* Provider */}
+              <div className="h-4 w-20 bg-[var(--color-bg-tertiary)] rounded hidden sm:block" />
+              {/* RTP */}
+              <div className="h-4 w-12 bg-[var(--color-bg-tertiary)] rounded" />
+              {/* Volatility */}
+              <div className="h-4 w-16 bg-[var(--color-bg-tertiary)] rounded hidden md:block" />
+              {/* Action button */}
+              <div className="h-7 w-14 bg-[var(--color-bg-tertiary)] rounded ml-auto" />
             </div>
           ))}
         </div>
 
+        {/* Games count skeleton */}
+        <div className="flex justify-center mt-6">
+          <div className="h-4 w-48 bg-[var(--color-bg-tertiary)] rounded" />
+        </div>
+
         {/* Pagination skeleton */}
-        <div className="flex justify-center gap-2 mt-8">
+        <div className="flex justify-center gap-2 mt-6">
           {Array.from({ length: 5 }).map((_, i) => (
             <div key={i} className="h-10 w-10 bg-[var(--color-bg-tertiary)] rounded" />
           ))}

@@ -3,11 +3,13 @@
 
 'use client'
 
+import { ElementType } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 
 interface PromoCardProps {
   title: string
+  headingLevel?: 'span' | 'h2' | 'h3' | 'h4'
   subtitle?: string
   colorTheme?: 'blue' | 'orange' | 'purple' | 'green' | 'pink'
   backgroundImage: string
@@ -34,6 +36,7 @@ const glowColors: Record<string, string> = {
 
 export default function PromoCard({
   title,
+  headingLevel = 'span',
   subtitle,
   colorTheme = 'blue',
   backgroundImage,
@@ -41,6 +44,7 @@ export default function PromoCard({
 }: PromoCardProps) {
   const gradient = colorGradients[colorTheme] || colorGradients.blue
   const glow = glowColors[colorTheme] || glowColors.blue
+  const TitleTag: ElementType = headingLevel || 'span'
 
   return (
     <Link
@@ -64,9 +68,9 @@ export default function PromoCard({
 
       {/* Content - Left aligned */}
       <div className="absolute inset-0 flex flex-col justify-center p-6 md:p-8">
-        <h3 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg tracking-wide">
+        <TitleTag className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg tracking-wide">
           {title}
-        </h3>
+        </TitleTag>
         {subtitle && (
           <p className="text-sm md:text-base text-white mt-2 max-w-[70%] leading-relaxed drop-shadow-lg">
             {subtitle}

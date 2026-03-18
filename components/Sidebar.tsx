@@ -49,6 +49,7 @@ import {
   Diamond,
   Joystick,
   Monitor,
+  BookOpen,
   LucideIcon
 } from 'lucide-react'
 import {
@@ -87,6 +88,7 @@ const iconMap: Record<string, IconComponent> = {
   gift: Gift,
   trophy: Trophy,
   search: Search,
+  'book-open': BookOpen,
 
   // MetaWin custom game category icons
   'slots': SlotsIcon,
@@ -233,7 +235,7 @@ export default function Sidebar({ navigation, signUpUrl = 'https://metawin.com' 
   )
 
   const renderNavSection = (section: NavSection, index: number) => (
-    <li key={index} className={`${section.showDivider ? 'mt-4 pt-4' : ''} ${section.isCollapsible ? 'pb-4 mb-2' : ''}`}>
+    <li key={index} className={`${section.showDivider ? 'mt-4 pt-4 border-t border-[var(--color-border)]' : ''} ${section.isCollapsible ? 'pb-4 mb-2' : ''}`}>
       {section.isCollapsible ? (
         <>
           <button

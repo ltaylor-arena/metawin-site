@@ -396,7 +396,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
                   href = `/casino/games/${item.categorySlug}/${item.slug}/`
                   typeLabel = 'Game Review'
                 } else if (item.type === 'promotion') {
-                  href = `/casino/promotions/${item.slug}/`
+                  href = `/casino/promo-code/`
                   typeLabel = 'Promotion'
                 }
 

@@ -3,7 +3,6 @@ import { client } from '@/lib/sanity'
 import { homepageQuery, siteSettingsQuery } from '@/lib/queries'
 import { PortableText } from '@portabletext/react'
 import Hero from '@/components/Hero'
-import GameCarousel from '@/components/GameCarousel'
 import FeatureCards from '@/components/FeatureCards'
 import Tabs from '@/components/Tabs'
 import FAQ from '@/components/FAQ'
@@ -13,6 +12,8 @@ import Callout from '@/components/Callout'
 import CategoryCards from '@/components/CategoryCards'
 import ExpandableRichText from '@/components/ExpandableRichText'
 import { OrganizationStructuredData } from '@/components/StructuredData'
+import GamesWikiTable from '@/components/GamesWikiTable'
+import Link from 'next/link'
 
 async function getHomepage() {
   return await client.fetch(homepageQuery)
@@ -74,24 +75,10 @@ export default async function CasinoHomePage() {
             return (
               <section key={block._key} className="px-4 md:px-6 py-8">
                 <div className={`bg-[#0F1115] rounded-lg p-4 md:p-6 flex flex-col ${hasPromoCards ? 'lg:flex-row lg:gap-8' : ''}`}>
-                  {/* Left Column - Text Content */}
-                  <div className={hasPromoCards ? 'lg:w-[65%]' : 'max-w-4xl'}>
-                    {block.heading && (
-                      <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-                        {block.heading}
-                      </h2>
-                    )}
-                    {block.text && (
-                      <div className="prose prose-invert prose-sm md:prose-base max-w-none prose-p:text-[0.9rem] prose-p:leading-[1.6]">
-                        <PortableText value={block.text} />
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Right Column - Compact Promo Cards (stacked vertically) */}
+                  {/* Promo Cards - First on mobile (only 1st card), right column on desktop (all cards) */}
                   {hasPromoCards && (
-                    <div className="lg:w-[35%] flex flex-col gap-3 mt-6 lg:mt-0">
-                      {block.promoCards.map((card: any) => {
+                    <div className="lg:w-[35%] flex flex-col gap-3 order-first lg:order-last mb-6 lg:mb-0">
+                      {block.promoCards.map((card: any, index: number) => {
                         const gradientColors: Record<string, string> = {
                           blue: 'from-blue-600/80',
                           orange: 'from-orange-500/80',
@@ -105,7 +92,7 @@ export default async function CasinoHomePage() {
                           <a
                             key={card._key}
                             href={card.link}
-                            className="relative block w-full aspect-[16/9] rounded-md overflow-hidden group"
+                            className={`relative block w-full aspect-[16/9] rounded-md overflow-hidden group ${index > 0 ? 'hidden lg:block' : ''}`}
                           >
                             {/* Card Image */}
                             {card.backgroundImage && (
@@ -119,9 +106,15 @@ export default async function CasinoHomePage() {
                             <div className={`absolute inset-0 bg-gradient-to-tr ${gradient} via-transparent to-transparent`} />
                             {/* Title & subtitle overlay */}
                             <div className="absolute bottom-2 left-2 right-2">
-                              <h4 className="text-white text-base font-semibold drop-shadow-lg">
-                                {card.title}
-                              </h4>
+                              {card.headingLevel === 'h2' ? (
+                                <h2 className="text-white text-base font-semibold drop-shadow-lg">{card.title}</h2>
+                              ) : card.headingLevel === 'h3' ? (
+                                <h3 className="text-white text-base font-semibold drop-shadow-lg">{card.title}</h3>
+                              ) : card.headingLevel === 'h4' ? (
+                                <h4 className="text-white text-base font-semibold drop-shadow-lg">{card.title}</h4>
+                              ) : (
+                                <span className="block text-white text-base font-semibold drop-shadow-lg">{card.title}</span>
+                              )}
                               {card.subtitle && (
                                 <p className="text-white/80 text-xs drop-shadow-lg mt-0.5 line-clamp-2">
                                   {card.subtitle}
@@ -133,6 +126,22 @@ export default async function CasinoHomePage() {
                       })}
                     </div>
                   )}
+
+                  {/* Text Content - Second on mobile, left column on desktop */}
+                  <div className={hasPromoCards ? 'lg:w-[65%] order-last lg:order-first' : 'max-w-4xl'}>
+                    {block.heading && (
+                      <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                        {block.heading}
+                      </h2>
+                    )}
+                    {block.text && (
+                      <ExpandableRichText
+                        content={block.text}
+                        maxLines={4}
+                        mobileOnly={true}
+                      />
+                    )}
+                  </div>
                 </div>
               </section>
             )
@@ -150,16 +159,39 @@ export default async function CasinoHomePage() {
             )
           
           case 'gameCarousel':
+            if (!block.games || block.games.length === 0) return null
+            const renderTableHeading = (title: string, level: string) => {
+              const className = "text-xl md:text-2xl font-bold text-white"
+              switch (level) {
+                case 'h3': return <h3 className={className}>{title}</h3>
+                case 'h4': return <h4 className={className}>{title}</h4>
+                case 'div': return <div className={className}>{title}</div>
+                default: return <h2 className={className}>{title}</h2>
+              }
+            }
             return (
-              <GameCarousel
-                key={block._key}
-                title={block.title}
-                games={block.games || []}
-                showWinAmounts={block.showWinAmounts}
-                cardSize={block.cardSize}
-                viewAllHref={block.viewAllHref}
-                signUpUrl={siteSettings?.signUpUrl}
-              />
+              <section key={block._key} className="px-4 md:px-6 py-8">
+                {/* Section Header */}
+                {(block.title || block.viewAllHref) && (
+                  <div className="flex items-center justify-between mb-4">
+                    {block.title && renderTableHeading(block.title, block.headingLevel)}
+                    {block.viewAllHref && (
+                      <Link
+                        href={block.viewAllHref}
+                        className="text-sm text-[var(--color-accent-blue)] hover:text-white transition-colors"
+                      >
+                        View all →
+                      </Link>
+                    )}
+                  </div>
+                )}
+                {/* Games Table */}
+                <GamesWikiTable
+                  games={block.games}
+                  categorySlug={block.categorySlug}
+                  signUpUrl={siteSettings?.signUpUrl}
+                />
+              </section>
             )
           
           case 'ctaBanner':

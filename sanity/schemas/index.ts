@@ -29,6 +29,9 @@ import {
 import blogPost from './blogPost'
 import blogCategory from './blogCategory'
 import blogSettings from './blogSettings'
+import guide from './guide'
+import guideCategory from './guideCategory'
+import guideSettings from './guideSettings'
 
 export const schemaTypes = [
   // Documents
@@ -45,6 +48,11 @@ export const schemaTypes = [
   blogPost,
   blogCategory,
   blogSettings,
+
+  // Guides
+  guide,
+  guideCategory,
+  guideSettings,
 
   // Objects (reusable components)
   seo,

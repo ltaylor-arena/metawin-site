@@ -11,6 +11,8 @@ import {
   sitemapAuthorsQuery,
   sitemapBlogPostsQuery,
   sitemapBlogCategoriesQuery,
+  sitemapGuidesQuery,
+  sitemapGuideCategoriesQuery,
 } from '@/lib/queries'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://metawin.com'
@@ -29,6 +31,9 @@ const SITEMAP_CONFIG = {
   author: { changefreq: 'monthly', priority: '0.5' },
   blogPost: { changefreq: 'weekly', priority: '0.7' },
   blogCategory: { changefreq: 'weekly', priority: '0.6' },
+  guidesIndex: { changefreq: 'weekly', priority: '0.8' },
+  guide: { changefreq: 'monthly', priority: '0.7' },
+  guideCategory: { changefreq: 'weekly', priority: '0.6' },
 }
 
 interface SitemapPage {
@@ -72,6 +77,17 @@ interface SitemapBlogCategory {
   _updatedAt: string
 }
 
+interface SitemapGuide {
+  title: string
+  slug: string
+  _updatedAt: string
+}
+
+interface SitemapGuideCategory {
+  slug: string
+  _updatedAt: string
+}
+
 function formatDate(date: string): string {
   return new Date(date).toISOString().split('T')[0]
 }
@@ -93,7 +109,7 @@ export async function GET() {
     },
   }
 
-  const [pages, games, categories, promotions, authors, blogPosts, blogCategories] = await Promise.all([
+  const [pages, games, categories, promotions, authors, blogPosts, blogCategories, guides, guideCategories] = await Promise.all([
     client.fetch<SitemapPage[]>(sitemapPagesQuery, {}, fetchOptions),
     client.fetch<SitemapGame[]>(sitemapGamesQuery, {}, fetchOptions),
     client.fetch<SitemapCategory[]>(sitemapCategoriesQuery, {}, fetchOptions),
@@ -101,6 +117,8 @@ export async function GET() {
     client.fetch<SitemapAuthor[]>(sitemapAuthorsQuery, {}, fetchOptions),
     client.fetch<SitemapBlogPost[]>(sitemapBlogPostsQuery, {}, fetchOptions),
     client.fetch<SitemapBlogCategory[]>(sitemapBlogCategoriesQuery, {}, fetchOptions),
+    client.fetch<SitemapGuide[]>(sitemapGuidesQuery, {}, fetchOptions),
+    client.fetch<SitemapGuideCategory[]>(sitemapGuideCategoriesQuery, {}, fetchOptions),
   ])
 
   const urls: string[] = []
@@ -165,31 +183,18 @@ export async function GET() {
     }
   }
 
-  // Add promotions index
+  // Add promo code page (consolidated promotions)
   const latestPromoUpdate = promotions.length > 0
     ? promotions.reduce((latest, p) => p._updatedAt > latest ? p._updatedAt : latest, promotions[0]._updatedAt)
     : new Date().toISOString()
 
   urls.push(`
     <url>
-      <loc>${SITE_URL}/casino/promotions/</loc>
+      <loc>${SITE_URL}/casino/promo-code/</loc>
       <lastmod>${formatDate(latestPromoUpdate)}</lastmod>
       <changefreq>${SITEMAP_CONFIG.promotionsIndex.changefreq}</changefreq>
       <priority>${SITEMAP_CONFIG.promotionsIndex.priority}</priority>
     </url>`)
-
-  // Add promotions
-  for (const promo of promotions) {
-    if (promo.slug) {
-      urls.push(`
-    <url>
-      <loc>${SITE_URL}/casino/promotions/${escapeXml(promo.slug)}/</loc>
-      <lastmod>${formatDate(promo._updatedAt)}</lastmod>
-      <changefreq>${SITEMAP_CONFIG.promotion.changefreq}</changefreq>
-      <priority>${SITEMAP_CONFIG.promotion.priority}</priority>
-    </url>`)
-    }
-  }
 
   // Add authors index
   const latestAuthorUpdate = authors.length > 0
@@ -252,6 +257,45 @@ export async function GET() {
       <lastmod>${formatDate(post._updatedAt)}</lastmod>
       <changefreq>${SITEMAP_CONFIG.blogPost.changefreq}</changefreq>
       <priority>${SITEMAP_CONFIG.blogPost.priority}</priority>
+    </url>`)
+    }
+  }
+
+  // Add guides index
+  const latestGuideUpdate = guides.length > 0
+    ? guides.reduce((latest, g) => g._updatedAt > latest ? g._updatedAt : latest, guides[0]._updatedAt)
+    : new Date().toISOString()
+
+  urls.push(`
+    <url>
+      <loc>${SITE_URL}/casino/guides/</loc>
+      <lastmod>${formatDate(latestGuideUpdate)}</lastmod>
+      <changefreq>${SITEMAP_CONFIG.guidesIndex.changefreq}</changefreq>
+      <priority>${SITEMAP_CONFIG.guidesIndex.priority}</priority>
+    </url>`)
+
+  // Add guide categories
+  for (const guideCat of guideCategories) {
+    if (guideCat.slug) {
+      urls.push(`
+    <url>
+      <loc>${SITE_URL}/casino/guides/category/${escapeXml(guideCat.slug)}/</loc>
+      <lastmod>${formatDate(guideCat._updatedAt)}</lastmod>
+      <changefreq>${SITEMAP_CONFIG.guideCategory.changefreq}</changefreq>
+      <priority>${SITEMAP_CONFIG.guideCategory.priority}</priority>
+    </url>`)
+    }
+  }
+
+  // Add guides
+  for (const guide of guides) {
+    if (guide.slug) {
+      urls.push(`
+    <url>
+      <loc>${SITE_URL}/casino/guides/${escapeXml(guide.slug)}/</loc>
+      <lastmod>${formatDate(guide._updatedAt)}</lastmod>
+      <changefreq>${SITEMAP_CONFIG.guide.changefreq}</changefreq>
+      <priority>${SITEMAP_CONFIG.guide.priority}</priority>
     </url>`)
     }
   }

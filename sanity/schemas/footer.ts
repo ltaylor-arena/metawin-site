@@ -50,11 +50,13 @@ export default defineType({
                       name: 'internalLink',
                       title: 'Internal Link',
                       type: 'reference',
-                      description: 'Link to a page, game, or category',
+                      description: 'Link to a page, game, category, blog post, or blog home',
                       to: [
                         { type: 'page' },
                         { type: 'game' },
                         { type: 'category' },
+                        { type: 'blogPost' },
+                        { type: 'blogSettings' },
                       ],
                     }),
                     defineField({

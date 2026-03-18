@@ -46,6 +46,7 @@ import {
   Diamond,
   Joystick,
   Monitor,
+  BookOpen,
   type LucideIcon,
 } from 'lucide-react'
 import {
@@ -101,6 +102,7 @@ const AVAILABLE_ICONS: { name: string; icon: IconComponent; label: string; isCus
   { name: 'gift', icon: Gift, label: 'Bonus' },
   { name: 'trophy', icon: Trophy, label: 'Winners' },
   { name: 'search', icon: Search, label: 'Search' },
+  { name: 'book-open', icon: BookOpen, label: 'Guides' },
 
   // Lucide game category icons (fallbacks)
   { name: 'gem', icon: Gem, label: 'Slots (alt)' },

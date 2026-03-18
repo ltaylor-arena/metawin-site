@@ -124,7 +124,7 @@ export default defineType({
               name: 'text',
               title: 'Intro Text',
               type: 'array',
-              of: [richTextBlockSimple],
+              of: [richTextBlock],
             }),
             defineField({
               name: 'promoCards',

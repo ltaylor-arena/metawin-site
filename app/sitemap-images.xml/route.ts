@@ -99,34 +99,22 @@ export async function GET() {
     }
   }
 
-  // Add promotions with images
+  // Add promo-code page with promotion images
+  const promoImages: string[] = []
   for (const promo of promotions) {
-    if (!promo.slug) continue
-
-    const images: string[] = []
-
-    if (promo.heroImage) {
-      images.push(`
-      <image:image>
-        <image:loc>${escapeXml(promo.heroImage)}</image:loc>
-        <image:title>${escapeXml(promo.title)} - Hero</image:title>
-      </image:image>`)
-    }
-
-    if (promo.thumbnail && promo.thumbnail !== promo.heroImage) {
-      images.push(`
+    if (promo.thumbnail) {
+      promoImages.push(`
       <image:image>
         <image:loc>${escapeXml(promo.thumbnail)}</image:loc>
-        <image:title>${escapeXml(promo.title)} - Thumbnail</image:title>
+        <image:title>${escapeXml(promo.title)}</image:title>
       </image:image>`)
     }
-
-    if (images.length > 0) {
-      urls.push(`
+  }
+  if (promoImages.length > 0) {
+    urls.push(`
     <url>
-      <loc>${SITE_URL}/casino/promotions/${escapeXml(promo.slug)}/</loc>${images.join('')}
+      <loc>${SITE_URL}/casino/promo-code/</loc>${promoImages.join('')}
     </url>`)
-    }
   }
 
   // Add authors with images

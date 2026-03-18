@@ -16,6 +16,22 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'headingLevel',
+      title: 'Heading Level',
+      type: 'string',
+      description: 'HTML heading level for SEO (defaults to none/span if not set)',
+      options: {
+        list: [
+          { title: 'None (span)', value: 'span' },
+          { title: 'H2', value: 'h2' },
+          { title: 'H3', value: 'h3' },
+          { title: 'H4', value: 'h4' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'span',
+    }),
+    defineField({
       name: 'subtitle',
       title: 'Subtitle',
       type: 'text',

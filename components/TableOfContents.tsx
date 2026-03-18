@@ -10,6 +10,7 @@ import { ChevronDown, List } from 'lucide-react'
 export interface TOCItem {
   id: string
   title: string
+  level?: 2 | 3
 }
 
 interface TableOfContentsProps {
@@ -105,6 +106,8 @@ export default function TableOfContents({
                   <button
                     onClick={() => handleClick(item.id)}
                     className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                      item.level === 3 ? 'pl-6 text-xs' : ''
+                    } ${
                       activeId === item.id
                         ? 'bg-[var(--color-accent-blue)]/10 text-[var(--color-accent-blue)]'
                         : 'text-[var(--color-text-secondary)] hover:text-white hover:bg-[var(--color-bg-hover)]'
@@ -154,6 +157,8 @@ export default function TableOfContents({
                   <button
                     onClick={() => handleClick(item.id)}
                     className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                      item.level === 3 ? 'pl-6 text-xs' : ''
+                    } ${
                       activeId === item.id
                         ? 'bg-[var(--color-accent-blue)]/10 text-[var(--color-accent-blue)]'
                         : 'text-[var(--color-text-secondary)] hover:text-white hover:bg-[var(--color-bg-hover)]'
@@ -190,6 +195,8 @@ export default function TableOfContents({
                 <button
                   onClick={() => handleClick(item.id)}
                   className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                    item.level === 3 ? 'pl-6 text-xs' : ''
+                  } ${
                     activeId === item.id
                       ? 'bg-[var(--color-accent-blue)]/10 text-[var(--color-accent-blue)] font-medium'
                       : 'text-[var(--color-text-secondary)] hover:text-white hover:bg-[var(--color-bg-hover)]'

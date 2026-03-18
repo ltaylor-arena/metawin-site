@@ -3,21 +3,21 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { client } from '@/lib/sanity'
-import { blogPostBySlugQuery, allBlogPostSlugsQuery } from '@/lib/queries'
+import { guideBySlugQuery, allGuideSlugsQuery } from '@/lib/queries'
 import { PortableText } from '@portabletext/react'
 import { portableTextComponents } from '@/components/PortableTextComponents'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import AuthorBio from '@/components/AuthorBio'
 import AuthorByline from '@/components/AuthorByline'
 import TableOfContents, { TOCItem } from '@/components/TableOfContents'
-import PostCard from '@/components/blog/PostCard'
+import GuideCard from '@/components/guides/GuideCard'
 import Callout from '@/components/Callout'
 
-interface BlogPostPageProps {
+interface GuidePageProps {
   params: Promise<{ slug: string }>
 }
 
-interface BlogPost {
+interface Guide {
   _id: string
   title: string
   slug: string
@@ -27,7 +27,8 @@ interface BlogPost {
   heroImageCaption?: string
   publishedAt?: string
   updatedAt?: string
-  isFeatured?: boolean
+  difficulty?: 'beginner' | 'intermediate' | 'advanced'
+  readingTime?: number
   showToc?: boolean
   showAuthorBio?: boolean
   categories?: {
@@ -63,7 +64,7 @@ interface BlogPost {
       website?: string
     }
   }
-  relatedPosts?: any[]
+  relatedGuides?: any[]
   relatedGames?: any[]
   seo?: {
     metaTitle?: string
@@ -73,39 +74,45 @@ interface BlogPost {
   }
 }
 
-async function getBlogPost(slug: string): Promise<BlogPost | null> {
-  return await client.fetch(blogPostBySlugQuery, { slug })
+const difficultyConfig = {
+  beginner: { label: 'Beginner', color: '#10B981' },
+  intermediate: { label: 'Intermediate', color: '#F59E0B' },
+  advanced: { label: 'Advanced', color: '#EF4444' },
+}
+
+async function getGuide(slug: string): Promise<Guide | null> {
+  return await client.fetch(guideBySlugQuery, { slug })
 }
 
 export async function generateStaticParams() {
-  const posts = await client.fetch(allBlogPostSlugsQuery)
-  return posts.map((post: { slug: string }) => ({
-    slug: post.slug,
+  const guides = await client.fetch(allGuideSlugsQuery)
+  return guides.map((guide: { slug: string }) => ({
+    slug: guide.slug,
   }))
 }
 
-export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: GuidePageProps): Promise<Metadata> {
   const { slug } = await params
-  const post = await getBlogPost(slug)
+  const guide = await getGuide(slug)
 
-  if (!post) {
+  if (!guide) {
     return {
-      title: 'Post Not Found',
+      title: 'Guide Not Found',
     }
   }
 
-  const title = post.seo?.metaTitle || post.title
+  const title = guide.seo?.metaTitle || guide.title
   return {
-    title: post.seo?.hideKicker ? { absolute: title } : title,
-    description: post.seo?.metaDescription || post.excerpt,
+    title: guide.seo?.hideKicker ? { absolute: title } : title,
+    description: guide.seo?.metaDescription || guide.excerpt,
     openGraph: {
       title,
-      description: post.seo?.metaDescription || post.excerpt,
+      description: guide.seo?.metaDescription || guide.excerpt,
       type: 'article',
-      publishedTime: post.publishedAt,
-      modifiedTime: post.updatedAt,
-      authors: post.author ? [post.author.name] : undefined,
-      images: post.heroImage ? [{ url: post.heroImage }] : undefined,
+      publishedTime: guide.publishedAt,
+      modifiedTime: guide.updatedAt,
+      authors: guide.author ? [guide.author.name] : undefined,
+      images: guide.heroImage ? [{ url: guide.heroImage }] : undefined,
     },
   }
 }
@@ -138,24 +145,26 @@ function extractTocItems(content: any[]): TOCItem[] {
   return tocItems
 }
 
-export default async function BlogPostPage({ params }: BlogPostPageProps) {
+export default async function GuidePage({ params }: GuidePageProps) {
   const { slug } = await params
-  const post = await getBlogPost(slug)
+  const guide = await getGuide(slug)
 
-  if (!post) {
+  if (!guide) {
     notFound()
   }
 
   // Extract TOC items from content
-  const tocItems = post.showToc !== false ? extractTocItems(post.content || []) : []
+  const tocItems = guide.showToc !== false ? extractTocItems(guide.content || []) : []
+
+  const difficultyInfo = guide.difficulty ? difficultyConfig[guide.difficulty] : null
 
   // Build breadcrumb items
   const breadcrumbItems = [
-    { label: 'Blog', href: '/casino/blog/' },
-    ...(post.categories && post.categories.length > 0
-      ? [{ label: post.categories[0].title, href: `/casino/blog/category/${post.categories[0].slug}/` }]
+    { label: 'Guides', href: '/casino/guides/' },
+    ...(guide.categories && guide.categories.length > 0
+      ? [{ label: guide.categories[0].title, href: `/casino/guides/category/${guide.categories[0].slug}/` }]
       : []),
-    { label: post.seo?.breadcrumbText || post.title },
+    { label: guide.seo?.breadcrumbText || guide.title },
   ]
 
   return (
@@ -167,42 +176,23 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
       {/* Page Header */}
       <header className="px-4 md:px-6 pt-6 pb-4">
-        {/* Categories */}
-        {post.categories && post.categories.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-3">
-            {post.categories.map((cat) => (
-              <Link
-                key={cat._id}
-                href={`/casino/blog/category/${cat.slug}/`}
-                className="px-2.5 py-1 text-xs font-medium rounded hover:opacity-80 transition-opacity"
-                style={{
-                  backgroundColor: cat.color ? `${cat.color}20` : 'var(--color-bg-tertiary)',
-                  color: cat.color || 'var(--color-text-secondary)',
-                }}
-              >
-                {cat.title}
-              </Link>
-            ))}
-          </div>
-        )}
-
         <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">
-          {post.title}
+          {guide.title}
         </h1>
 
-        {post.excerpt && (
+        {guide.excerpt && (
           <p className="mt-3 text-lg text-[var(--color-text-muted)]">
-            {post.excerpt}
+            {guide.excerpt}
           </p>
         )}
 
-        {post.author && (
+        {guide.author && (
           <div className="mt-4">
             <AuthorByline
-              author={post.author}
-              factChecker={post.factChecker}
-              publishedAt={post.publishedAt}
-              updatedAt={post.updatedAt}
+              author={guide.author}
+              factChecker={guide.factChecker}
+              publishedAt={guide.publishedAt}
+              updatedAt={guide.updatedAt}
             />
           </div>
         )}
@@ -220,30 +210,30 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <div className="grid grid-cols-1 xl:grid-cols-[1fr_280px] gap-8">
           {/* Left Column - Content */}
           <div className="min-w-0">
-            {/* Hero Image */}
-            {post.heroImage && (
+            {/* Hero Image (optional for guides) */}
+            {guide.heroImage && (
               <figure className="mb-8">
                 <div className="relative aspect-[16/9] rounded-xl overflow-hidden bg-[var(--color-bg-secondary)]">
                   <Image
-                    src={post.heroImage}
-                    alt={post.heroImageAlt || post.title}
+                    src={guide.heroImage}
+                    alt={guide.heroImageAlt || guide.title}
                     fill
                     className="object-cover"
                     priority
                   />
                 </div>
-                {post.heroImageCaption && (
+                {guide.heroImageCaption && (
                   <figcaption className="mt-2 text-sm text-center text-[var(--color-text-muted)]">
-                    {post.heroImageCaption}
+                    {guide.heroImageCaption}
                   </figcaption>
                 )}
               </figure>
             )}
 
             {/* Article Content */}
-            {post.content && (
+            {guide.content && (
               <article className="prose prose-invert prose-sm md:prose-base max-w-none">
-                {post.content.map((block: any, index: number) => {
+                {guide.content.map((block: any, index: number) => {
                   // Handle callout blocks
                   if (block._type === 'callout') {
                     return (
@@ -290,11 +280,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             )}
 
             {/* Related Games */}
-            {post.relatedGames && post.relatedGames.length > 0 && (
+            {guide.relatedGames && guide.relatedGames.length > 0 && (
               <section className="mt-12 pt-8 border-t border-[var(--color-border)]">
                 <h2 className="text-xl font-bold text-white mb-6">Related Games</h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                  {post.relatedGames.map((game: any) => (
+                  {guide.relatedGames.map((game: any) => (
                     <Link
                       key={game._id}
                       href={`/casino/games/${game.categorySlug}/${game.slug}/`}
@@ -326,25 +316,25 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               </section>
             )}
 
-            {/* Related Posts */}
-            {post.relatedPosts && post.relatedPosts.length > 0 && (
+            {/* Related Guides */}
+            {guide.relatedGuides && guide.relatedGuides.length > 0 && (
               <section className="mt-12 pt-8 border-t border-[var(--color-border)]">
-                <h2 className="text-xl font-bold text-white mb-6">Related Articles</h2>
+                <h2 className="text-xl font-bold text-white mb-6">Related Guides</h2>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {post.relatedPosts.map((relatedPost: any) => (
-                    <PostCard key={relatedPost._id} {...relatedPost} />
+                  {guide.relatedGuides.map((relatedGuide: any) => (
+                    <GuideCard key={relatedGuide._id} {...relatedGuide} />
                   ))}
                 </div>
               </section>
             )}
 
             {/* Author Bio */}
-            {post.showAuthorBio !== false && post.author && (
+            {guide.showAuthorBio !== false && guide.author && (
               <div className="mt-12 pt-8 border-t border-[var(--color-border)] space-y-4">
-                <AuthorBio author={post.author} />
-                {post.factChecker && (
+                <AuthorBio author={guide.author} />
+                {guide.factChecker && (
                   <AuthorBio
-                    author={post.factChecker}
+                    author={guide.factChecker}
                     title="Fact Checked By"
                     id="fact-checker-info"
                   />
@@ -360,26 +350,35 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <TableOfContents items={tocItems} variant="desktop" />
             )}
 
-            {/* Share buttons placeholder */}
+            {/* Guide Info Card */}
             <div className="hidden xl:block p-4 bg-[var(--color-bg-secondary)] rounded-xl">
-              <h3 className="text-sm font-semibold text-white mb-3">Share</h3>
-              <div className="flex gap-2">
-                <button className="p-2 bg-[var(--color-bg-tertiary)] rounded-lg hover:bg-[var(--color-bg-hover)] transition-colors">
-                  <svg className="w-5 h-5 text-[var(--color-text-muted)]" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                  </svg>
-                </button>
-                <button className="p-2 bg-[var(--color-bg-tertiary)] rounded-lg hover:bg-[var(--color-bg-hover)] transition-colors">
-                  <svg className="w-5 h-5 text-[var(--color-text-muted)]" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M6.94 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002zM7 8.48H3V21h4V8.48zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.72-2.91l.04-1.68z" />
-                  </svg>
-                </button>
-                <button className="p-2 bg-[var(--color-bg-tertiary)] rounded-lg hover:bg-[var(--color-bg-hover)] transition-colors">
-                  <svg className="w-5 h-5 text-[var(--color-text-muted)]" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                  </svg>
-                </button>
-              </div>
+              <h3 className="text-sm font-semibold text-white mb-3">Guide Info</h3>
+              <dl className="space-y-2 text-sm">
+                {difficultyInfo && (
+                  <div className="flex justify-between">
+                    <dt className="text-[var(--color-text-muted)]">Difficulty</dt>
+                    <dd style={{ color: difficultyInfo.color }}>{difficultyInfo.label}</dd>
+                  </div>
+                )}
+                {guide.readingTime && (
+                  <div className="flex justify-between">
+                    <dt className="text-[var(--color-text-muted)]">Reading time</dt>
+                    <dd className="text-white">{guide.readingTime} min</dd>
+                  </div>
+                )}
+                {guide.updatedAt && (
+                  <div className="flex justify-between">
+                    <dt className="text-[var(--color-text-muted)]">Last updated</dt>
+                    <dd className="text-white">
+                      {new Date(guide.updatedAt).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })}
+                    </dd>
+                  </div>
+                )}
+              </dl>
             </div>
           </aside>
         </div>

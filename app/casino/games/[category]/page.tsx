@@ -1,8 +1,6 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import Link from 'next/link'
-import Image from 'next/image'
-import { client, urlFor } from '@/lib/sanity'
+import { client } from '@/lib/sanity'
 import { categoryBySlugQuery, getGamesByCategoryPaginatedQuery, gamesByCategoryCountQuery, allCategoriesQuery, siteSettingsQuery } from '@/lib/queries'
 import { PortableText } from '@portabletext/react'
 import { portableTextComponents } from '@/components/PortableTextComponents'
@@ -15,6 +13,7 @@ import GameTable from '@/components/GameTable'
 import FAQ from '@/components/FAQ'
 import Pagination from '@/components/Pagination'
 import SortDropdown, { SortOption } from '@/components/SortDropdown'
+import GamesWikiTable from '@/components/GamesWikiTable'
 import ExpandableText from '@/components/ExpandableText'
 
 const DEFAULT_GAMES_PER_PAGE = 24
@@ -262,7 +261,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
       {/* Main Content */}
       <div className="px-4 md:px-6 pb-8">
-        {/* Sort Controls */}
+        {/* Controls: Sort */}
         <div className="flex items-center justify-between border-t border-[var(--color-border)] py-4 mb-4">
           <p className="text-sm text-[var(--color-text-muted)]">
             {totalGames.toLocaleString()} games
@@ -270,107 +269,12 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
           <SortDropdown isSlots={isSlots} currentSort={validSort} />
         </div>
 
-        {/* Games Grid */}
-        {games && games.length > 0 ? (
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-2 md:gap-3">
-            {games.map((game: any) => (
-              <div key={game._id} className="group overflow-visible">
-                <div className="game-card overflow-visible">
-                  {/* Thumbnail wrapper - provides space for lift effect */}
-                  <div className="relative aspect-[3/4] mb-1.5 overflow-visible">
-                    {/* Thumbnail - moves up on hover */}
-                    <div className="absolute inset-0 transition-transform duration-200 group-hover:-translate-y-2">
-                      <div className="relative w-full h-full overflow-hidden rounded">
-                        {game.thumbnail ? (
-                          <Image
-                            src={urlFor(game.thumbnail)
-                              .width(352)
-                              .height(470)
-                              .fit('crop')
-                              .auto('format')
-                              .url()}
-                            alt={game.title}
-                            fill
-                            sizes="(max-width: 640px) 33vw, (max-width: 768px) 25vw, (max-width: 1024px) 20vw, (max-width: 1280px) 16vw, 12vw"
-                            className="object-cover"
-                          />
-                        ) : game.externalThumbnailUrl ? (
-                          <Image
-                            src={game.externalThumbnailUrl}
-                            alt={game.title}
-                            fill
-                            sizes="(max-width: 640px) 33vw, (max-width: 768px) 25vw, (max-width: 1024px) 20vw, (max-width: 1280px) 16vw, 12vw"
-                            className="object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-[var(--color-bg-tertiary)] flex items-center justify-center">
-                            <span className="text-[var(--color-text-muted)] text-xs">No image</span>
-                          </div>
-                        )}
-
-                        {/* Badges */}
-                        {game.isNew && (
-                          <div className="absolute top-2 left-2">
-                            <span className="px-1.5 py-0.5 bg-green-500 text-white text-[10px] font-bold rounded">
-                              NEW
-                            </span>
-                          </div>
-                        )}
-
-                        {/* Hover Buttons - slide up from bottom */}
-                        <div className="absolute inset-x-0 bottom-0 flex flex-col translate-y-full group-hover:translate-y-0 transition-transform duration-200">
-                          <a
-                            href={signUpUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-full py-2.5 bg-black text-white hover:text-white text-xs font-semibold text-center"
-                          >
-                            Play now
-                          </a>
-                          {game.hasContent && (
-                            <Link
-                              href={`/casino/games/${category}/${game.slug}/`}
-                              className="w-full py-2 bg-white/20 hover:bg-white/30 text-white hover:text-white text-xs font-semibold text-center transition-colors backdrop-blur-sm"
-                            >
-                              Game Info
-                            </Link>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Game Info */}
-                  <div className="px-0.5 text-center">
-                    <h3 className="text-xs font-medium text-white truncate">
-                      {game.title}
-                    </h3>
-                    {(game.rtp || game.volatility) && (
-                      <div className="flex items-center justify-center gap-1 mt-0.5">
-                        {game.rtp && (
-                          <span className="text-[11px]" style={{ color: 'rgb(0, 234, 105)' }}>
-                            {game.rtp}%
-                          </span>
-                        )}
-                        {game.volatility && (
-                          <img
-                            src={`/images/volatility/volatility-${game.volatility}.svg`}
-                            alt={`${game.volatility} volatility`}
-                            style={{ height: '7px', width: 'auto' }}
-                          />
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-12">
-            <p className="text-[var(--color-text-muted)]">No games found in this category.</p>
-          </div>
-        )}
+        {/* Games Table */}
+        <GamesWikiTable
+          games={games}
+          categorySlug={category}
+          signUpUrl={signUpUrl}
+        />
 
         {/* Games count */}
         {totalGames > 0 && (
