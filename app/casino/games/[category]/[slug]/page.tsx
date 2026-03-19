@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { client, urlFor } from '@/lib/sanity'
-import { gameBySlugQuery, allGamesWithCategoriesQuery, siteSettingsQuery } from '@/lib/queries'
+import { gameBySlugQuery, siteSettingsQuery } from '@/lib/queries'
 import { PortableText } from '@portabletext/react'
 import { portableTextComponents } from '@/components/PortableTextComponents'
 import Breadcrumbs from '@/components/Breadcrumbs'
@@ -36,14 +36,6 @@ async function getGame(slug: string) {
 
 async function getSiteSettings() {
   return await client.fetch(siteSettingsQuery)
-}
-
-export async function generateStaticParams() {
-  const games = await client.fetch(allGamesWithCategoriesQuery)
-  return games.map((game: { slug: string; categorySlug: string }) => ({
-    category: game.categorySlug,
-    slug: game.slug,
-  }))
 }
 
 export async function generateMetadata({ params }: GamePageProps): Promise<Metadata> {
