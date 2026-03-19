@@ -19,6 +19,7 @@ import organizationSchema from './organizationSchema'
 import gameSchema from './gameSchema'
 import callout from './callout'
 import categoryCards from './categoryCards'
+import gameCategoryGrid from './gameCategoryGrid'
 import {
   gameQuickSummary,
   gameProsAndCons,
@@ -65,6 +66,7 @@ export const schemaTypes = [
   gameSchema,
   callout,
   categoryCards,
+  gameCategoryGrid,
 
   // Game content blocks (reorderable middle section)
   gameQuickSummary,

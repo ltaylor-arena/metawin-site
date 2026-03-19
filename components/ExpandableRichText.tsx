@@ -19,7 +19,7 @@ export default function ExpandableRichText({
   content,
   maxLines = 6,
   className = '',
-  mobileOnly = false
+  mobileOnly = false,
 }: ExpandableRichTextProps) {
   const [isExpanded, setIsExpanded] = useState(false)
   const [needsExpansion, setNeedsExpansion] = useState(false)

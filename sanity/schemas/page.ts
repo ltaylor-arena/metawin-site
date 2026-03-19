@@ -124,7 +124,10 @@ export default defineType({
               name: 'text',
               title: 'Intro Text',
               type: 'array',
-              of: [richTextBlock],
+              of: [
+                richTextBlock,
+                { type: 'gameCategoryGrid' },
+              ],
             }),
             defineField({
               name: 'promoCards',
@@ -298,6 +301,12 @@ export default defineType({
         defineArrayMember({
           type: 'categoryCards',
           title: 'Category Cards',
+        }),
+
+        // Game Category Grid (auto-populated tiles with icons and counts)
+        defineArrayMember({
+          type: 'gameCategoryGrid',
+          title: 'Game Category Grid',
         }),
 
         // Hot & Cold Slots (Live RTP Tracker)

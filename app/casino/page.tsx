@@ -1,15 +1,17 @@
 import { Metadata } from 'next'
 import { client } from '@/lib/sanity'
-import { homepageQuery, siteSettingsQuery } from '@/lib/queries'
+import { homepageQuery, siteSettingsQuery, categorySummaryQuery } from '@/lib/queries'
 import { PortableText } from '@portabletext/react'
 import Hero from '@/components/Hero'
 import FeatureCards from '@/components/FeatureCards'
 import Tabs from '@/components/Tabs'
 import FAQ from '@/components/FAQ'
 import PromoCard from '@/components/PromoCard'
+import PromoCarousel from '@/components/PromoCarousel'
 import HotColdSlots from '@/components/HotColdSlots'
 import Callout from '@/components/Callout'
 import CategoryCards from '@/components/CategoryCards'
+import GameCategoryGrid from '@/components/GameCategoryGrid'
 import ExpandableRichText from '@/components/ExpandableRichText'
 import { OrganizationStructuredData } from '@/components/StructuredData'
 import GamesWikiTable from '@/components/GamesWikiTable'
@@ -35,9 +37,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function CasinoHomePage() {
-  const [page, siteSettings] = await Promise.all([
+  const [page, siteSettings, gameCategories] = await Promise.all([
     getHomepage(),
-    getSiteSettings()
+    getSiteSettings(),
+    client.fetch(categorySummaryQuery),
   ])
 
   if (!page) {
@@ -75,55 +78,10 @@ export default async function CasinoHomePage() {
             return (
               <section key={block._key} className="px-4 md:px-6 py-8">
                 <div className={`bg-[#0F1115] rounded-lg p-4 md:p-6 flex flex-col ${hasPromoCards ? 'lg:flex-row lg:gap-8' : ''}`}>
-                  {/* Promo Cards - First on mobile (only 1st card), right column on desktop (all cards) */}
+                  {/* Promo Cards - Carousel on mobile, stacked on desktop */}
                   {hasPromoCards && (
-                    <div className="lg:w-[35%] flex flex-col gap-3 order-first lg:order-last mb-6 lg:mb-0">
-                      {block.promoCards.map((card: any, index: number) => {
-                        const gradientColors: Record<string, string> = {
-                          blue: 'from-blue-600/80',
-                          orange: 'from-orange-500/80',
-                          purple: 'from-purple-600/80',
-                          green: 'from-emerald-600/80',
-                          pink: 'from-pink-500/80',
-                        }
-                        const gradient = gradientColors[card.colorTheme] || gradientColors.blue
-
-                        return (
-                          <a
-                            key={card._key}
-                            href={card.link}
-                            className={`relative block w-full aspect-[16/9] rounded-md overflow-hidden group ${index > 0 ? 'hidden lg:block' : ''}`}
-                          >
-                            {/* Card Image */}
-                            {card.backgroundImage && (
-                              <img
-                                src={card.backgroundImage}
-                                alt={card.title}
-                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                              />
-                            )}
-                            {/* Gradient overlay - bottom left corner */}
-                            <div className={`absolute inset-0 bg-gradient-to-tr ${gradient} via-transparent to-transparent`} />
-                            {/* Title & subtitle overlay */}
-                            <div className="absolute bottom-2 left-2 right-2">
-                              {card.headingLevel === 'h2' ? (
-                                <h2 className="text-white text-base font-semibold drop-shadow-lg">{card.title}</h2>
-                              ) : card.headingLevel === 'h3' ? (
-                                <h3 className="text-white text-base font-semibold drop-shadow-lg">{card.title}</h3>
-                              ) : card.headingLevel === 'h4' ? (
-                                <h4 className="text-white text-base font-semibold drop-shadow-lg">{card.title}</h4>
-                              ) : (
-                                <span className="block text-white text-base font-semibold drop-shadow-lg">{card.title}</span>
-                              )}
-                              {card.subtitle && (
-                                <p className="text-white/80 text-xs drop-shadow-lg mt-0.5 line-clamp-2">
-                                  {card.subtitle}
-                                </p>
-                              )}
-                            </div>
-                          </a>
-                        )
-                      })}
+                    <div className="lg:w-[35%] order-first lg:order-last mb-6 lg:mb-0">
+                      <PromoCarousel cards={block.promoCards} />
                     </div>
                   )}
 
@@ -134,13 +92,61 @@ export default async function CasinoHomePage() {
                         {block.heading}
                       </h2>
                     )}
-                    {block.text && (
-                      <ExpandableRichText
-                        content={block.text}
-                        maxLines={4}
-                        mobileOnly={true}
-                      />
-                    )}
+                    {block.text && (() => {
+                      // Split text blocks around gameCategoryGrid insertions
+                      const chunks: { type: 'text' | 'grid'; content?: any[]; grid?: any }[] = []
+                      let currentText: any[] = []
+
+                      for (const item of block.text) {
+                        if (item._type === 'gameCategoryGrid') {
+                          if (currentText.length > 0) {
+                            chunks.push({ type: 'text', content: currentText })
+                            currentText = []
+                          }
+                          chunks.push({ type: 'grid', grid: item })
+                        } else {
+                          currentText.push(item)
+                        }
+                      }
+                      if (currentText.length > 0) {
+                        chunks.push({ type: 'text', content: currentText })
+                      }
+
+                      // If no grids, render as before
+                      if (chunks.length === 1 && chunks[0].type === 'text') {
+                        return (
+                          <ExpandableRichText
+                            content={block.text}
+                            maxLines={4}
+                            mobileOnly={true}
+                          />
+                        )
+                      }
+
+                      return chunks.map((chunk, i) => {
+                        if (chunk.type === 'grid') {
+                          return (
+                            <div key={chunk.grid._key || `grid-${i}`} className="my-6">
+                              <GameCategoryGrid
+                                heading={chunk.grid.heading}
+                                headingLevel={chunk.grid.headingLevel}
+                                columns={chunk.grid.columns}
+                                maxItems={chunk.grid.maxItems}
+                                categories={gameCategories}
+                              />
+                            </div>
+                          )
+                        }
+                        return (
+                          <ExpandableRichText
+                            key={`text-${i}`}
+                            content={chunk.content}
+                            maxLines={i === 0 ? 4 : 6}
+                            mobileOnly={true}
+                          />
+                        )
+                      })
+                    })()}
                   </div>
                 </div>
               </section>
@@ -275,6 +281,19 @@ export default async function CasinoHomePage() {
                 description={block.sectionDescription}
                 cards={block.cards || []}
               />
+            )
+
+          case 'gameCategoryGrid':
+            return (
+              <section key={block._key} className="px-4 md:px-6 py-6">
+                <GameCategoryGrid
+                  heading={block.heading}
+                  headingLevel={block.headingLevel}
+                  columns={block.columns}
+                  maxItems={block.maxItems}
+                  categories={gameCategories}
+                />
+              </section>
             )
 
           default:

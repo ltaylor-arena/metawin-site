@@ -6,16 +6,61 @@ import { Search, X, Loader2 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { client, urlFor } from '@/lib/sanity'
-import { searchGamesQuery } from '@/lib/queries'
+import { searchAllQuery } from '@/lib/queries'
 
 interface SearchResult {
   _id: string
+  _type: string
   title: string
   slug: string
-  categorySlug: string
-  thumbnail?: any // Sanity image reference
-  externalThumbnailUrl?: string // CDN URL fallback
+  categorySlug?: string
+  thumbnail?: any
+  externalThumbnailUrl?: string
+  heroImage?: string
+  image?: any
   provider?: string
+  difficulty?: string
+}
+
+interface SearchResults {
+  games: SearchResult[]
+  pages: SearchResult[]
+  blogPosts: SearchResult[]
+  guides: SearchResult[]
+  authors: SearchResult[]
+}
+
+const typeConfig: Record<string, { label: string; color: string; bg: string }> = {
+  game: { label: 'Game', color: '#3B82F6', bg: '#3B82F620' },
+  page: { label: 'Page', color: '#8B5CF6', bg: '#8B5CF620' },
+  blogPost: { label: 'Blog', color: '#F59E0B', bg: '#F59E0B20' },
+  guide: { label: 'Guide', color: '#10B981', bg: '#10B98120' },
+  author: { label: 'Author', color: '#EC4899', bg: '#EC489920' },
+}
+
+function getResultUrl(result: SearchResult): string {
+  switch (result._type) {
+    case 'game':
+      return `/casino/games/${result.categorySlug}/${result.slug}/`
+    case 'page':
+      return `/casino/${result.slug}/`
+    case 'blogPost':
+      return `/casino/blog/${result.slug}/`
+    case 'guide':
+      return `/casino/guides/${result.slug}/`
+    case 'author':
+      return `/casino/authors/${result.slug}/`
+    default:
+      return '#'
+  }
+}
+
+function getResultSubtext(result: SearchResult): string | null {
+  if (result._type === 'game' && result.provider) return result.provider
+  if (result._type === 'guide' && result.difficulty) {
+    return result.difficulty.charAt(0).toUpperCase() + result.difficulty.slice(1)
+  }
+  return null
 }
 
 interface SearchModalProps {
@@ -70,10 +115,18 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
     const timer = setTimeout(async () => {
       setIsLoading(true)
       try {
-        const searchResults = await client.fetch(searchGamesQuery, {
+        const data: SearchResults = await client.fetch(searchAllQuery, {
           searchTerm: `${query}*`,
         })
-        setResults(searchResults)
+        // Flatten all results into a single list, interleaving types
+        const all: SearchResult[] = [
+          ...data.games,
+          ...data.blogPosts,
+          ...data.guides,
+          ...data.pages,
+          ...data.authors,
+        ]
+        setResults(all)
       } catch (error) {
         console.error('Search error:', error)
         setResults([])
@@ -113,7 +166,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search games or providers..."
+              placeholder="Search games, guides, articles..."
               className="w-full pl-12 pr-12 py-4 bg-transparent text-white placeholder:text-[var(--color-text-muted)] focus:outline-none text-lg"
             />
             {query && (
@@ -134,64 +187,70 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
               </div>
             ) : results.length > 0 ? (
               <div className="p-2">
-                {results.map((game) => (
-                  <Link
-                    key={game._id}
-                    href={`/casino/games/${game.categorySlug}/${game.slug}/`}
-                    onClick={handleClose}
-                    className="flex items-center gap-4 p-3 rounded-lg hover:bg-[var(--color-bg-hover)] transition-colors"
-                  >
-                    {/* Thumbnail */}
-                    <div className="relative w-12 h-16 rounded-lg overflow-hidden bg-[var(--color-bg-tertiary)] flex-shrink-0">
-                      {game.thumbnail ? (
-                        <Image
-                          src={urlFor(game.thumbnail)
-                            .width(96)
-                            .height(128)
-                            .fit('crop')
-                            .auto('format')
-                            .url()}
-                          alt={game.title}
-                          fill
-                          sizes="48px"
-                          className="object-cover"
-                        />
-                      ) : game.externalThumbnailUrl ? (
-                        <Image
-                          src={game.externalThumbnailUrl}
-                          alt={game.title}
-                          fill
-                          sizes="48px"
-                          className="object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-[var(--color-text-muted)] text-xs">
-                          No img
-                        </div>
-                      )}
-                    </div>
+                {results.map((result) => {
+                  const config = typeConfig[result._type] || typeConfig.page
+                  const subtext = getResultSubtext(result)
+                  const thumbnailUrl = result.thumbnail
+                    ? urlFor(result.thumbnail).width(96).height(128).fit('crop').auto('format').url()
+                    : result.externalThumbnailUrl || result.heroImage || (result.image ? urlFor(result.image).width(96).height(128).fit('crop').auto('format').url() : null)
 
-                    {/* Info */}
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-white truncate">
-                        {game.title}
-                      </h4>
-                      {game.provider && (
-                        <p className="text-sm text-[var(--color-text-muted)] truncate">
-                          {game.provider}
-                        </p>
-                      )}
-                    </div>
-                  </Link>
-                ))}
+                  return (
+                    <Link
+                      key={result._id}
+                      href={getResultUrl(result)}
+                      onClick={handleClose}
+                      className="flex items-center gap-4 p-3 rounded-lg hover:bg-[var(--color-bg-hover)] transition-colors"
+                    >
+                      {/* Thumbnail */}
+                      <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-[var(--color-bg-tertiary)] flex-shrink-0">
+                        {thumbnailUrl ? (
+                          <Image
+                            src={thumbnailUrl}
+                            alt={result.title}
+                            fill
+                            sizes="48px"
+                            className="object-cover"
+                          />
+                        ) : (
+                          <div
+                            className="w-full h-full flex items-center justify-center text-xs font-bold"
+                            style={{ color: config.color, backgroundColor: config.bg }}
+                          >
+                            {config.label[0]}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Info */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-medium text-white truncate">
+                            {result.title}
+                          </h4>
+                          <span
+                            className="flex-shrink-0 px-1.5 py-0.5 text-[10px] font-semibold rounded"
+                            style={{ color: config.color, backgroundColor: config.bg }}
+                          >
+                            {config.label}
+                          </span>
+                        </div>
+                        {subtext && (
+                          <p className="text-sm text-[var(--color-text-muted)] truncate">
+                            {subtext}
+                          </p>
+                        )}
+                      </div>
+                    </Link>
+                  )
+                })}
               </div>
             ) : query.trim() ? (
               <div className="py-12 text-center text-[var(--color-text-muted)]">
-                No games found for "{query}"
+                No results found for &ldquo;{query}&rdquo;
               </div>
             ) : (
               <div className="py-12 text-center text-[var(--color-text-muted)]">
-                Start typing to search games...
+                Search games, guides, blog posts, and more...
               </div>
             )}
           </div>

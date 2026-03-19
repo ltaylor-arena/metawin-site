@@ -361,10 +361,10 @@ export default function Sidebar({ navigation, signUpUrl = 'https://metawin.com' 
           <button
             onClick={() => setSearchOpen(true)}
             className={`w-full flex items-center ${collapsed ? 'justify-center' : ''} gap-3 px-3 py-2.5 rounded-lg bg-[#1A1D26] border border-[#252831] text-[var(--color-text-secondary)] hover:text-white hover:border-[var(--color-accent-blue)] transition-colors`}
-            title={collapsed ? 'Search games' : undefined}
+            title={collapsed ? 'Search' : undefined}
           >
             <Search className="w-5 h-5" />
-            {!collapsed && <span className="text-sm">Search games...</span>}
+            {!collapsed && <span className="text-sm">Search</span>}
           </button>
         </div>
 
@@ -392,7 +392,7 @@ export default function Sidebar({ navigation, signUpUrl = 'https://metawin.com' 
             rel="noopener noreferrer"
             className={`block w-full py-3 rounded-lg bg-[var(--color-accent-blue)] hover:bg-[var(--color-accent-blue-hover)] text-white hover:text-white font-semibold text-center transition-colors ${collapsed ? 'px-2 text-xs' : ''}`}
           >
-            {collapsed ? '$' : 'Deposit'}
+            {collapsed ? '$' : 'Sign In'}
           </a>
 
           {/* Social Icons */}

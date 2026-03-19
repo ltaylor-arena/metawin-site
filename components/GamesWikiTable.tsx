@@ -85,7 +85,7 @@ export default function GamesWikiTable({ games, categorySlug, signUpUrl = 'https
         </thead>
         <tbody>
           {games.map((game, index) => {
-            const gameUrl = `/casino/games/${categorySlug || game.categorySlug}/${game.slug}/`
+            const gameUrl = `/casino/games/${game.categorySlug || categorySlug}/${game.slug}/`
 
             return (
               <tr

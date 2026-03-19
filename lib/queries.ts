@@ -803,6 +803,16 @@ export const categoryBySlugQuery = groq`
 `
 
 // Get all categories for sitemap/static generation
+// Get all categories with game counts (lightweight, for category grid)
+export const categorySummaryQuery = groq`
+  *[_type == "category" && hideFromGamesIndex != true] | order(coalesce(order, 999) asc, title asc) {
+    _id,
+    title,
+    "slug": slug.current,
+    "gameCount": count(*[_type == "game" && references(^._id)])
+  }
+`
+
 export const allCategoriesQuery = groq`
   *[_type == "category"] {
     "slug": slug.current,
@@ -821,7 +831,7 @@ export const categoriesWithGamesQuery = groq`
       _id,
       title,
       "slug": slug.current,
-      "categorySlug": ^.slug.current,
+      "categorySlug": categories[0]->slug.current,
       thumbnail,
       externalThumbnailUrl,
       provider,
@@ -858,7 +868,7 @@ const gameFields = `
     _id,
     title,
     "slug": slug.current,
-    "categorySlug": $categorySlug,
+    "categorySlug": categories[0]->slug.current,
     thumbnail,
     externalThumbnailUrl,
     provider,
@@ -1075,6 +1085,48 @@ export const searchGamesQuery = groq`
     provider
   }
 `
+
+// Universal search across all content types
+export const searchAllQuery = groq`{
+  "games": *[_type == "game" && (title match $searchTerm || provider match $searchTerm) && count(categories) > 0] | order(title asc)[0...8] {
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    "categorySlug": categories[0]->slug.current,
+    thumbnail,
+    externalThumbnailUrl,
+    provider
+  },
+  "pages": *[_type == "page" && title match $searchTerm && !isHomepage] | order(title asc)[0...4] {
+    _id,
+    _type,
+    title,
+    "slug": slug.current
+  },
+  "blogPosts": *[_type == "blogPost" && title match $searchTerm] | order(publishedAt desc)[0...4] {
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    "heroImage": heroImage.asset->url
+  },
+  "guides": *[_type == "guide" && title match $searchTerm] | order(coalesce(updatedAt, publishedAt) desc)[0...4] {
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    "heroImage": heroImage.asset->url,
+    difficulty
+  },
+  "authors": *[_type == "author" && name match $searchTerm] | order(name asc)[0...4] {
+    _id,
+    _type,
+    "title": name,
+    "slug": slug.current,
+    image
+  }
+}`
 
 // Get all promotions for sitemap/static generation
 export const allPromotionSlugsQuery = groq`
