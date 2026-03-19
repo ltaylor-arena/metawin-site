@@ -6,6 +6,7 @@ import { useState, useRef, useEffect } from 'react'
 
 export type SortOption =
   | 'featured'         // Games with reviews/content first, then A-Z
+  | 'newest'           // Most recently added first
   | 'a-z'              // Alphabetical A-Z
   | 'z-a'              // Alphabetical Z-A
   | 'rtp'              // Highest RTP first
@@ -17,12 +18,14 @@ interface SortDropdownProps {
 
 const SLOTS_OPTIONS: { value: SortOption; label: string }[] = [
   { value: 'featured', label: 'Featured' },
+  { value: 'newest', label: 'Newest' },
   { value: 'a-z', label: 'A - Z' },
   { value: 'z-a', label: 'Z - A' },
   { value: 'rtp', label: 'Highest RTP' },
 ]
 
 const DEFAULT_OPTIONS: { value: SortOption; label: string }[] = [
+  { value: 'newest', label: 'Newest' },
   { value: 'a-z', label: 'A - Z' },
   { value: 'z-a', label: 'Z - A' },
   { value: 'rtp', label: 'Highest RTP' },

@@ -887,6 +887,7 @@ const sortOrders: Record<string, string> = {
     ),
     title asc
   )`,
+  'newest': 'order(_createdAt desc)',
   'a-z': 'order(title asc)',
   'z-a': 'order(title desc)',
   'rtp': 'order(coalesce(rtp, 0) desc, title asc)',

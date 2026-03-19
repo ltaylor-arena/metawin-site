@@ -19,7 +19,7 @@ import ExpandableText from '@/components/ExpandableText'
 const DEFAULT_GAMES_PER_PAGE = 24
 
 // Valid sort options
-const VALID_SORTS = ['featured', 'a-z', 'z-a', 'rtp'] as const
+const VALID_SORTS = ['featured', 'newest', 'a-z', 'z-a', 'rtp'] as const
 
 interface ContentBlock {
   _type: string
