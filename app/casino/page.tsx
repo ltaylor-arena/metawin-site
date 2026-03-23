@@ -88,9 +88,9 @@ export default async function CasinoHomePage() {
                   {/* Text Content - Second on mobile, left column on desktop */}
                   <div className={hasPromoCards ? 'lg:w-[65%] order-last lg:order-first' : 'max-w-4xl'}>
                     {block.heading && (
-                      <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                      <h1 className="text-2xl md:text-3xl font-bold text-white mb-4">
                         {block.heading}
-                      </h2>
+                      </h1>
                     )}
                     {block.text && (() => {
                       // Split text blocks around gameCategoryGrid insertions

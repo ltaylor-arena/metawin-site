@@ -4,20 +4,7 @@
 import { urlFor } from '@/lib/sanity'
 
 interface OrganizationSchemaData {
-  enabled?: boolean
-  name?: string
-  legalName?: string
-  url?: string
-  logo?: any
-  description?: string
-  foundingDate?: string
-  sameAs?: Array<{ platform: string; url: string }>
-  contactPoint?: {
-    contactType?: string
-    email?: string
-    url?: string
-    availableLanguage?: string[]
-  }
+  jsonLd?: string
 }
 
 interface GameSchemaData {
@@ -60,57 +47,21 @@ interface GameData {
 
 // Organization Schema JSON-LD
 export function OrganizationStructuredData({ data }: { data?: OrganizationSchemaData }) {
-  if (!data?.enabled || !data.name || !data.url) {
+  if (!data?.jsonLd) {
     return null
   }
 
-  const jsonLd: Record<string, any> = {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: data.name,
-    url: data.url,
-  }
-
-  if (data.legalName) {
-    jsonLd.legalName = data.legalName
-  }
-
-  if (data.logo) {
-    jsonLd.logo = urlFor(data.logo).width(600).height(600).url()
-  }
-
-  if (data.description) {
-    jsonLd.description = data.description
-  }
-
-  if (data.foundingDate) {
-    jsonLd.foundingDate = data.foundingDate
-  }
-
-  if (data.sameAs && data.sameAs.length > 0) {
-    jsonLd.sameAs = data.sameAs.map((profile) => profile.url)
-  }
-
-  if (data.contactPoint?.contactType) {
-    jsonLd.contactPoint = {
-      '@type': 'ContactPoint',
-      contactType: data.contactPoint.contactType,
-    }
-    if (data.contactPoint.email) {
-      jsonLd.contactPoint.email = data.contactPoint.email
-    }
-    if (data.contactPoint.url) {
-      jsonLd.contactPoint.url = data.contactPoint.url
-    }
-    if (data.contactPoint.availableLanguage?.length) {
-      jsonLd.contactPoint.availableLanguage = data.contactPoint.availableLanguage
-    }
+  // Validate JSON before rendering
+  try {
+    JSON.parse(data.jsonLd)
+  } catch {
+    return null
   }
 
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      dangerouslySetInnerHTML={{ __html: data.jsonLd }}
     />
   )
 }
