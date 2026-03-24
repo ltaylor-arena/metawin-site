@@ -12,6 +12,7 @@ import AuthorByline from '@/components/AuthorByline'
 import TableOfContents, { TOCItem } from '@/components/TableOfContents'
 import GuideCard from '@/components/guides/GuideCard'
 import Callout from '@/components/Callout'
+import { ArticleStructuredData } from '@/components/StructuredData'
 
 interface GuidePageProps {
   params: Promise<{ slug: string }>
@@ -169,6 +170,16 @@ export default async function GuidePage({ params }: GuidePageProps) {
 
   return (
     <div className="min-h-screen">
+      <ArticleStructuredData
+        title={guide.title}
+        description={guide.seo?.metaDescription || guide.excerpt}
+        url={`https://metawin.com/casino/guides/${guide.slug}/`}
+        image={guide.heroImage}
+        publishedAt={guide.publishedAt}
+        updatedAt={guide.updatedAt}
+        author={guide.author}
+      />
+
       {/* Breadcrumbs */}
       <div className="px-4 md:px-6 pt-4">
         <Breadcrumbs items={breadcrumbItems} />

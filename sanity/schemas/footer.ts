@@ -57,6 +57,8 @@ export default defineType({
                         { type: 'category' },
                         { type: 'blogPost' },
                         { type: 'blogSettings' },
+                        { type: 'guide' },
+                        { type: 'guideSettings' },
                       ],
                     }),
                     defineField({

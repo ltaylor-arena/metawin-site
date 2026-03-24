@@ -115,12 +115,15 @@ export async function generateMetadata({
   }
 
   const title = category.seo?.metaTitle || `${category.title} Guides`
+  const description = category.seo?.metaDescription || category.description || `Browse all ${category.title.toLowerCase()} guides and how-tos.`
+
   return {
     title: category.seo?.hideKicker ? { absolute: title } : title,
-    description:
-      category.seo?.metaDescription ||
-      category.description ||
-      `Browse all ${category.title.toLowerCase()} guides and how-tos.`,
+    description,
+    openGraph: {
+      title,
+      description,
+    },
   }
 }
 

@@ -105,6 +105,10 @@ export async function generateMetadata({ params, searchParams }: CategoryPagePro
     description: baseDescription,
     alternates,
     robots: { index: true, follow: true },
+    openGraph: {
+      title: typeof title === 'string' ? title : titleString,
+      description: baseDescription,
+    },
     other: otherMeta.length > 0 ? Object.fromEntries(otherMeta.map(m => [m.rel, m.href])) : undefined,
   }
 }

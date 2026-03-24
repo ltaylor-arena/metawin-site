@@ -49,10 +49,17 @@ export async function generateMetadata({ params }: GamePageProps): Promise<Metad
   }
 
   const title = game.seo?.metaTitle || game.title
+  const description = game.seo?.metaDescription || `Play ${game.title} by ${game.provider} at MetaWin. ${game.rtp ? `RTP: ${game.rtp}%` : ''}`
+
   return {
     title: game.seo?.hideKicker ? { absolute: title } : title,
-    description: game.seo?.metaDescription || `Play ${game.title} by ${game.provider} at MetaWin. ${game.rtp ? `RTP: ${game.rtp}%` : ''}`,
+    description,
     robots: { index: false, follow: false },
+    openGraph: {
+      title,
+      description,
+      images: game.externalThumbnailUrl ? [{ url: game.externalThumbnailUrl }] : undefined,
+    },
   }
 }
 

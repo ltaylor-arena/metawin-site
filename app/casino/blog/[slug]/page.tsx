@@ -12,6 +12,7 @@ import AuthorByline from '@/components/AuthorByline'
 import TableOfContents, { TOCItem } from '@/components/TableOfContents'
 import PostCard from '@/components/blog/PostCard'
 import Callout from '@/components/Callout'
+import { ArticleStructuredData } from '@/components/StructuredData'
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>
@@ -160,6 +161,16 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <div className="min-h-screen">
+      <ArticleStructuredData
+        title={post.title}
+        description={post.seo?.metaDescription || post.excerpt}
+        url={`https://metawin.com/casino/blog/${post.slug}/`}
+        image={post.heroImage}
+        publishedAt={post.publishedAt}
+        updatedAt={post.updatedAt}
+        author={post.author}
+      />
+
       {/* Breadcrumbs */}
       <div className="px-4 md:px-6 pt-4">
         <Breadcrumbs items={breadcrumbItems} />

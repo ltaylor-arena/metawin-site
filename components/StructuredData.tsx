@@ -66,6 +66,71 @@ export function OrganizationStructuredData({ data }: { data?: OrganizationSchema
   )
 }
 
+// Article Schema JSON-LD (for blog posts and guides)
+export function ArticleStructuredData({
+  title,
+  description,
+  url,
+  image,
+  publishedAt,
+  updatedAt,
+  author,
+}: {
+  title: string
+  description?: string
+  url: string
+  image?: string
+  publishedAt?: string
+  updatedAt?: string
+  author?: { name: string; slug: string; image?: string }
+}) {
+  const jsonLd: Record<string, any> = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    url,
+  }
+
+  if (description) {
+    jsonLd.description = description
+  }
+
+  if (image) {
+    jsonLd.image = image
+  }
+
+  if (publishedAt) {
+    jsonLd.datePublished = publishedAt
+  }
+
+  if (updatedAt) {
+    jsonLd.dateModified = updatedAt
+  } else if (publishedAt) {
+    jsonLd.dateModified = publishedAt
+  }
+
+  if (author) {
+    jsonLd.author = {
+      '@type': 'Person',
+      name: author.name,
+      url: `https://metawin.com/casino/authors/${author.slug}/`,
+    }
+  }
+
+  jsonLd.publisher = {
+    '@type': 'Organization',
+    name: 'MetaWin',
+    url: 'https://metawin.com',
+  }
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
+  )
+}
+
 // Game Schema JSON-LD
 export function GameStructuredData({
   schemaData,

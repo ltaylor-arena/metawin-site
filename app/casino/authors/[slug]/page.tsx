@@ -97,10 +97,16 @@ export async function generateMetadata({ params }: AuthorPageProps): Promise<Met
   if (author.role) titleParts.push(author.role)
   titleParts.push('MetaWin Casino')
 
+  const description = author.bio || `Read articles and game reviews by ${author.name} at MetaWin.`
+
   return {
     title: titleParts.join(' | '),
-    description: author.bio || `Read articles and game reviews by ${author.name} at MetaWin.`,
+    description,
     robots: { index: true, follow: true },
+    openGraph: {
+      title: titleParts.join(' | '),
+      description,
+    },
   }
 }
 

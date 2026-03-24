@@ -88,9 +88,15 @@ export async function generateMetadata(): Promise<Metadata> {
   const settings = await getBlogSettings()
   const titleText = settings?.seo?.metaTitle || settings?.heroHeading || 'Blog'
 
+  const description = settings?.seo?.metaDescription || settings?.heroSubtext || 'Read the latest articles, guides, and news.'
+
   return {
     title: settings?.seo?.hideKicker ? { absolute: titleText } : titleText,
-    description: settings?.seo?.metaDescription || settings?.heroSubtext || 'Read the latest articles, guides, and news.',
+    description,
+    openGraph: {
+      title: titleText,
+      description,
+    },
   }
 }
 

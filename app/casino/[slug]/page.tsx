@@ -56,10 +56,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const title = page.seo?.metaTitle || page.title
+  const description = page.seo?.metaDescription || page.description
+
   return {
     title: page.seo?.hideKicker ? { absolute: title } : title,
-    description: page.seo?.metaDescription || page.description,
+    description,
     robots: { index: false, follow: false },
+    openGraph: {
+      title,
+      description,
+    },
   }
 }
 

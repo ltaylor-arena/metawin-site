@@ -29,10 +29,17 @@ export async function generateMetadata(): Promise<Metadata> {
   const page = await getHomepage()
   const title = page?.seo?.metaTitle || "The World's Best Crypto Casino"
 
+  const description = page?.seo?.metaDescription || "Play thousands of casino games with instant crypto withdrawals."
+
   return {
     title: page?.seo?.hideKicker ? { absolute: title } : title,
-    description: page?.seo?.metaDescription || "Play thousands of casino games with instant crypto withdrawals.",
+    description,
     robots: { index: false, follow: false },
+    openGraph: {
+      title,
+      description,
+      images: page?.seo?.ogImage ? [{ url: page.seo.ogImage }] : undefined,
+    },
   }
 }
 

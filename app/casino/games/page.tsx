@@ -154,10 +154,17 @@ export async function generateMetadata(): Promise<Metadata> {
   const page = await getPage()
   const title = page?.seo?.metaTitle || 'All Games'
 
+  const description = page?.seo?.metaDescription || 'Browse all casino games at MetaWin. Slots, table games, crash games, and more.'
+
   return {
     title: page?.seo?.hideKicker ? { absolute: title } : title,
-    description: page?.seo?.metaDescription || 'Browse all casino games at MetaWin. Slots, table games, crash games, and more.',
+    description,
     robots: { index: false, follow: false },
+    openGraph: {
+      title,
+      description,
+      images: page?.seo?.ogImage ? [{ url: page.seo.ogImage }] : undefined,
+    },
   }
 }
 

@@ -64,9 +64,15 @@ export async function generateMetadata(): Promise<Metadata> {
   const settings = await getGuideSettings()
   const titleText = settings?.seo?.metaTitle || settings?.heroHeading || 'Guides'
 
+  const description = settings?.seo?.metaDescription || settings?.heroSubtext || 'Player guides, how-tos, and explainers for MetaWin.'
+
   return {
     title: settings?.seo?.hideKicker ? { absolute: titleText } : titleText,
-    description: settings?.seo?.metaDescription || settings?.heroSubtext || 'Player guides, how-tos, and explainers for MetaWin.',
+    description,
+    openGraph: {
+      title: titleText,
+      description,
+    },
   }
 }
 

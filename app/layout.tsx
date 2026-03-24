@@ -17,6 +17,15 @@ export const metadata: Metadata = {
     index: false,
     follow: false,
   },
+  openGraph: {
+    siteName: 'MetaWin Casino',
+    type: 'website',
+    title: {
+      template: '%s | MetaWin Casino',
+      default: 'MetaWin Casino',
+    },
+    description: "The World's Best Crypto Casino & Prize Winning Platform",
+  },
 }
 
 export default function RootLayout({
