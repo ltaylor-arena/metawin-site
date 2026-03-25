@@ -104,7 +104,7 @@ export async function generateMetadata({ params, searchParams }: CategoryPagePro
     title,
     description: baseDescription,
     alternates,
-    robots: { index: true, follow: true },
+    robots: { index: false, follow: false },
     openGraph: {
       title: typeof title === 'string' ? title : titleString,
       description: baseDescription,

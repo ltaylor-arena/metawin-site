@@ -102,7 +102,7 @@ export async function generateMetadata({ params }: AuthorPageProps): Promise<Met
   return {
     title: titleParts.join(' | '),
     description,
-    robots: { index: true, follow: true },
+    robots: { index: false, follow: false },
     openGraph: {
       title: titleParts.join(' | '),
       description,
