@@ -29,6 +29,7 @@
     "react-dom": "^19.1",
     "sanity": "^5.1.0",
     "sanity-plugin-media": "^4.1.1",
+    "sst": "^4.5.11",
     "styled-components": "^6.1.18",
     "tailwindcss": "^3.4.19"
   },

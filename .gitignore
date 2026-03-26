@@ -40,6 +40,10 @@
 # Vercel
 .vercel
 
+# SST
+.sst/
+.open-next/
+
 # Claude
 .claude/
 
