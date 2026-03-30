@@ -6,10 +6,6 @@
 
 declare module "sst" {
   export interface Resource {
-    "MetawinSite": {
-      "type": "sst.aws.Nextjs"
-      "url": string
-    }
   }
 }
 /// <reference path="sst-env.d.ts" />
