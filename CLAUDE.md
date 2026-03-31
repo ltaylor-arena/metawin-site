@@ -4,12 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-MetaWin Casino - SEO-optimized content site built with Next.js 16 and Sanity CMS. Designed to be served via CloudFront reverse proxy at `/casino/*`.
+MetaWin Casino - SEO-optimized content site built with Next.js 16 and Sanity CMS. Designed to be served via CloudFront reverse proxy at `/hub/*`.
 
 ## Commands
 
 ```bash
-npm run dev          # Start Next.js dev server (site at http://localhost:3000/casino, studio at /studio)
+npm run dev          # Start Next.js dev server (site at http://localhost:3000/hub, studio at /studio)
 npm run build        # Production build
 npm run start        # Start production server
 npm run sanity       # Run Sanity Studio standalone
@@ -28,19 +28,19 @@ Collections: `popular`, `all-slots`, `crash`, `plinkos`, `blackjack`, `baccarat`
 ## Architecture
 
 ### Routing Structure
-- All public pages live under `/casino/*` (handled by `app/casino/`)
+- All public pages live under `/hub/*` (handled by `app/hub/`)
 - Sanity Studio is embedded at `/studio` (handled by `app/studio/[[...index]]/`)
-- Middleware (`middleware.ts`) processes CloudFront proxy headers on `/casino/*` routes
+- Middleware (`middleware.ts`) processes CloudFront proxy headers on `/hub/*` routes
 
 ### Content Sections
-- `/casino/` - Homepage (page builder)
-- `/casino/games/` - Games index with category tiles
-- `/casino/games/[category]/` - Category page with game table
-- `/casino/games/[category]/[slug]/` - Individual game page (ISR, no static generation)
-- `/casino/blog/` - Blog (time-sensitive, promotional content)
-- `/casino/guides/` - Guides (evergreen, wiki-style educational content)
-- `/casino/authors/[slug]/` - Author profiles
-- `/casino/promo-code/` - Promotions
+- `/hub/` - Homepage (page builder)
+- `/hub/games/` - Games index with category tiles
+- `/hub/games/[category]/` - Category page with game table
+- `/hub/games/[category]/[slug]/` - Individual game page (ISR, no static generation)
+- `/hub/blog/` - Blog (time-sensitive, promotional content)
+- `/hub/guides/` - Guides (evergreen, wiki-style educational content)
+- `/hub/authors/[slug]/` - Author profiles
+- `/hub/promo-code/` - Promotions
 
 ### Data Flow
 1. **Sanity Client** (`lib/sanity.ts`) - Configured client with `sanityFetch()` helper that includes Next.js caching (60s revalidation)
@@ -65,7 +65,7 @@ Pages use a modular content block system. The `page` schema has a `content` arra
 ### Layout
 ```
 app/layout.tsx              # Root: global styles, metadata template
-└── app/casino/layout.tsx   # Casino: single unified sidebar nav + header + footer
+└── app/hub/layout.tsx   # Casino: single unified sidebar nav + header + footer
     └── page.tsx            # Individual page content
 ```
 
@@ -83,7 +83,7 @@ Custom SVG icons in `components/icons/GameIcons.tsx` plus Lucide React icons. Bo
 ## Key Patterns
 
 ### Game URLs
-Games always link to their **primary category** (first in the categories array): `/casino/games/{primaryCategory}/{slug}/`. The `categorySlug` in GROQ projections uses `categories[0]->slug.current`, not the current page's category. This prevents duplicate URLs for games in multiple categories.
+Games always link to their **primary category** (first in the categories array): `/hub/games/{primaryCategory}/{slug}/`. The `categorySlug` in GROQ projections uses `categories[0]->slug.current`, not the current page's category. This prevents duplicate URLs for games in multiple categories.
 
 ### Image Handling
 Use `urlFor()` from `lib/sanity.ts` to generate optimized image URLs from Sanity assets. External game thumbnails use `externalThumbnailUrl` from the MetaWin CDN.

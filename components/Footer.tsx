@@ -6,7 +6,7 @@ import Image from 'next/image'
 import { Instagram, Youtube, MessageCircle } from 'lucide-react'
 import { XIcon, DiscordIcon, TelegramIcon } from './SocialIcons'
 import { PortableText, PortableTextBlock } from '@portabletext/react'
-import type { FooterData, FooterColumn } from '@/app/casino/layout'
+import type { FooterData, FooterColumn } from '@/app/hub/layout'
 
 // Social icon mapping
 const socialIcons: Record<string, React.ElementType> = {
@@ -27,38 +27,38 @@ const defaultColumns: FooterColumn[] = [
   {
     heading: 'Casino',
     links: [
-      { label: 'All Games', internalHref: '/casino/games/' },
-      { label: 'Slots', internalHref: '/casino/games/slots/' },
-      { label: 'Live Casino', internalHref: '/casino/games/live-casino/' },
-      { label: 'Game Shows', internalHref: '/casino/games/game-shows/' },
-      { label: 'Providers', internalHref: '/casino/providers/' },
+      { label: 'All Games', internalHref: '/hub/games/' },
+      { label: 'Slots', internalHref: '/hub/games/slots/' },
+      { label: 'Live Casino', internalHref: '/hub/games/live-casino/' },
+      { label: 'Game Shows', internalHref: '/hub/games/game-shows/' },
+      { label: 'Providers', internalHref: '/hub/providers/' },
     ],
   },
   {
     heading: 'Promotions',
     links: [
-      { label: 'Prizes', internalHref: '/casino/prizes/' },
-      { label: 'Races', internalHref: '/casino/races/' },
-      { label: 'VIP Program', internalHref: '/casino/vip/' },
-      { label: 'Referrals', internalHref: '/casino/referrals/' },
+      { label: 'Prizes', internalHref: '/hub/prizes/' },
+      { label: 'Races', internalHref: '/hub/races/' },
+      { label: 'VIP Program', internalHref: '/hub/vip/' },
+      { label: 'Referrals', internalHref: '/hub/referrals/' },
     ],
   },
   {
     heading: 'Support',
     links: [
       { label: 'Help Center', externalUrl: 'https://help.metawin.com', openInNewTab: true },
-      { label: 'Responsible Gaming', internalHref: '/casino/responsible-gaming/' },
-      { label: 'Terms of Service', internalHref: '/casino/terms/' },
-      { label: 'Privacy Policy', internalHref: '/casino/privacy/' },
+      { label: 'Responsible Gaming', internalHref: '/hub/responsible-gaming/' },
+      { label: 'Terms of Service', internalHref: '/hub/terms/' },
+      { label: 'Privacy Policy', internalHref: '/hub/privacy/' },
     ],
   },
   {
     heading: 'Company',
     links: [
-      { label: 'About Us', internalHref: '/casino/about/' },
-      { label: 'Blog', internalHref: '/casino/blog/' },
-      { label: 'Careers', internalHref: '/casino/careers/' },
-      { label: 'Contact', internalHref: '/casino/contact/' },
+      { label: 'About Us', internalHref: '/hub/about/' },
+      { label: 'Blog', internalHref: '/hub/blog/' },
+      { label: 'Careers', internalHref: '/hub/careers/' },
+      { label: 'Contact', internalHref: '/hub/contact/' },
     ],
   },
 ]
@@ -86,7 +86,7 @@ export default function Footer({ data }: FooterProps) {
           {/* Logo & Copyright */}
           <div className="flex flex-col items-center md:items-start gap-2">
             <Image
-              src="/casino/images/metawin-logo-white.svg"
+              src="/hub/images/metawin-logo-white.svg"
               alt="MetaWin"
               width={120}
               height={24}
@@ -149,35 +149,35 @@ export default function Footer({ data }: FooterProps) {
         {/* Crypto Coin Logos */}
         <div className="flex flex-wrap items-center justify-center gap-6 lg:gap-8 xl:gap-10 mt-8 pt-8 border-t border-[var(--color-border)]">
           <Image
-            src="/casino/images/bitcoin-logo.svg"
+            src="/hub/images/bitcoin-logo.svg"
             alt="Bitcoin"
             width={120}
             height={30}
             className="h-auto w-auto"
           />
           <Image
-            src="/casino/images/usdcoin-logo.svg"
+            src="/hub/images/usdcoin-logo.svg"
             alt="USD Coin"
             width={120}
             height={30}
             className="h-auto w-auto"
           />
           <Image
-            src="/casino/images/ethereum-logo.svg"
+            src="/hub/images/ethereum-logo.svg"
             alt="Ethereum"
             width={120}
             height={30}
             className="h-auto w-auto"
           />
           <Image
-            src="/casino/images/solana-logo.svg"
+            src="/hub/images/solana-logo.svg"
             alt="Solana"
             width={120}
             height={30}
             className="h-auto w-auto"
           />
           <Image
-            src="/casino/images/litecoin-logo.svg"
+            src="/hub/images/litecoin-logo.svg"
             alt="Litecoin"
             width={120}
             height={30}

@@ -41,15 +41,15 @@ const typeConfig: Record<string, { label: string; color: string; bg: string }> =
 function getResultUrl(result: SearchResult): string {
   switch (result._type) {
     case 'game':
-      return `/casino/games/${result.categorySlug}/${result.slug}/`
+      return `/hub/games/${result.categorySlug}/${result.slug}/`
     case 'page':
-      return `/casino/${result.slug}/`
+      return `/hub/${result.slug}/`
     case 'blogPost':
-      return `/casino/blog/${result.slug}/`
+      return `/hub/blog/${result.slug}/`
     case 'guide':
-      return `/casino/guides/${result.slug}/`
+      return `/hub/guides/${result.slug}/`
     case 'author':
-      return `/casino/authors/${result.slug}/`
+      return `/hub/authors/${result.slug}/`
     default:
       return '#'
   }

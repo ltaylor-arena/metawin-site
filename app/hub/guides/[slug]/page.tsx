@@ -161,9 +161,9 @@ export default async function GuidePage({ params }: GuidePageProps) {
 
   // Build breadcrumb items
   const breadcrumbItems = [
-    { label: 'Guides', href: '/casino/guides/' },
+    { label: 'Guides', href: '/hub/guides/' },
     ...(guide.categories && guide.categories.length > 0
-      ? [{ label: guide.categories[0].title, href: `/casino/guides/category/${guide.categories[0].slug}/` }]
+      ? [{ label: guide.categories[0].title, href: `/hub/guides/category/${guide.categories[0].slug}/` }]
       : []),
     { label: guide.seo?.breadcrumbText || guide.title },
   ]
@@ -173,7 +173,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
       <ArticleStructuredData
         title={guide.title}
         description={guide.seo?.metaDescription || guide.excerpt}
-        url={`https://metawin.com/casino/guides/${guide.slug}/`}
+        url={`https://metawin.com/hub/guides/${guide.slug}/`}
         image={guide.heroImage}
         publishedAt={guide.publishedAt}
         updatedAt={guide.updatedAt}
@@ -298,7 +298,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
                   {guide.relatedGames.map((game: any) => (
                     <Link
                       key={game._id}
-                      href={`/casino/games/${game.categorySlug}/${game.slug}/`}
+                      href={`/hub/games/${game.categorySlug}/${game.slug}/`}
                       className="group block bg-[var(--color-bg-secondary)] rounded-lg overflow-hidden hover:ring-2 hover:ring-[var(--color-accent-blue)] transition-all"
                     >
                       <div className="relative aspect-[4/3] bg-[var(--color-bg-tertiary)]">

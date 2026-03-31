@@ -32,14 +32,14 @@ export default function NotFound() {
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link
-            href="/casino/"
+            href="/hub/"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-[var(--color-accent-blue)] hover:bg-[var(--color-accent-blue-hover)] text-white font-semibold rounded-lg transition-colors"
           >
             <Home className="w-4 h-4" />
             Go to Homepage
           </Link>
           <Link
-            href="/casino/games/"
+            href="/hub/games/"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-[var(--color-bg-tertiary)] hover:bg-[var(--color-bg-hover)] text-white font-medium rounded-lg transition-colors border border-[var(--color-border)]"
           >
             <Search className="w-4 h-4" />

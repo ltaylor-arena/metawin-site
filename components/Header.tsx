@@ -32,7 +32,7 @@ export default function Header({ signUpUrl = 'https://metawin.com/' }: HeaderPro
         </button>
         
         {/* Logo */}
-        <Link href="/casino/" className="text-lg font-bold text-white">
+        <Link href="/hub/" className="text-lg font-bold text-white">
           METAWIN
         </Link>
         

@@ -85,7 +85,7 @@ export default function GamesWikiTable({ games, categorySlug, signUpUrl = 'https
         </thead>
         <tbody>
           {games.map((game, index) => {
-            const gameUrl = `/casino/games/${game.categorySlug || categorySlug}/${game.slug}/`
+            const gameUrl = `/hub/games/${game.categorySlug || categorySlug}/${game.slug}/`
 
             return (
               <tr
@@ -166,7 +166,7 @@ export default function GamesWikiTable({ games, categorySlug, signUpUrl = 'https
                 <td className="px-4 py-3 hidden md:table-cell">
                   {(categorySlug || game.categorySlug) ? (
                     <Link
-                      href={`/casino/games/${categorySlug || game.categorySlug}/`}
+                      href={`/hub/games/${categorySlug || game.categorySlug}/`}
                       className="text-[var(--color-text-secondary)] hover:text-[var(--color-accent-blue)] transition-colors capitalize"
                     >
                       {(categorySlug || game.categorySlug)?.replace(/-/g, ' ')}
@@ -193,7 +193,7 @@ export default function GamesWikiTable({ games, categorySlug, signUpUrl = 'https
                     {game.volatility ? (
                       <div className="flex items-center gap-2">
                         <img
-                          src={`/casino/images/volatility/volatility-${game.volatility}.svg`}
+                          src={`/hub/images/volatility/volatility-${game.volatility}.svg`}
                           alt={`${game.volatility} volatility`}
                           style={{ height: '10px', width: 'auto' }}
                         />

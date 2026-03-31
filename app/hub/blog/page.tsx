@@ -192,7 +192,7 @@ export default async function BlogPage() {
         {categories.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-8">
             <Link
-              href="/casino/blog/"
+              href="/hub/blog/"
               className="px-4 py-2 text-sm font-medium rounded-full bg-[var(--color-accent-blue)] text-white"
             >
               All
@@ -200,7 +200,7 @@ export default async function BlogPage() {
             {categories.map((cat) => (
               <Link
                 key={cat._id}
-                href={`/casino/blog/category/${cat.slug}/`}
+                href={`/hub/blog/category/${cat.slug}/`}
                 className="px-4 py-2 text-sm font-medium rounded-full bg-[var(--color-bg-secondary)] text-[var(--color-text-muted)] hover:bg-[var(--color-bg-tertiary)] transition-colors"
                 style={cat.color ? { borderColor: cat.color, borderWidth: 1 } : undefined}
               >
@@ -241,7 +241,7 @@ export default async function BlogPage() {
                   {category.title}
                 </h2>
                 <Link
-                  href={`/casino/blog/category/${category.slug}/`}
+                  href={`/hub/blog/category/${category.slug}/`}
                   className="text-sm font-medium text-[var(--color-accent-blue)] hover:underline"
                 >
                   View all →

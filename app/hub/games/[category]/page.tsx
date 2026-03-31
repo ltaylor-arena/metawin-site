@@ -72,7 +72,7 @@ export async function generateMetadata({ params, searchParams }: CategoryPagePro
   const totalGames = await getGamesCount(category)
   const totalPages = Math.ceil(totalGames / gamesPerPage)
 
-  const basePath = `/casino/games/${category}/`
+  const basePath = `/hub/games/${category}/`
   const baseTitle = categoryData.seo?.metaTitle || categoryData.title
   const baseDescription = categoryData.seo?.metaDescription || `Play the best ${categoryData.title} games at MetaWin Casino.`
 
@@ -216,7 +216,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
   const totalPages = Math.ceil(totalGames / gamesPerPage)
   const signUpUrl = siteSettings?.signUpUrl || 'https://metawin.com/signup'
-  const basePath = `/casino/games/${category}/`
+  const basePath = `/hub/games/${category}/`
 
   // Redirect to page 1 if page is out of bounds
   if (currentPage > totalPages && totalPages > 0) {
@@ -225,7 +225,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
   // Build breadcrumb items
   const breadcrumbItems = [
-    { label: 'Games', href: '/casino/games/' },
+    { label: 'Games', href: '/hub/games/' },
     { label: categoryData.seo?.breadcrumbText || categoryData.title },
   ]
 

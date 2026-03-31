@@ -42,7 +42,7 @@ export default defineType({
       title: 'Slug',
       type: 'slug',
       group: 'settings',
-      description: 'URL path for this page (e.g., "slots" becomes /casino/slots)',
+      description: 'URL path for this page (e.g., "slots" becomes /hub/slots)',
       options: {
         source: 'title',
         maxLength: 96,
@@ -54,7 +54,7 @@ export default defineType({
       title: 'Is Homepage?',
       type: 'boolean',
       group: 'settings',
-      description: 'Set this page as the /casino/ homepage',
+      description: 'Set this page as the /hub/ homepage',
       initialValue: false,
     }),
 
@@ -378,7 +378,7 @@ export default defineType({
     },
     prepare: ({ title, slug, isHomepage }) => ({
       title: title,
-      subtitle: isHomepage ? '🏠 Homepage' : `/casino/${slug}`,
+      subtitle: isHomepage ? '🏠 Homepage' : `/hub/${slug}`,
     }),
   },
 })

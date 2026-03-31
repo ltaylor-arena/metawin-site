@@ -118,7 +118,7 @@ export default function GameCategoryGrid({ heading, headingLevel = 'h2', columns
         {displayCategories.map((category) => (
           <Link
             key={category._id}
-            href={`/casino/games/${category.slug}/`}
+            href={`/hub/games/${category.slug}/`}
             className="group relative bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-tertiary)] border border-[var(--color-border)] rounded-xl p-3 md:p-4 transition-all duration-200 hover:border-[var(--color-accent-blue)]"
           >
             <div className="w-10 h-10 md:w-12 md:h-12 mb-2 rounded-lg bg-[var(--color-bg-tertiary)] flex items-center justify-center p-2 text-[var(--color-accent-blue)] group-hover:text-white transition-colors">
@@ -142,7 +142,7 @@ export default function GameCategoryGrid({ heading, headingLevel = 'h2', columns
         {displayCategories.map((category) => (
           <Link
             key={category._id}
-            href={`/casino/games/${category.slug}/`}
+            href={`/hub/games/${category.slug}/`}
             className="group flex-shrink-0 w-[120px] bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-tertiary)] border border-[var(--color-border)] rounded-xl p-3 transition-all duration-200 hover:border-[var(--color-accent-blue)]"
           >
             <div className="w-9 h-9 mb-1.5 rounded-lg bg-[var(--color-bg-tertiary)] flex items-center justify-center p-1.5 text-[var(--color-accent-blue)] group-hover:text-white transition-colors">

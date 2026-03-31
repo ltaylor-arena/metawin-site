@@ -68,7 +68,7 @@ export default function GuideCard({
   if (variant === 'compact') {
     return (
       <Link
-        href={`/casino/guides/${slug}/`}
+        href={`/hub/guides/${slug}/`}
         className="group flex gap-4 items-start"
       >
         <div className="flex-1 min-w-0">
@@ -89,7 +89,7 @@ export default function GuideCard({
   // Default variant — wiki-style card
   return (
     <Link
-      href={`/casino/guides/${slug}/`}
+      href={`/hub/guides/${slug}/`}
       className="group block bg-[var(--color-bg-secondary)] rounded-xl overflow-hidden hover:ring-2 hover:ring-[var(--color-accent-blue)] transition-all"
     >
       {/* Optional Image — smaller aspect ratio than blog */}

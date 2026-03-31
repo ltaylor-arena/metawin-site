@@ -51,7 +51,7 @@ export default function FeaturedPostHero({
 
   return (
     <Link
-      href={`/casino/blog/${slug}/`}
+      href={`/hub/blog/${slug}/`}
       className="group block mb-12 p-4 md:p-6 rounded-2xl bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-tertiary)] transition-colors"
     >
       {/* Large Hero Image */}

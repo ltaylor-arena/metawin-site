@@ -83,7 +83,7 @@ export default function GameDetailsTable({
         <div className="flex items-center gap-2">
           <span>{formatVolatility(volatility)}</span>
           <img
-            src={`/casino/images/volatility/volatility-${volatility}.svg`}
+            src={`/hub/images/volatility/volatility-${volatility}.svg`}
             alt={`${formatVolatility(volatility)} volatility`}
             className="h-3 w-auto"
           />

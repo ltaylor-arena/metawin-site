@@ -65,7 +65,7 @@ export default async function AuthorsIndexPage() {
               return (
                 <Link
                   key={author._id}
-                  href={`/casino/authors/${author.slug}/`}
+                  href={`/hub/authors/${author.slug}/`}
                   className="group block bg-[var(--color-bg-secondary)] rounded-xl overflow-hidden border border-[var(--color-border)] hover:border-[var(--color-border-hover)] transition-colors"
                 >
                   <div className="p-6">

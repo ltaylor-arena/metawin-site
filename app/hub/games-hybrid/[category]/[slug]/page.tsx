@@ -151,7 +151,7 @@ export default async function HybridGamePage({ params }: GamePageProps) {
   }
 
   // Construct page URL for structured data
-  const pageUrl = `https://metawin.com/casino/games/${category}/${slug}/`
+  const pageUrl = `https://metawin.com/hub/games/${category}/${slug}/`
 
   // Get content blocks
   const contentBlocks: ContentBlock[] = game.content || []
@@ -188,7 +188,7 @@ export default async function HybridGamePage({ params }: GamePageProps) {
         {/* Game Area Placeholder */}
         <div className="relative w-full">
           <Image
-            src="/casino/images/placeholders/placeholder-game-area.png"
+            src="/hub/images/placeholders/placeholder-game-area.png"
             alt="Game Area - This will be the actual game interface"
             width={1095}
             height={618}
@@ -205,7 +205,7 @@ export default async function HybridGamePage({ params }: GamePageProps) {
         {/* Game Title Bar Placeholder */}
         <div className="relative w-full mt-0">
           <Image
-            src="/casino/images/placeholders/placeholder-game-title.png"
+            src="/hub/images/placeholders/placeholder-game-title.png"
             alt="Game Title Bar"
             width={1095}
             height={85}
@@ -216,7 +216,7 @@ export default async function HybridGamePage({ params }: GamePageProps) {
         {/* More Games Carousel Placeholder */}
         <div className="relative w-full mt-6">
           <Image
-            src="/casino/images/placeholders/placeholder-more-games.png"
+            src="/hub/images/placeholders/placeholder-more-games.png"
             alt="More Games Carousel"
             width={1095}
             height={140}
@@ -227,7 +227,7 @@ export default async function HybridGamePage({ params }: GamePageProps) {
         {/* Leaderboards Placeholder */}
         <div className="relative w-full mt-6">
           <Image
-            src="/casino/images/placeholders/placeholder-leaderboards.png"
+            src="/hub/images/placeholders/placeholder-leaderboards.png"
             alt="Leaderboards & Races"
             width={1095}
             height={350}

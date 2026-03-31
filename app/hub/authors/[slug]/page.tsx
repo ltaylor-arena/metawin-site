@@ -142,7 +142,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
     : null
 
   const breadcrumbItems = [
-    { label: 'Authors', href: '/casino/authors/' },
+    { label: 'Authors', href: '/hub/authors/' },
     { label: author.name },
   ]
 
@@ -396,13 +396,13 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
                 let typeLabel = ''
 
                 if (item.type === 'page') {
-                  href = `/casino/${item.slug}/`
+                  href = `/hub/${item.slug}/`
                   typeLabel = 'Article'
                 } else if (item.type === 'game') {
-                  href = `/casino/games/${item.categorySlug}/${item.slug}/`
+                  href = `/hub/games/${item.categorySlug}/${item.slug}/`
                   typeLabel = 'Game Review'
                 } else if (item.type === 'promotion') {
-                  href = `/casino/promo-code/`
+                  href = `/hub/promo-code/`
                   typeLabel = 'Promotion'
                 }
 

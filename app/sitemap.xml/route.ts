@@ -128,7 +128,7 @@ export async function GET() {
     if (page.isHomepage) {
       urls.push(`
     <url>
-      <loc>${SITE_URL}/casino/</loc>
+      <loc>${SITE_URL}/hub/</loc>
       <lastmod>${formatDate(page._updatedAt)}</lastmod>
       <changefreq>${SITEMAP_CONFIG.homepage.changefreq}</changefreq>
       <priority>${SITEMAP_CONFIG.homepage.priority}</priority>
@@ -136,7 +136,7 @@ export async function GET() {
     } else if (page.slug) {
       urls.push(`
     <url>
-      <loc>${SITE_URL}/casino/${escapeXml(page.slug)}/</loc>
+      <loc>${SITE_URL}/hub/${escapeXml(page.slug)}/</loc>
       <lastmod>${formatDate(page._updatedAt)}</lastmod>
       <changefreq>${SITEMAP_CONFIG.page.changefreq}</changefreq>
       <priority>${SITEMAP_CONFIG.page.priority}</priority>
@@ -151,7 +151,7 @@ export async function GET() {
 
   urls.push(`
     <url>
-      <loc>${SITE_URL}/casino/games/</loc>
+      <loc>${SITE_URL}/hub/games/</loc>
       <lastmod>${formatDate(latestGameUpdate)}</lastmod>
       <changefreq>${SITEMAP_CONFIG.gamesIndex.changefreq}</changefreq>
       <priority>${SITEMAP_CONFIG.gamesIndex.priority}</priority>
@@ -162,7 +162,7 @@ export async function GET() {
     if (category.slug) {
       urls.push(`
     <url>
-      <loc>${SITE_URL}/casino/games/${escapeXml(category.slug)}/</loc>
+      <loc>${SITE_URL}/hub/games/${escapeXml(category.slug)}/</loc>
       <lastmod>${formatDate(category._updatedAt)}</lastmod>
       <changefreq>${SITEMAP_CONFIG.category.changefreq}</changefreq>
       <priority>${SITEMAP_CONFIG.category.priority}</priority>
@@ -175,7 +175,7 @@ export async function GET() {
     if (game.slug && game.categorySlug) {
       urls.push(`
     <url>
-      <loc>${SITE_URL}/casino/games/${escapeXml(game.categorySlug)}/${escapeXml(game.slug)}/</loc>
+      <loc>${SITE_URL}/hub/games/${escapeXml(game.categorySlug)}/${escapeXml(game.slug)}/</loc>
       <lastmod>${formatDate(game._updatedAt)}</lastmod>
       <changefreq>${SITEMAP_CONFIG.game.changefreq}</changefreq>
       <priority>${SITEMAP_CONFIG.game.priority}</priority>
@@ -190,7 +190,7 @@ export async function GET() {
 
   urls.push(`
     <url>
-      <loc>${SITE_URL}/casino/promo-code/</loc>
+      <loc>${SITE_URL}/hub/promo-code/</loc>
       <lastmod>${formatDate(latestPromoUpdate)}</lastmod>
       <changefreq>${SITEMAP_CONFIG.promotionsIndex.changefreq}</changefreq>
       <priority>${SITEMAP_CONFIG.promotionsIndex.priority}</priority>
@@ -203,7 +203,7 @@ export async function GET() {
 
   urls.push(`
     <url>
-      <loc>${SITE_URL}/casino/authors/</loc>
+      <loc>${SITE_URL}/hub/authors/</loc>
       <lastmod>${formatDate(latestAuthorUpdate)}</lastmod>
       <changefreq>${SITEMAP_CONFIG.authorsIndex.changefreq}</changefreq>
       <priority>${SITEMAP_CONFIG.authorsIndex.priority}</priority>
@@ -214,7 +214,7 @@ export async function GET() {
     if (author.slug) {
       urls.push(`
     <url>
-      <loc>${SITE_URL}/casino/authors/${escapeXml(author.slug)}/</loc>
+      <loc>${SITE_URL}/hub/authors/${escapeXml(author.slug)}/</loc>
       <lastmod>${formatDate(author._updatedAt)}</lastmod>
       <changefreq>${SITEMAP_CONFIG.author.changefreq}</changefreq>
       <priority>${SITEMAP_CONFIG.author.priority}</priority>
@@ -229,7 +229,7 @@ export async function GET() {
 
   urls.push(`
     <url>
-      <loc>${SITE_URL}/casino/blog/</loc>
+      <loc>${SITE_URL}/hub/blog/</loc>
       <lastmod>${formatDate(latestBlogUpdate)}</lastmod>
       <changefreq>${SITEMAP_CONFIG.blogIndex.changefreq}</changefreq>
       <priority>${SITEMAP_CONFIG.blogIndex.priority}</priority>
@@ -240,7 +240,7 @@ export async function GET() {
     if (blogCat.slug) {
       urls.push(`
     <url>
-      <loc>${SITE_URL}/casino/blog/category/${escapeXml(blogCat.slug)}/</loc>
+      <loc>${SITE_URL}/hub/blog/category/${escapeXml(blogCat.slug)}/</loc>
       <lastmod>${formatDate(blogCat._updatedAt)}</lastmod>
       <changefreq>${SITEMAP_CONFIG.blogCategory.changefreq}</changefreq>
       <priority>${SITEMAP_CONFIG.blogCategory.priority}</priority>
@@ -253,7 +253,7 @@ export async function GET() {
     if (post.slug) {
       urls.push(`
     <url>
-      <loc>${SITE_URL}/casino/blog/${escapeXml(post.slug)}/</loc>
+      <loc>${SITE_URL}/hub/blog/${escapeXml(post.slug)}/</loc>
       <lastmod>${formatDate(post._updatedAt)}</lastmod>
       <changefreq>${SITEMAP_CONFIG.blogPost.changefreq}</changefreq>
       <priority>${SITEMAP_CONFIG.blogPost.priority}</priority>
@@ -268,7 +268,7 @@ export async function GET() {
 
   urls.push(`
     <url>
-      <loc>${SITE_URL}/casino/guides/</loc>
+      <loc>${SITE_URL}/hub/guides/</loc>
       <lastmod>${formatDate(latestGuideUpdate)}</lastmod>
       <changefreq>${SITEMAP_CONFIG.guidesIndex.changefreq}</changefreq>
       <priority>${SITEMAP_CONFIG.guidesIndex.priority}</priority>
@@ -279,7 +279,7 @@ export async function GET() {
     if (guideCat.slug) {
       urls.push(`
     <url>
-      <loc>${SITE_URL}/casino/guides/category/${escapeXml(guideCat.slug)}/</loc>
+      <loc>${SITE_URL}/hub/guides/category/${escapeXml(guideCat.slug)}/</loc>
       <lastmod>${formatDate(guideCat._updatedAt)}</lastmod>
       <changefreq>${SITEMAP_CONFIG.guideCategory.changefreq}</changefreq>
       <priority>${SITEMAP_CONFIG.guideCategory.priority}</priority>
@@ -292,7 +292,7 @@ export async function GET() {
     if (guide.slug) {
       urls.push(`
     <url>
-      <loc>${SITE_URL}/casino/guides/${escapeXml(guide.slug)}/</loc>
+      <loc>${SITE_URL}/hub/guides/${escapeXml(guide.slug)}/</loc>
       <lastmod>${formatDate(guide._updatedAt)}</lastmod>
       <changefreq>${SITEMAP_CONFIG.guide.changefreq}</changefreq>
       <priority>${SITEMAP_CONFIG.guide.priority}</priority>

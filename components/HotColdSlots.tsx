@@ -66,7 +66,7 @@ function SlotTable({ title, games, type, signUpUrl }: SlotTableProps) {
               >
                 <td className="px-4 py-3">
                   <Link
-                    href={signUpUrl || `https://metawin.com/casino/slots/${game.slug}`}
+                    href={signUpUrl || `https://metawin.com/hub/slots/${game.slug}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 group"

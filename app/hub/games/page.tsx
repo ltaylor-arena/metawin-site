@@ -289,7 +289,7 @@ export default async function GamesIndexPage() {
           {categoriesWithGames.map((category) => (
             <Link
               key={category._id}
-              href={`/casino/games/${category.slug}/`}
+              href={`/hub/games/${category.slug}/`}
               className="group relative bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-tertiary)] border border-[var(--color-border)] rounded-xl p-4 md:p-6 transition-all duration-200 hover:border-[var(--color-accent-blue)]"
             >
               {/* Category Icon */}

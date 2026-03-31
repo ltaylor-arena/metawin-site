@@ -72,7 +72,7 @@ import {
   NewReleasesIcon,
   MetawinnersNftIcon,
 } from '@/components/icons/GameIcons'
-import type { SidebarNavigation, NavItem, NavSection } from '@/app/casino/layout'
+import type { SidebarNavigation, NavItem, NavSection } from '@/app/hub/layout'
 import SearchModal from './SearchModal'
 
 // Type for icon components (both Lucide and custom SVG icons)

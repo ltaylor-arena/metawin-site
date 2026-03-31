@@ -8,14 +8,14 @@ const resolveInternalLinks = `
     ...,
     _type == "link" && linkType == "internal" => {
       "href": select(
-        reference->_type == "page" && reference->isHomepage == true => "/casino/",
-        reference->_type == "page" => "/casino/" + reference->slug.current + "/",
-        reference->_type == "game" => "/casino/games/" + reference->categories[0]->slug.current + "/" + reference->slug.current + "/",
-        reference->_type == "category" => "/casino/games/" + reference->slug.current + "/",
-        reference->_type == "promotion" => "/casino/promo-code/",
-        reference->_type == "author" => "/casino/authors/" + reference->slug.current + "/",
-        reference->_type == "guide" => "/casino/guides/" + reference->slug.current + "/",
-        reference->_type == "guideCategory" => "/casino/guides/category/" + reference->slug.current + "/",
+        reference->_type == "page" && reference->isHomepage == true => "/hub/",
+        reference->_type == "page" => "/hub/" + reference->slug.current + "/",
+        reference->_type == "game" => "/hub/games/" + reference->categories[0]->slug.current + "/" + reference->slug.current + "/",
+        reference->_type == "category" => "/hub/games/" + reference->slug.current + "/",
+        reference->_type == "promotion" => "/hub/promo-code/",
+        reference->_type == "author" => "/hub/authors/" + reference->slug.current + "/",
+        reference->_type == "guide" => "/hub/guides/" + reference->slug.current + "/",
+        reference->_type == "guideCategory" => "/hub/guides/category/" + reference->slug.current + "/",
         null
       )
     }
@@ -104,12 +104,12 @@ export const homepageQuery = groq`
         headingLevel,
         displayMode,
         "viewAllHref": select(
-          viewAllLink->_type == "page" && viewAllLink->isHomepage == true => "/casino/",
-          viewAllLink->_type == "page" => "/casino/" + viewAllLink->slug.current + "/",
-          viewAllLink->_type == "category" => "/casino/games/" + viewAllLink->slug.current + "/",
-          displayMode == "category" && defined(category) => "/casino/games/" + category->slug.current + "/",
-          displayMode == "popular" => "/casino/games/",
-          displayMode == "latest" => "/casino/games/",
+          viewAllLink->_type == "page" && viewAllLink->isHomepage == true => "/hub/",
+          viewAllLink->_type == "page" => "/hub/" + viewAllLink->slug.current + "/",
+          viewAllLink->_type == "category" => "/hub/games/" + viewAllLink->slug.current + "/",
+          displayMode == "category" && defined(category) => "/hub/games/" + category->slug.current + "/",
+          displayMode == "popular" => "/hub/games/",
+          displayMode == "latest" => "/hub/games/",
           null
         ),
         "categorySlug": category->slug.current,
@@ -318,12 +318,12 @@ export const pageBySlugQuery = groq`
         headingLevel,
         displayMode,
         "viewAllHref": select(
-          viewAllLink->_type == "page" && viewAllLink->isHomepage == true => "/casino/",
-          viewAllLink->_type == "page" => "/casino/" + viewAllLink->slug.current + "/",
-          viewAllLink->_type == "category" => "/casino/games/" + viewAllLink->slug.current + "/",
-          displayMode == "category" && defined(category) => "/casino/games/" + category->slug.current + "/",
-          displayMode == "popular" => "/casino/games/",
-          displayMode == "latest" => "/casino/games/",
+          viewAllLink->_type == "page" && viewAllLink->isHomepage == true => "/hub/",
+          viewAllLink->_type == "page" => "/hub/" + viewAllLink->slug.current + "/",
+          viewAllLink->_type == "category" => "/hub/games/" + viewAllLink->slug.current + "/",
+          displayMode == "category" && defined(category) => "/hub/games/" + category->slug.current + "/",
+          displayMode == "popular" => "/hub/games/",
+          displayMode == "latest" => "/hub/games/",
           null
         ),
         "categorySlug": category->slug.current,
@@ -485,13 +485,13 @@ export const sidebarNavigationQuery = groq`
         icon,
         linkType,
         "href": select(
-          linkType == "internal" && internalLink->isHomepage == true => "/casino/",
-          linkType == "internal" && internalLink->_type == "blogSettings" => "/casino/blog/",
-          linkType == "internal" && internalLink->_type == "blogPost" => "/casino/blog/" + internalLink->slug.current + "/",
-          linkType == "internal" && internalLink->_type == "guideSettings" => "/casino/guides/",
-          linkType == "internal" && internalLink->_type == "guide" => "/casino/guides/" + internalLink->slug.current + "/",
-          linkType == "internal" => "/casino/" + internalLink->slug.current + "/",
-          linkType == "category" => "/casino/games/" + categoryLink->slug.current + "/",
+          linkType == "internal" && internalLink->isHomepage == true => "/hub/",
+          linkType == "internal" && internalLink->_type == "blogSettings" => "/hub/blog/",
+          linkType == "internal" && internalLink->_type == "blogPost" => "/hub/blog/" + internalLink->slug.current + "/",
+          linkType == "internal" && internalLink->_type == "guideSettings" => "/hub/guides/",
+          linkType == "internal" && internalLink->_type == "guide" => "/hub/guides/" + internalLink->slug.current + "/",
+          linkType == "internal" => "/hub/" + internalLink->slug.current + "/",
+          linkType == "category" => "/hub/games/" + categoryLink->slug.current + "/",
           linkType == "external" => externalUrl
         ),
         highlight
@@ -508,14 +508,14 @@ export const sidebarNavigationQuery = groq`
           icon,
           linkType,
           "href": select(
-            linkType == "internal" && internalLink->isHomepage == true => "/casino/",
-            linkType == "internal" && internalLink->_type == "blogSettings" => "/casino/blog/",
-            linkType == "internal" && internalLink->_type == "blogPost" => "/casino/blog/" + internalLink->slug.current + "/",
-            linkType == "internal" && internalLink->_type == "guideSettings" => "/casino/guides/",
-            linkType == "internal" && internalLink->_type == "guide" => "/casino/guides/" + internalLink->slug.current + "/",
-            linkType == "internal" => "/casino/" + internalLink->slug.current + "/",
-            linkType == "category" => "/casino/games/" + categoryLink->slug.current + "/",
-            linkType == "game" => "/casino/games/" + gameLink->categories[0]->slug.current + "/" + gameLink->slug.current + "/",
+            linkType == "internal" && internalLink->isHomepage == true => "/hub/",
+            linkType == "internal" && internalLink->_type == "blogSettings" => "/hub/blog/",
+            linkType == "internal" && internalLink->_type == "blogPost" => "/hub/blog/" + internalLink->slug.current + "/",
+            linkType == "internal" && internalLink->_type == "guideSettings" => "/hub/guides/",
+            linkType == "internal" && internalLink->_type == "guide" => "/hub/guides/" + internalLink->slug.current + "/",
+            linkType == "internal" => "/hub/" + internalLink->slug.current + "/",
+            linkType == "category" => "/hub/games/" + categoryLink->slug.current + "/",
+            linkType == "game" => "/hub/games/" + gameLink->categories[0]->slug.current + "/" + gameLink->slug.current + "/",
             linkType == "external" => externalUrl
           ),
           highlight
@@ -548,14 +548,14 @@ export const footerQuery = groq`
         externalUrl,
         openInNewTab,
         "internalHref": select(
-          internalLink->_type == "page" && internalLink->isHomepage == true => "/casino/",
-          internalLink->_type == "page" => "/casino/" + internalLink->slug.current + "/",
-          internalLink->_type == "category" => "/casino/games/" + internalLink->slug.current + "/",
-          internalLink->_type == "game" => "/casino/games/" + internalLink->categories[0]->slug.current + "/" + internalLink->slug.current + "/",
-          internalLink->_type == "blogSettings" => "/casino/blog/",
-          internalLink->_type == "blogPost" => "/casino/blog/" + internalLink->slug.current + "/",
-          internalLink->_type == "guideSettings" => "/casino/guides/",
-          internalLink->_type == "guide" => "/casino/guides/" + internalLink->slug.current + "/",
+          internalLink->_type == "page" && internalLink->isHomepage == true => "/hub/",
+          internalLink->_type == "page" => "/hub/" + internalLink->slug.current + "/",
+          internalLink->_type == "category" => "/hub/games/" + internalLink->slug.current + "/",
+          internalLink->_type == "game" => "/hub/games/" + internalLink->categories[0]->slug.current + "/" + internalLink->slug.current + "/",
+          internalLink->_type == "blogSettings" => "/hub/blog/",
+          internalLink->_type == "blogPost" => "/hub/blog/" + internalLink->slug.current + "/",
+          internalLink->_type == "guideSettings" => "/hub/guides/",
+          internalLink->_type == "guide" => "/hub/guides/" + internalLink->slug.current + "/",
           null
         )
       }

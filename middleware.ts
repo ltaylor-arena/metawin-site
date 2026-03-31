@@ -20,5 +20,5 @@ export function middleware(request: NextRequest) {
 
 // Only run middleware on casino routes
 export const config = {
-  matcher: '/casino/:path*',
+  matcher: '/hub/:path*',
 }

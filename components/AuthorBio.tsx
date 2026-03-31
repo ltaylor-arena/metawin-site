@@ -70,7 +70,7 @@ export default function AuthorBio({ author, title = 'About the Author', id = 'au
 
           {/* Author Info */}
           <div className="flex-1 min-w-0">
-            <Link href={`/casino/authors/${author.slug}/`} className="block">
+            <Link href={`/hub/authors/${author.slug}/`} className="block">
               <h4 className="text-base font-semibold text-white hover:text-[var(--color-accent-blue)] transition-colors">{author.name}</h4>
             </Link>
             {author.role && (

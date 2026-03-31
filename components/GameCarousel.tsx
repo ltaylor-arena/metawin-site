@@ -131,7 +131,7 @@ export default function GameCarousel({
               aria-label="Scroll left"
             >
               <img
-                src={canScrollLeft ? "/casino/images/svg/left-arrow-active.svg" : "/casino/images/svg/left-arrow.svg"}
+                src={canScrollLeft ? "/hub/images/svg/left-arrow-active.svg" : "/hub/images/svg/left-arrow.svg"}
                 alt=""
                 className="w-[18px] h-[18px]"
               />
@@ -143,7 +143,7 @@ export default function GameCarousel({
               aria-label="Scroll right"
             >
               <img
-                src={canScrollRight ? "/casino/images/svg/right-arrow.svg" : "/casino/images/svg/right-arrow-default.svg"}
+                src={canScrollRight ? "/hub/images/svg/right-arrow.svg" : "/hub/images/svg/right-arrow-default.svg"}
                 alt=""
                 className="w-[18px] h-[18px]"
               />
@@ -166,7 +166,7 @@ export default function GameCarousel({
           }}
         >
         {games.map((game, index) => {
-          const gamePageUrl = `/casino/games/${game.categorySlug || 'slots'}/${game.slug}/`
+          const gamePageUrl = `/hub/games/${game.categorySlug || 'slots'}/${game.slug}/`
 
           // Determine image source: Sanity asset or external URL
           const thumbnailSrc = game.thumbnail
@@ -251,7 +251,7 @@ export default function GameCarousel({
                       )}
                       {game.volatility && (
                         <img
-                          src={`/casino/images/volatility/volatility-${game.volatility}.svg`}
+                          src={`/hub/images/volatility/volatility-${game.volatility}.svg`}
                           alt={`${game.volatility} volatility`}
                           style={{ height: '7px', width: 'auto' }}
                         />
@@ -287,7 +287,7 @@ export default function GameCarousel({
               className="relative aspect-[3/4] overflow-hidden rounded flex items-center justify-center"
               style={{
                 backgroundColor: '#080d14',
-                backgroundImage: 'url(/casino/images/see-more-pattern.png)',
+                backgroundImage: 'url(/hub/images/see-more-pattern.png)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
               }}

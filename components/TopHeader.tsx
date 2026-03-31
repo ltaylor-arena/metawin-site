@@ -28,9 +28,9 @@ export default function TopHeader({ signUpUrl = 'https://metawin.com/' }: TopHea
         </button>
 
         {/* Logo */}
-        <Link href="/casino/" className="flex items-center shrink-0">
+        <Link href="/hub/" className="flex items-center shrink-0">
           <Image
-            src="/casino/images/metawin-logo-white.svg"
+            src="/hub/images/metawin-logo-white.svg"
             alt="MetaWin"
             width={120}
             height={24}

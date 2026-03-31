@@ -113,7 +113,7 @@ export function ArticleStructuredData({
     jsonLd.author = {
       '@type': 'Person',
       name: author.name,
-      url: `https://metawin.com/casino/authors/${author.slug}/`,
+      url: `https://metawin.com/hub/authors/${author.slug}/`,
     }
   }
 

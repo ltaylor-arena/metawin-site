@@ -94,7 +94,7 @@ export async function GET() {
     if (images.length > 0) {
       urls.push(`
     <url>
-      <loc>${SITE_URL}/casino/games/${escapeXml(game.categorySlug)}/${escapeXml(game.slug)}/</loc>${images.join('')}
+      <loc>${SITE_URL}/hub/games/${escapeXml(game.categorySlug)}/${escapeXml(game.slug)}/</loc>${images.join('')}
     </url>`)
     }
   }
@@ -113,7 +113,7 @@ export async function GET() {
   if (promoImages.length > 0) {
     urls.push(`
     <url>
-      <loc>${SITE_URL}/casino/promo-code/</loc>${promoImages.join('')}
+      <loc>${SITE_URL}/hub/promo-code/</loc>${promoImages.join('')}
     </url>`)
   }
 
@@ -123,7 +123,7 @@ export async function GET() {
 
     urls.push(`
     <url>
-      <loc>${SITE_URL}/casino/authors/${escapeXml(author.slug)}/</loc>
+      <loc>${SITE_URL}/hub/authors/${escapeXml(author.slug)}/</loc>
       <image:image>
         <image:loc>${escapeXml(author.image)}</image:loc>
         <image:title>${escapeXml(author.name)} - Profile Photo</image:title>

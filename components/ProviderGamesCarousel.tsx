@@ -111,7 +111,7 @@ export default function ProviderGamesCarousel({ provider, games, signUpUrl = 'ht
         }}
       >
         {games.map((game) => {
-          const gamePageUrl = `/casino/games/${game.categorySlug}/${game.slug}/`
+          const gamePageUrl = `/hub/games/${game.categorySlug}/${game.slug}/`
 
           // Determine image source: Sanity asset or external URL
           const thumbnailSrc = game.thumbnail
@@ -187,7 +187,7 @@ export default function ProviderGamesCarousel({ provider, games, signUpUrl = 'ht
                       )}
                       {game.volatility && (
                         <img
-                          src={`/casino/images/volatility/volatility-${game.volatility}.svg`}
+                          src={`/hub/images/volatility/volatility-${game.volatility}.svg`}
                           alt={`${game.volatility} volatility`}
                           style={{ height: '7px', width: 'auto' }}
                         />

@@ -75,7 +75,7 @@ export default defineType({
           if (!value) return true
           // For internal URLs (starting with /), enforce trailing slash
           if (value.startsWith('/') && !value.endsWith('/')) {
-            return 'Internal URLs must end with a trailing slash (e.g., /casino/slots/)'
+            return 'Internal URLs must end with a trailing slash (e.g., /hub/slots/)'
           }
           return true
         }),

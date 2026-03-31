@@ -83,7 +83,7 @@ export default defineType({
       title: 'Hide from Games Index',
       type: 'boolean',
       group: 'basic',
-      description: 'Hide this category carousel from /casino/games/',
+      description: 'Hide this category carousel from /hub/games/',
       initialValue: false,
     }),
 

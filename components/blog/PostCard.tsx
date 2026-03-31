@@ -54,7 +54,7 @@ export default function PostCard({
   if (variant === 'featured') {
     return (
       <Link
-        href={`/casino/blog/${slug}/`}
+        href={`/hub/blog/${slug}/`}
         className="group block bg-[var(--color-bg-secondary)] rounded-xl overflow-hidden hover:ring-2 hover:ring-[var(--color-accent-blue)] transition-all"
       >
         <div className="grid md:grid-cols-2 gap-0">
@@ -128,7 +128,7 @@ export default function PostCard({
   if (variant === 'compact') {
     return (
       <Link
-        href={`/casino/blog/${slug}/`}
+        href={`/hub/blog/${slug}/`}
         className="group flex gap-4 items-start"
       >
         {/* Image */}
@@ -168,7 +168,7 @@ export default function PostCard({
   // Default variant - vertical card
   return (
     <Link
-      href={`/casino/blog/${slug}/`}
+      href={`/hub/blog/${slug}/`}
       className="group block bg-[var(--color-bg-secondary)] rounded-xl overflow-hidden hover:ring-2 hover:ring-[var(--color-accent-blue)] transition-all"
     >
       {/* Image */}

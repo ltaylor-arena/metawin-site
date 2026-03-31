@@ -152,9 +152,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   // Build breadcrumb items
   const breadcrumbItems = [
-    { label: 'Blog', href: '/casino/blog/' },
+    { label: 'Blog', href: '/hub/blog/' },
     ...(post.categories && post.categories.length > 0
-      ? [{ label: post.categories[0].title, href: `/casino/blog/category/${post.categories[0].slug}/` }]
+      ? [{ label: post.categories[0].title, href: `/hub/blog/category/${post.categories[0].slug}/` }]
       : []),
     { label: post.seo?.breadcrumbText || post.title },
   ]
@@ -164,7 +164,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <ArticleStructuredData
         title={post.title}
         description={post.seo?.metaDescription || post.excerpt}
-        url={`https://metawin.com/casino/blog/${post.slug}/`}
+        url={`https://metawin.com/hub/blog/${post.slug}/`}
         image={post.heroImage}
         publishedAt={post.publishedAt}
         updatedAt={post.updatedAt}
@@ -184,7 +184,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             {post.categories.map((cat) => (
               <Link
                 key={cat._id}
-                href={`/casino/blog/category/${cat.slug}/`}
+                href={`/hub/blog/category/${cat.slug}/`}
                 className="px-2.5 py-1 text-xs font-medium rounded hover:opacity-80 transition-opacity"
                 style={{
                   backgroundColor: cat.color ? `${cat.color}20` : 'var(--color-bg-tertiary)',
@@ -308,7 +308,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   {post.relatedGames.map((game: any) => (
                     <Link
                       key={game._id}
-                      href={`/casino/games/${game.categorySlug}/${game.slug}/`}
+                      href={`/hub/games/${game.categorySlug}/${game.slug}/`}
                       className="group block bg-[var(--color-bg-secondary)] rounded-lg overflow-hidden hover:ring-2 hover:ring-[var(--color-accent-blue)] transition-all"
                     >
                       <div className="relative aspect-[4/3] bg-[var(--color-bg-tertiary)]">

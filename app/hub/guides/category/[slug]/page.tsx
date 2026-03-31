@@ -4,24 +4,24 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { client } from '@/lib/sanity'
 import {
-  blogCategoryBySlugQuery,
-  blogPostsByCategoryQuery,
-  blogPostsByCategoryCountQuery,
-  allBlogCategorySlugsQuery,
-  allBlogCategoriesQuery,
+  guideCategoryBySlugQuery,
+  guidesByCategoryQuery,
+  guidesByCategoryCountQuery,
+  allGuideCategorySlugsQuery,
+  allGuideCategoriesQuery,
 } from '@/lib/queries'
 import { PortableText } from '@portabletext/react'
 import { portableTextComponents } from '@/components/PortableTextComponents'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import Pagination from '@/components/Pagination'
-import PostCard from '@/components/blog/PostCard'
+import GuideCard from '@/components/guides/GuideCard'
 
-interface BlogCategoryPageProps {
+interface GuideCategoryPageProps {
   params: Promise<{ slug: string }>
   searchParams: Promise<{ page?: string }>
 }
 
-interface BlogCategory {
+interface GuideCategory {
   _id: string
   title: string
   slug: string
@@ -30,7 +30,7 @@ interface BlogCategory {
   heroImageAlt?: string
   introText?: any[]
   color?: string
-  postsPerPage?: number
+  guidesPerPage?: number
   seo?: {
     metaTitle?: string
     hideKicker?: boolean
@@ -39,7 +39,7 @@ interface BlogCategory {
   }
 }
 
-interface BlogPost {
+interface Guide {
   _id: string
   title: string
   slug: string
@@ -47,7 +47,9 @@ interface BlogPost {
   heroImage?: string
   heroImageAlt?: string
   publishedAt?: string
-  isFeatured?: boolean
+  updatedAt?: string
+  difficulty?: 'beginner' | 'intermediate' | 'advanced'
+  readingTime?: number
   categories?: {
     _id: string
     title: string
@@ -66,35 +68,35 @@ interface Category {
   title: string
   slug: string
   color?: string
-  postCount?: number
+  guideCount?: number
 }
 
-async function getCategory(slug: string): Promise<BlogCategory | null> {
-  return await client.fetch(blogCategoryBySlugQuery, { slug })
+async function getCategory(slug: string): Promise<GuideCategory | null> {
+  return await client.fetch(guideCategoryBySlugQuery, { slug })
 }
 
-async function getPosts(
+async function getGuides(
   categorySlug: string,
   start: number,
   end: number
-): Promise<BlogPost[]> {
-  return await client.fetch(blogPostsByCategoryQuery, {
+): Promise<Guide[]> {
+  return await client.fetch(guidesByCategoryQuery, {
     categorySlug,
     start,
     end,
   })
 }
 
-async function getPostCount(categorySlug: string): Promise<number> {
-  return await client.fetch(blogPostsByCategoryCountQuery, { categorySlug })
+async function getGuideCount(categorySlug: string): Promise<number> {
+  return await client.fetch(guidesByCategoryCountQuery, { categorySlug })
 }
 
 async function getAllCategories(): Promise<Category[]> {
-  return await client.fetch(allBlogCategoriesQuery)
+  return await client.fetch(allGuideCategoriesQuery)
 }
 
 export async function generateStaticParams() {
-  const categories = await client.fetch(allBlogCategorySlugsQuery)
+  const categories = await client.fetch(allGuideCategorySlugsQuery)
   return categories.map((cat: { slug: string }) => ({
     slug: cat.slug,
   }))
@@ -102,7 +104,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({
   params,
-}: BlogCategoryPageProps): Promise<Metadata> {
+}: GuideCategoryPageProps): Promise<Metadata> {
   const { slug } = await params
   const category = await getCategory(slug)
 
@@ -112,8 +114,8 @@ export async function generateMetadata({
     }
   }
 
-  const title = category.seo?.metaTitle || `${category.title} Articles`
-  const description = category.seo?.metaDescription || category.description || `Browse all ${category.title.toLowerCase()} articles and guides.`
+  const title = category.seo?.metaTitle || `${category.title} Guides`
+  const description = category.seo?.metaDescription || category.description || `Browse all ${category.title.toLowerCase()} guides and how-tos.`
 
   return {
     title: category.seo?.hideKicker ? { absolute: title } : title,
@@ -125,10 +127,10 @@ export async function generateMetadata({
   }
 }
 
-export default async function BlogCategoryPage({
+export default async function GuideCategoryPage({
   params,
   searchParams,
-}: BlogCategoryPageProps) {
+}: GuideCategoryPageProps) {
   const { slug } = await params
   const { page: pageParam } = await searchParams
 
@@ -140,22 +142,22 @@ export default async function BlogCategoryPage({
 
   // Pagination
   const currentPage = pageParam ? parseInt(pageParam, 10) : 1
-  const postsPerPage = category.postsPerPage || 12
-  const start = (currentPage - 1) * postsPerPage
-  const end = start + postsPerPage
+  const guidesPerPage = category.guidesPerPage || 12
+  const start = (currentPage - 1) * guidesPerPage
+  const end = start + guidesPerPage
 
   // Fetch data
-  const [posts, totalPosts, allCategories] = await Promise.all([
-    getPosts(slug, start, end),
-    getPostCount(slug),
+  const [guides, totalGuides, allCategories] = await Promise.all([
+    getGuides(slug, start, end),
+    getGuideCount(slug),
     getAllCategories(),
   ])
 
-  const totalPages = Math.ceil(totalPosts / postsPerPage)
+  const totalPages = Math.ceil(totalGuides / guidesPerPage)
 
   // Build breadcrumb items
   const breadcrumbItems = [
-    { label: 'Blog', href: '/casino/blog/' },
+    { label: 'Guides', href: '/hub/guides/' },
     { label: category.seo?.breadcrumbText || category.title },
   ]
 
@@ -223,7 +225,7 @@ export default async function BlogCategoryPage({
         {allCategories.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-8">
             <Link
-              href="/casino/blog/"
+              href="/hub/guides/"
               className="px-4 py-2 text-sm font-medium rounded-full bg-[var(--color-bg-secondary)] text-[var(--color-text-muted)] hover:bg-[var(--color-bg-tertiary)] transition-colors"
             >
               All
@@ -231,7 +233,7 @@ export default async function BlogCategoryPage({
             {allCategories.map((cat) => (
               <Link
                 key={cat._id}
-                href={`/casino/blog/category/${cat.slug}/`}
+                href={`/hub/guides/category/${cat.slug}/`}
                 className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
                   cat.slug === slug
                     ? 'bg-[var(--color-accent-blue)] text-white'
@@ -239,9 +241,9 @@ export default async function BlogCategoryPage({
                 }`}
               >
                 {cat.title}
-                {cat.postCount !== undefined && (
+                {cat.guideCount !== undefined && (
                   <span className="ml-1.5 text-xs opacity-60">
-                    ({cat.postCount})
+                    ({cat.guideCount})
                   </span>
                 )}
               </Link>
@@ -252,22 +254,22 @@ export default async function BlogCategoryPage({
         {/* Results info */}
         <div className="flex items-center justify-between mb-6">
           <p className="text-sm text-[var(--color-text-muted)]">
-            {totalPosts} {totalPosts === 1 ? 'article' : 'articles'}
+            {totalGuides} {totalGuides === 1 ? 'guide' : 'guides'}
             {currentPage > 1 && ` · Page ${currentPage} of ${totalPages}`}
           </p>
         </div>
 
-        {/* Posts Grid */}
-        {posts.length > 0 ? (
+        {/* Guides Grid */}
+        {guides.length > 0 ? (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {posts.map((post) => (
-              <PostCard key={post._id} {...post} />
+            {guides.map((guide) => (
+              <GuideCard key={guide._id} {...guide} />
             ))}
           </div>
         ) : (
           <div className="text-center py-12">
             <p className="text-[var(--color-text-muted)]">
-              No articles found in this category.
+              No guides found in this category.
             </p>
           </div>
         )}
@@ -278,7 +280,7 @@ export default async function BlogCategoryPage({
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
-              basePath={`/casino/blog/category/${slug}`}
+              basePath={`/hub/guides/category/${slug}`}
             />
           </div>
         )}
