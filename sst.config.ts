@@ -16,8 +16,8 @@ export default $config({
   async run() {
     new sst.aws.Nextjs("MetawinSite", {
       environment: {
-        NEXT_PUBLIC_SANITY_PROJECT_ID: "e5ats5ga",
-        NEXT_PUBLIC_SANITY_DATASET: "production",
+        NEXT_PUBLIC_SANITY_PROJECT_ID: "edcyyirq",
+        NEXT_PUBLIC_SANITY_DATASET: "metawin-content",
         NEXT_PUBLIC_SANITY_API_VERSION: "2024-01-01",
       },
     });

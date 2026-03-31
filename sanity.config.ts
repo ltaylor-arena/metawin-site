@@ -8,8 +8,8 @@ export default defineConfig({
   name: 'default',
   title: 'Metawin-CMS',
 
-  projectId: 'e5ats5ga',
-  dataset: 'production',
+  projectId: 'edcyyirq',
+  dataset: 'metawin-content',
 
   basePath: '/studio',
 
