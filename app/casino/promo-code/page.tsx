@@ -32,7 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'MetaWin Promo Code 2026 - Latest Bonus Codes & Offers',
     description: 'Get the latest MetaWin promo codes and bonus offers. Find exclusive promotional codes, welcome bonuses, and special offers for new and existing players.',
-    robots: { index: false, follow: false },
+
     openGraph: {
       title: 'MetaWin Promo Code 2026 - Latest Bonus Codes & Offers',
       description: 'Get the latest MetaWin promo codes and bonus offers. Find exclusive promotional codes, welcome bonuses, and special offers for new and existing players.',

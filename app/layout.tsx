@@ -13,10 +13,6 @@ export const metadata: Metadata = {
     default: 'MetaWin Casino',
   },
   description: "The World's Best Crypto Casino & Prize Winning Platform",
-  robots: {
-    index: false,
-    follow: false,
-  },
   openGraph: {
     siteName: 'MetaWin Casino',
     type: 'website',
@@ -31,6 +27,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.variable}>
+      <head>
+        <meta name="robots" content="noindex, nofollow" />
+      </head>
       <body className="min-h-screen bg-[var(--color-bg-primary)] font-sans">
         {children}
       </body>

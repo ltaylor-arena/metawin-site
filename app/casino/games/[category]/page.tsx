@@ -104,7 +104,7 @@ export async function generateMetadata({ params, searchParams }: CategoryPagePro
     title,
     description: baseDescription,
     alternates,
-    robots: { index: false, follow: false },
+
     openGraph: {
       title: categoryData.seo?.hideKicker ? titleString : undefined,
       description: baseDescription,

@@ -25,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Our Authors | MetaWin',
     description: 'Meet the expert writers and reviewers behind MetaWin\'s casino game reviews and guides.',
-    robots: { index: false, follow: false },
+
   }
 }
 

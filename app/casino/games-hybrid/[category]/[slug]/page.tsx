@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: GamePageProps): Promise<Metad
   return {
     title: game.seo?.hideKicker ? { absolute: title } : title,
     description: game.seo?.metaDescription || `Play ${game.title} by ${game.provider} at MetaWin.`,
-    robots: { index: false, follow: false },
+
   }
 }
 

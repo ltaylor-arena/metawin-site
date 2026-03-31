@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: GamePageProps): Promise<Metad
   return {
     title: game.seo?.hideKicker ? { absolute: title } : title,
     description,
-    robots: { index: false, follow: false },
+
     openGraph: {
       title: game.seo?.hideKicker ? title : undefined,
       description,
