@@ -60,7 +60,7 @@ export default function AuthorByline({ author, factChecker, publishedAt, updated
         {/* Author */}
         <div className="flex items-center gap-2">
           <span>Written by</span>
-          <a href="#author-info" className="flex items-center gap-2 hover:text-white transition-colors">
+          <a href="#author-info" onClick={(e) => { e.preventDefault(); document.getElementById('author-info')?.scrollIntoView({ behavior: 'smooth' }) }} className="flex items-center gap-2 hover:text-white transition-colors">
             {authorThumbnailUrl && (
               <div className="relative w-6 h-6 rounded-full overflow-hidden bg-[var(--color-bg-tertiary)]">
                 <Image
@@ -80,7 +80,7 @@ export default function AuthorByline({ author, factChecker, publishedAt, updated
         {factChecker && (
           <div className="flex items-center gap-2">
             <span>Fact checked by</span>
-            <a href="#fact-checker-info" className="flex items-center gap-2 hover:text-white transition-colors">
+            <a href="#fact-checker-info" onClick={(e) => { e.preventDefault(); document.getElementById('fact-checker-info')?.scrollIntoView({ behavior: 'smooth' }) }} className="flex items-center gap-2 hover:text-white transition-colors">
               {factCheckerThumbnailUrl && (
                 <div className="relative w-6 h-6 rounded-full overflow-hidden bg-[var(--color-bg-tertiary)]">
                   <Image
