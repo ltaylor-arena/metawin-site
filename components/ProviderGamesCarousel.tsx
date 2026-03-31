@@ -187,7 +187,7 @@ export default function ProviderGamesCarousel({ provider, games, signUpUrl = 'ht
                       )}
                       {game.volatility && (
                         <img
-                          src={`/images/volatility/volatility-${game.volatility}.svg`}
+                          src={`/casino/images/volatility/volatility-${game.volatility}.svg`}
                           alt={`${game.volatility} volatility`}
                           style={{ height: '7px', width: 'auto' }}
                         />

@@ -21,8 +21,8 @@ interface HeroProps {
 }
 
 // Default fallback images
-const DEFAULT_DESKTOP_IMAGE = '/images/header/single-header-bg-desktop.png'
-const DEFAULT_MOBILE_IMAGE = '/images/header/single-header-mob.png'
+const DEFAULT_DESKTOP_IMAGE = '/casino/images/header/single-header-bg-desktop.png'
+const DEFAULT_MOBILE_IMAGE = '/casino/images/header/single-header-mob.png'
 
 export default function Hero({
   slides,

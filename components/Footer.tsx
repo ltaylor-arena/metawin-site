@@ -86,7 +86,7 @@ export default function Footer({ data }: FooterProps) {
           {/* Logo & Copyright */}
           <div className="flex flex-col items-center md:items-start gap-2">
             <Image
-              src="/images/metawin-logo-white.svg"
+              src="/casino/images/metawin-logo-white.svg"
               alt="MetaWin"
               width={120}
               height={24}
@@ -149,35 +149,35 @@ export default function Footer({ data }: FooterProps) {
         {/* Crypto Coin Logos */}
         <div className="flex flex-wrap items-center justify-center gap-6 lg:gap-8 xl:gap-10 mt-8 pt-8 border-t border-[var(--color-border)]">
           <Image
-            src="/images/bitcoin-logo.svg"
+            src="/casino/images/bitcoin-logo.svg"
             alt="Bitcoin"
             width={120}
             height={30}
             className="h-auto w-auto"
           />
           <Image
-            src="/images/usdcoin-logo.svg"
+            src="/casino/images/usdcoin-logo.svg"
             alt="USD Coin"
             width={120}
             height={30}
             className="h-auto w-auto"
           />
           <Image
-            src="/images/ethereum-logo.svg"
+            src="/casino/images/ethereum-logo.svg"
             alt="Ethereum"
             width={120}
             height={30}
             className="h-auto w-auto"
           />
           <Image
-            src="/images/solana-logo.svg"
+            src="/casino/images/solana-logo.svg"
             alt="Solana"
             width={120}
             height={30}
             className="h-auto w-auto"
           />
           <Image
-            src="/images/litecoin-logo.svg"
+            src="/casino/images/litecoin-logo.svg"
             alt="Litecoin"
             width={120}
             height={30}

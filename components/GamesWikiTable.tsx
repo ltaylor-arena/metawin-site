@@ -193,7 +193,7 @@ export default function GamesWikiTable({ games, categorySlug, signUpUrl = 'https
                     {game.volatility ? (
                       <div className="flex items-center gap-2">
                         <img
-                          src={`/images/volatility/volatility-${game.volatility}.svg`}
+                          src={`/casino/images/volatility/volatility-${game.volatility}.svg`}
                           alt={`${game.volatility} volatility`}
                           style={{ height: '10px', width: 'auto' }}
                         />

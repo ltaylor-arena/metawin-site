@@ -131,7 +131,7 @@ export default function GameCarousel({
               aria-label="Scroll left"
             >
               <img
-                src={canScrollLeft ? "/images/svg/left-arrow-active.svg" : "/images/svg/left-arrow.svg"}
+                src={canScrollLeft ? "/casino/images/svg/left-arrow-active.svg" : "/casino/images/svg/left-arrow.svg"}
                 alt=""
                 className="w-[18px] h-[18px]"
               />
@@ -143,7 +143,7 @@ export default function GameCarousel({
               aria-label="Scroll right"
             >
               <img
-                src={canScrollRight ? "/images/svg/right-arrow.svg" : "/images/svg/right-arrow-default.svg"}
+                src={canScrollRight ? "/casino/images/svg/right-arrow.svg" : "/casino/images/svg/right-arrow-default.svg"}
                 alt=""
                 className="w-[18px] h-[18px]"
               />
@@ -251,7 +251,7 @@ export default function GameCarousel({
                       )}
                       {game.volatility && (
                         <img
-                          src={`/images/volatility/volatility-${game.volatility}.svg`}
+                          src={`/casino/images/volatility/volatility-${game.volatility}.svg`}
                           alt={`${game.volatility} volatility`}
                           style={{ height: '7px', width: 'auto' }}
                         />
@@ -287,7 +287,7 @@ export default function GameCarousel({
               className="relative aspect-[3/4] overflow-hidden rounded flex items-center justify-center"
               style={{
                 backgroundColor: '#080d14',
-                backgroundImage: 'url(/images/see-more-pattern.png)',
+                backgroundImage: 'url(/casino/images/see-more-pattern.png)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
               }}
