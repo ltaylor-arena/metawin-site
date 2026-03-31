@@ -119,7 +119,7 @@ export async function generateMetadata({
     title: category.seo?.hideKicker ? { absolute: title } : title,
     description,
     openGraph: {
-      title,
+      title: category.seo?.hideKicker ? title : undefined,
       description,
     },
   }

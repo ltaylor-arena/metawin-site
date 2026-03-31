@@ -107,7 +107,7 @@ export async function generateMetadata({ params }: GuidePageProps): Promise<Meta
     title: guide.seo?.hideKicker ? { absolute: title } : title,
     description: guide.seo?.metaDescription || guide.excerpt,
     openGraph: {
-      title,
+      title: guide.seo?.hideKicker ? title : undefined,
       description: guide.seo?.metaDescription || guide.excerpt,
       type: 'article',
       publishedTime: guide.publishedAt,

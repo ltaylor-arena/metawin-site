@@ -106,7 +106,7 @@ export async function generateMetadata({ params, searchParams }: CategoryPagePro
     alternates,
     robots: { index: false, follow: false },
     openGraph: {
-      title: typeof title === 'string' ? title : titleString,
+      title: categoryData.seo?.hideKicker ? titleString : undefined,
       description: baseDescription,
     },
     other: otherMeta.length > 0 ? Object.fromEntries(otherMeta.map(m => [m.rel, m.href])) : undefined,

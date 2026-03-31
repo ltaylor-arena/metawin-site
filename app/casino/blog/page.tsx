@@ -94,7 +94,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: settings?.seo?.hideKicker ? { absolute: titleText } : titleText,
     description,
     openGraph: {
-      title: titleText,
+      title: settings?.seo?.hideKicker ? titleText : undefined,
       description,
     },
   }

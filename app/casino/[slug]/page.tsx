@@ -63,7 +63,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     description,
     robots: { index: false, follow: false },
     openGraph: {
-      title,
+      title: page.seo?.hideKicker ? title : undefined,
       description,
     },
   }

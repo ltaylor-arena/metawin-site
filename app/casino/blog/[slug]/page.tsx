@@ -100,7 +100,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     title: post.seo?.hideKicker ? { absolute: title } : title,
     description: post.seo?.metaDescription || post.excerpt,
     openGraph: {
-      title,
+      title: post.seo?.hideKicker ? title : undefined,
       description: post.seo?.metaDescription || post.excerpt,
       type: 'article',
       publishedTime: post.publishedAt,

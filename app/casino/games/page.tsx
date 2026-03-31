@@ -161,7 +161,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description,
     robots: { index: false, follow: false },
     openGraph: {
-      title,
+      title: page?.seo?.hideKicker ? title : undefined,
       description,
       images: page?.seo?.ogImage ? [{ url: page.seo.ogImage }] : undefined,
     },
