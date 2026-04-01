@@ -1576,7 +1576,7 @@ const guideCardFields = `
   title,
   "slug": slug.current,
   excerpt,
-  "heroImage": heroImage.asset->url,
+  "heroImage": heroImage.asset->url + "?w=640&q=80&auto=format",
   "heroImageAlt": heroImage.alt,
   publishedAt,
   updatedAt,
