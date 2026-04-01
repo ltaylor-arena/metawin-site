@@ -164,16 +164,9 @@ export default function GamesWikiTable({ games, categorySlug, signUpUrl = 'https
 
                 {/* Category */}
                 <td className="px-4 py-3 hidden md:table-cell">
-                  {(categorySlug || game.categorySlug) ? (
-                    <Link
-                      href={`/hub/games/${categorySlug || game.categorySlug}/`}
-                      className="text-[var(--color-text-secondary)] hover:text-[var(--color-accent-blue)] transition-colors capitalize"
-                    >
-                      {(categorySlug || game.categorySlug)?.replace(/-/g, ' ')}
-                    </Link>
-                  ) : (
-                    <span className="text-[var(--color-text-muted)]">-</span>
-                  )}
+                  <span className="text-[var(--color-text-secondary)] capitalize">
+                    {(categorySlug || game.categorySlug)?.replace(/-/g, ' ') || '-'}
+                  </span>
                 </td>
 
                 {/* RTP */}
