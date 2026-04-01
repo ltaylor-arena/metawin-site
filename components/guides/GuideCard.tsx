@@ -94,7 +94,7 @@ export default function GuideCard({
     >
       {/* Optional Image — smaller aspect ratio than blog */}
       {heroImage && (
-        <div className="relative aspect-[3/1] bg-[var(--color-bg-tertiary)]">
+        <div className="relative aspect-[16/9] bg-[var(--color-bg-tertiary)]">
           <Image
             src={heroImage}
             alt={heroImageAlt || title}
