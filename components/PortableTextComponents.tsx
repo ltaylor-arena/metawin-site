@@ -15,6 +15,7 @@ interface ImageValue {
   }
   alt?: string
   caption?: string
+  layout?: 'framed' | 'full-width'
 }
 
 interface CalloutValue {
@@ -136,17 +137,33 @@ export const portableTextComponents: PortableTextComponents = {
 
       const imageUrl = urlFor(value.asset).width(800).quality(85).auto('format').url()
 
-      return (
-        <figure className="not-prose my-6 rounded-lg overflow-hidden border border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
-          <div className="relative aspect-video">
+      // Full-width layout: no frame, no border, no caption treatment
+      if (value.layout === 'full-width') {
+        return (
+          <figure className="not-prose my-6">
             <Image
               src={imageUrl}
               alt={value.alt || 'Image'}
-              fill
+              width={800}
+              height={450}
               sizes="(max-width: 768px) 100vw, 800px"
-              className="object-cover"
+              className="w-full h-auto rounded-lg"
             />
-          </div>
+          </figure>
+        )
+      }
+
+      // Default framed layout
+      return (
+        <figure className="not-prose my-6 rounded-lg overflow-hidden border border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
+          <Image
+            src={imageUrl}
+            alt={value.alt || 'Image'}
+            width={800}
+            height={450}
+            sizes="(max-width: 768px) 100vw, 800px"
+            className="w-full h-auto"
+          />
           {value.caption && (
             <figcaption className="px-4 py-3 text-sm text-[var(--color-text-muted)] text-center italic bg-[var(--color-bg-tertiary)]">
               {value.caption}
@@ -164,19 +181,20 @@ export const portableTextComponents: PortableTextComponents = {
 
       return (
         <div className={`not-prose my-6 rounded-xl border ${styles.bg} ${styles.border} p-4 md:p-5`}>
-          <div className="flex gap-3">
-            <div className={`flex-shrink-0 ${styles.icon}`}>
-              <Icon className="w-5 h-5 mt-0.5" />
+          {value.title && (
+            <div className="flex items-center gap-2 mb-3">
+              <Icon className={`w-5 h-5 flex-shrink-0 ${styles.icon}`} />
+              <h4 className={`font-semibold ${styles.title}`}>
+                {value.title}
+              </h4>
             </div>
-            <div className="flex-1 min-w-0">
-              {value.title && (
-                <h4 className={`font-semibold ${styles.title} mb-2`}>
-                  {value.title}
-                </h4>
-              )}
-              <div className="prose prose-invert prose-sm max-w-none [&>p]:text-[var(--color-text-secondary)] [&>p]:leading-relaxed [&>p:last-child]:mb-0">
-                <PortableText value={value.content} />
-              </div>
+          )}
+          <div className="flex gap-3">
+            {!value.title && (
+              <Icon className={`w-5 h-5 flex-shrink-0 mt-0.5 ${styles.icon}`} />
+            )}
+            <div className="flex-1 min-w-0 prose prose-invert prose-sm max-w-none [&>p]:text-[var(--color-text-secondary)] [&>p]:leading-relaxed [&>p:last-child]:mb-0">
+              <PortableText value={value.content} />
             </div>
           </div>
         </div>

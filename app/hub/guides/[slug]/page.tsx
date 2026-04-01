@@ -282,18 +282,32 @@ export default async function GuidePage({ params }: GuidePageProps) {
 
                   // Handle inline images
                   if (block._type === 'image' && block.url) {
-                    return (
-                      <figure key={block._key || index} className="my-8">
-                        <div className="relative aspect-[16/9] rounded-lg overflow-hidden bg-[var(--color-bg-secondary)]">
+                    if (block.layout === 'full-width') {
+                      return (
+                        <figure key={block._key || index} className="not-prose my-6">
                           <Image
                             src={block.url}
                             alt={block.alt || ''}
-                            fill
-                            className="object-cover"
+                            width={800}
+                            height={450}
+                            sizes="(max-width: 768px) 100vw, 800px"
+                            className="w-full h-auto rounded-lg"
                           />
-                        </div>
+                        </figure>
+                      )
+                    }
+                    return (
+                      <figure key={block._key || index} className="not-prose my-6 rounded-lg overflow-hidden border border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
+                        <Image
+                          src={block.url}
+                          alt={block.alt || ''}
+                          width={800}
+                          height={450}
+                          sizes="(max-width: 768px) 100vw, 800px"
+                          className="w-full h-auto"
+                        />
                         {block.caption && (
-                          <figcaption className="mt-2 text-sm text-center text-[var(--color-text-muted)]">
+                          <figcaption className="px-4 py-3 text-sm text-[var(--color-text-muted)] text-center italic bg-[var(--color-bg-tertiary)]">
                             {block.caption}
                           </figcaption>
                         )}

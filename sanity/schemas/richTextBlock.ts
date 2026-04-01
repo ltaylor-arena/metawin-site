@@ -154,6 +154,20 @@ export const richTextBlockWithImages = [
         title: 'Caption',
         type: 'string',
       }),
+      defineField({
+        name: 'layout',
+        title: 'Layout',
+        type: 'string',
+        options: {
+          list: [
+            { title: 'Framed (default)', value: 'framed' },
+            { title: 'Full Width (no frame)', value: 'full-width' },
+          ],
+          layout: 'radio',
+          direction: 'horizontal',
+        },
+        initialValue: 'framed',
+      }),
     ],
   },
 ]
