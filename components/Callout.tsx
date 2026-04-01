@@ -55,7 +55,7 @@ export default function Callout({ title, content, variant = 'info' }: CalloutPro
       {title && (
         <div className="flex items-center gap-2 mb-3">
           <Icon className={`w-5 h-5 flex-shrink-0 ${styles.icon}`} />
-          <h4 className={`font-semibold ${styles.title}`}>
+          <h4 className={`font-semibold ${styles.title} !m-0`}>
             {title}
           </h4>
         </div>
