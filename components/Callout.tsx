@@ -52,22 +52,20 @@ export default function Callout({ title, content, variant = 'info' }: CalloutPro
 
   return (
     <div className={`rounded-xl border ${styles.bg} ${styles.border} p-4 md:p-5`}>
-      <div className="flex gap-3">
-        {/* Icon */}
-        <div className={`flex-shrink-0 ${styles.icon}`}>
-          <Icon className="w-5 h-5 mt-0.5" />
+      {title && (
+        <div className="flex items-center gap-2 mb-3">
+          <Icon className={`w-5 h-5 flex-shrink-0 ${styles.icon}`} />
+          <h4 className={`font-semibold ${styles.title}`}>
+            {title}
+          </h4>
         </div>
-
-        {/* Content */}
-        <div className="flex-1 min-w-0">
-          {title && (
-            <h4 className={`font-semibold ${styles.title} mb-2`}>
-              {title}
-            </h4>
-          )}
-          <div className="prose prose-invert prose-sm max-w-none [&>p]:text-[var(--color-text-secondary)] [&>p]:leading-relaxed [&>p:last-child]:mb-0">
-            <PortableText value={content} />
-          </div>
+      )}
+      <div className="flex gap-3">
+        {!title && (
+          <Icon className={`w-5 h-5 flex-shrink-0 mt-0.5 ${styles.icon}`} />
+        )}
+        <div className="flex-1 min-w-0 prose prose-invert prose-sm max-w-none [&>p]:text-[var(--color-text-secondary)] [&>p]:leading-relaxed [&>p:last-child]:mb-0">
+          <PortableText value={content} />
         </div>
       </div>
     </div>
