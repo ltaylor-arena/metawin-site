@@ -1687,7 +1687,15 @@ export const guideBySlugQuery = groq`
         title,
         "content": content[] { ${richTextWithLinks} },
         variant
+      },
+      _type == "gameTable" => {
+        ...,
       }
+    },
+    faq[] {
+      _key,
+      question,
+      answer[] { ${richTextWithLinks} }
     },
     author-> {
       name,

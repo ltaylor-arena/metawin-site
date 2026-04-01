@@ -12,6 +12,8 @@ import AuthorByline from '@/components/AuthorByline'
 import TableOfContents, { TOCItem } from '@/components/TableOfContents'
 import GuideCard from '@/components/guides/GuideCard'
 import Callout from '@/components/Callout'
+import GameTable from '@/components/GameTable'
+import FAQ from '@/components/FAQ'
 import { ArticleStructuredData } from '@/components/StructuredData'
 
 interface GuidePageProps {
@@ -39,6 +41,11 @@ interface Guide {
     color?: string
   }[]
   content?: any[]
+  faq?: {
+    _key: string
+    question: string
+    answer: any[]
+  }[]
   author?: {
     name: string
     slug: string
@@ -257,6 +264,22 @@ export default async function GuidePage({ params }: GuidePageProps) {
                     )
                   }
 
+                  // Handle data tables
+                  if (block._type === 'gameTable' && block.tableData) {
+                    return (
+                      <div key={block._key || index} className="not-prose my-6">
+                        {block.title && (
+                          <h3 className="text-lg font-semibold text-white mb-3">{block.title}</h3>
+                        )}
+                        <GameTable
+                          tableData={block.tableData}
+                          highlightFirstColumn={block.highlightFirstColumn}
+                          striped={block.striped}
+                        />
+                      </div>
+                    )
+                  }
+
                   // Handle inline images
                   if (block._type === 'image' && block.url) {
                     return (
@@ -336,6 +359,13 @@ export default async function GuidePage({ params }: GuidePageProps) {
                     <GuideCard key={relatedGuide._id} {...relatedGuide} />
                   ))}
                 </div>
+              </section>
+            )}
+
+            {/* FAQ */}
+            {guide.faq && guide.faq.length > 0 && (
+              <section className="mt-12 pt-8 border-t border-[var(--color-border)]">
+                <FAQ items={guide.faq} />
               </section>
             )}
 

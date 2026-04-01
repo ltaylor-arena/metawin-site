@@ -116,6 +116,44 @@ export default defineType({
           type: 'callout',
           title: 'Callout',
         }),
+        // Data Table
+        defineArrayMember({
+          type: 'gameTable',
+          title: 'Data Table',
+        }),
+      ],
+    }),
+
+    // FAQ
+    defineField({
+      name: 'faq',
+      title: 'FAQ',
+      type: 'array',
+      group: 'content',
+      of: [
+        {
+          type: 'object',
+          name: 'faqItem',
+          title: 'FAQ Item',
+          fields: [
+            defineField({
+              name: 'question',
+              title: 'Question',
+              type: 'string',
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'answer',
+              title: 'Answer',
+              type: 'array',
+              of: [richTextBlockSimple],
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+          preview: {
+            select: { title: 'question' },
+          },
+        },
       ],
     }),
 
