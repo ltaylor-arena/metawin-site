@@ -12,6 +12,7 @@ import AuthorByline from '@/components/AuthorByline'
 import TableOfContents, { TOCItem } from '@/components/TableOfContents'
 import PostCard from '@/components/blog/PostCard'
 import Callout from '@/components/Callout'
+import GameTable from '@/components/GameTable'
 import { ArticleStructuredData } from '@/components/StructuredData'
 
 interface BlogPostPageProps {
@@ -233,8 +234,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <div className="min-w-0">
             {/* Hero Image */}
             {post.heroImage && (
-              <figure className="mb-8">
-                <div className="relative aspect-[16/9] rounded-xl overflow-hidden bg-[var(--color-bg-secondary)]">
+              <figure className="mb-8 rounded-lg overflow-hidden border border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
+                <div className="relative aspect-[21/9]">
                   <Image
                     src={post.heroImage}
                     alt={post.heroImageAlt || post.title}
@@ -244,7 +245,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   />
                 </div>
                 {post.heroImageCaption && (
-                  <figcaption className="mt-2 text-sm text-center text-[var(--color-text-muted)]">
+                  <figcaption className="px-4 py-3 text-sm text-[var(--color-text-muted)] text-center italic bg-[var(--color-bg-tertiary)]">
                     {post.heroImageCaption}
                   </figcaption>
                 )}
@@ -267,11 +268,27 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     )
                   }
 
+                  // Handle data tables
+                  if (block._type === 'gameTable' && block.tableData) {
+                    return (
+                      <div key={block._key || index} className="not-prose my-6">
+                        {block.title && (
+                          <h3 className="text-lg font-semibold text-white mb-3">{block.title}</h3>
+                        )}
+                        <GameTable
+                          tableData={block.tableData}
+                          highlightFirstColumn={block.highlightFirstColumn}
+                          striped={block.striped}
+                        />
+                      </div>
+                    )
+                  }
+
                   // Handle inline images
                   if (block._type === 'image' && block.url) {
                     return (
-                      <figure key={block._key || index} className="my-8">
-                        <div className="relative aspect-[16/9] rounded-lg overflow-hidden bg-[var(--color-bg-secondary)]">
+                      <figure key={block._key || index} className="not-prose my-6 rounded-lg overflow-hidden border border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
+                        <div className="relative aspect-video">
                           <Image
                             src={block.url}
                             alt={block.alt || ''}
@@ -280,7 +297,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                           />
                         </div>
                         {block.caption && (
-                          <figcaption className="mt-2 text-sm text-center text-[var(--color-text-muted)]">
+                          <figcaption className="px-4 py-3 text-sm text-[var(--color-text-muted)] text-center italic bg-[var(--color-bg-tertiary)]">
                             {block.caption}
                           </figcaption>
                         )}
