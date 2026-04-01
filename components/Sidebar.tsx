@@ -329,24 +329,24 @@ export default function Sidebar({ navigation, signUpUrl = 'https://metawin.com' 
           {!collapsed ? (
             <div className="px-4 w-full">
               <div className="flex gap-2">
-                <Link
-                  href="/games/"
+                <a
+                  href="https://metawin.com/games/"
                   className="flex-1 text-center py-2 px-3 rounded-md text-xs font-medium text-[var(--color-text-secondary)] hover:text-white active:text-white bg-[var(--color-bg-tertiary)] transition-colors"
                 >
                   Casino
-                </Link>
-                <Link
-                  href="/prizes/"
+                </a>
+                <a
+                  href="https://metawin.com/prizes/"
                   className="flex-1 text-center py-2 px-3 rounded-md text-xs font-medium text-[var(--color-text-secondary)] hover:text-white active:text-white bg-[var(--color-bg-tertiary)] transition-colors"
                 >
                   Prizes
-                </Link>
-                <Link
-                  href="/sports/"
+                </a>
+                <a
+                  href="https://metawin.com/sports/"
                   className="flex-1 text-center py-2 px-3 rounded-md text-xs font-medium text-[var(--color-text-secondary)] hover:text-white active:text-white bg-[var(--color-bg-tertiary)] transition-colors"
                 >
                   Sports
-                </Link>
+                </a>
               </div>
             </div>
           ) : (
