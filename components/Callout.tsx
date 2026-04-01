@@ -60,14 +60,19 @@ export default function Callout({ title, content, variant = 'info' }: CalloutPro
           </h4>
         </div>
       )}
-      <div className="flex gap-3">
-        {!title && (
+      {!title && (
+        <div className="flex gap-3">
           <Icon className={`w-5 h-5 flex-shrink-0 mt-0.5 ${styles.icon}`} />
-        )}
-        <div className="flex-1 min-w-0 prose prose-invert prose-sm max-w-none [&>p]:text-[var(--color-text-secondary)] [&>p]:leading-relaxed [&>p:last-child]:mb-0">
+          <div className="flex-1 min-w-0 prose prose-invert prose-sm max-w-none [&>p]:text-[var(--color-text-secondary)] [&>p]:leading-relaxed [&>p:last-child]:mb-0">
+            <PortableText value={content} />
+          </div>
+        </div>
+      )}
+      {title && (
+        <div className="prose prose-invert prose-sm max-w-none [&>p]:text-[var(--color-text-secondary)] [&>p]:leading-relaxed [&>p:last-child]:mb-0">
           <PortableText value={content} />
         </div>
-      </div>
+      )}
     </div>
   )
 }
