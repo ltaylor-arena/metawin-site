@@ -349,6 +349,36 @@ export default defineType({
       group: 'seo',
     }),
 
+    // Recent Wins (auto-populated by bot)
+    defineField({
+      name: 'recentWins',
+      title: 'Recent Wins',
+      type: 'array',
+      group: 'details',
+      description: 'Auto-populated by the wins bot. Do not edit manually.',
+      readOnly: true,
+      of: [
+        {
+          type: 'object',
+          name: 'win',
+          fields: [
+            defineField({ name: 'username', type: 'string' }),
+            defineField({ name: 'winnings', type: 'number' }),
+            defineField({ name: 'currencyCode', type: 'string' }),
+            defineField({ name: 'winUsd', type: 'number' }),
+            defineField({ name: 'timestamp', type: 'datetime' }),
+          ],
+          preview: {
+            select: { username: 'username', winUsd: 'winUsd', timestamp: 'timestamp' },
+            prepare({ username, winUsd, timestamp }) {
+              const ago = timestamp ? new Date(timestamp).toLocaleString() : ''
+              return { title: `${username} — $${winUsd ?? '?'}`, subtitle: ago }
+            },
+          },
+        },
+      ],
+    }),
+
     // Structured Data
     defineField({
       name: 'gameSchema',
