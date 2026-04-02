@@ -17,6 +17,7 @@ import GameTable from '@/components/GameTable'
 import AuthorBio from '@/components/AuthorBio'
 import AuthorByline from '@/components/AuthorByline'
 import FAQ from '@/components/FAQ'
+import RecentWins from '@/components/RecentWins'
 import { GameStructuredData } from '@/components/StructuredData'
 import TableOfContents, { TOCItem } from '@/components/TableOfContents'
 
@@ -384,6 +385,15 @@ export default async function GamePage({ params }: GamePageProps) {
               hasAutoplay={game.hasAutoplay}
               releaseDate={game.releaseDate}
             />
+
+            {/* Recent Big Wins */}
+            {game.recentWins && game.recentWins.length > 0 && (
+              <RecentWins
+                wins={game.recentWins}
+                gameTitle={game.title}
+                thumbnail={game.externalThumbnailUrl || (game.thumbnail?.asset ? urlFor(game.thumbnail).width(56).height(56).quality(80).auto('format').url() : undefined)}
+              />
+            )}
 
             {/* Desktop Table of Contents - Sticky after details */}
             {tocItems.length > 1 && (

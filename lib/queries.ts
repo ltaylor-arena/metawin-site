@@ -703,6 +703,16 @@ export const gameBySlugQuery = groq`
       "ogImage": ogImage.asset->url
     },
 
+    // Recent Wins
+    "recentWins": recentWins[0...10]{
+      _key,
+      username,
+      winUsd,
+      currencyCode,
+      winnings,
+      timestamp
+    },
+
     // Structured Data
     gameSchema
   }
