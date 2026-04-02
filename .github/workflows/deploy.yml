@@ -29,8 +29,21 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Remove stale production stage
-        run: npx sst remove --stage production || true
-
       - name: Deploy with SST
         run: npx sst deploy --stage production
+
+      - name: Fix CloudFront KV routing
+        run: |
+          KVS_ARN=$(aws cloudfront list-key-value-stores --query 'KeyValueStoreList.Items[0].ARN' --output text)
+          KVS_ETAG=$(aws cloudfront-keyvaluestore describe-key-value-store --kvs-arn "$KVS_ARN" --query 'ETag' --output text)
+          CURRENT=$(aws cloudfront-keyvaluestore get-key --kvs-arn "$KVS_ARN" --key "4b00:metadata" --query 'Value' --output text)
+          NEW_META=$(echo "$CURRENT" | python3 -c "
+          import sys, json
+          d = json.load(sys.stdin)
+          d['s3']['routes'] = [r for r in d['s3']['routes'] if r != '/hub']
+          if '/hub/images' not in d['s3']['routes']:
+              d['s3']['routes'].append('/hub/images')
+          print(json.dumps(d))
+          ")
+          aws cloudfront-keyvaluestore put-key --kvs-arn "$KVS_ARN" --key "4b00:metadata" --value "$NEW_META" --if-match "$KVS_ETAG"
+          echo "KV metadata patched: /hub removed from S3 routes, /hub/images added"
